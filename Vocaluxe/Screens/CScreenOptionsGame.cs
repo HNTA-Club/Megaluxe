@@ -221,6 +221,8 @@ namespace Vocaluxe.Screens
             CConfig.SaveConfig();
 
             CSongs.Sorter.SongSorting = CConfig.Config.Game.SongSorting;
+            CConfig.Config.Game.SongSortingReverse = false;
+            CSongs.Sorter.ReverseSorting = false;
             CSongs.Categorizer.Tabs = CConfig.Config.Game.Tabs;
         }
 

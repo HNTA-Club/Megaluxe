@@ -369,6 +369,7 @@ namespace Vocaluxe.Base
                 using (CBenchmark.Time("Sorted Songs"))
                 {
                     Sorter.SongSorting = CConfig.Config.Game.SongSorting;
+                    Sorter.ReverseSorting = CConfig.Config.Game.SongSortingReverse;
                     Sorter.IgnoreArticles = CConfig.Config.Game.IgnoreArticles;
                     Categorizer.Tabs = CConfig.Config.Game.Tabs;
                     Categorizer.ObjectChanged += _HandleCategoriesChanged;

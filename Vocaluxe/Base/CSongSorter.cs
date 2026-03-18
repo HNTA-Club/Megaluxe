@@ -29,6 +29,7 @@ namespace Vocaluxe.Base
         private CSongPointer[] _SortedSongs = new CSongPointer[0];
         private EOffOn _IgnoreArticles = CConfig.Config.Game.IgnoreArticles;
         private ESongSorting _SongSorting = CConfig.Config.Game.SongSorting;
+        private bool _ReverseSorting = CConfig.Config.Game.SongSortingReverse;
 
         public CSongSorter()
         {
@@ -66,6 +67,23 @@ namespace Vocaluxe.Base
                 _SongSorting = value;
                 _SetChanged();
             }
+        }
+
+        public bool ReverseSorting
+        {
+            get { return _ReverseSorting; }
+            set
+            {
+                if (value == _ReverseSorting)
+                    return;
+                _ReverseSorting = value;
+                _SetChanged();
+            }
+        }
+
+        public bool SortDescending
+        {
+            get { return _IsSortDescending(_SongSorting, _ReverseSorting); }
         }
 
         public void SetOptions(ESongSorting songSorting, EOffOn ignoreArticles)
@@ -127,6 +145,16 @@ namespace Vocaluxe.Base
         {
             int res = String.Compare(s1.SortString[0].ToString(), s2.SortString[0].ToString(), StringComparison.CurrentCultureIgnoreCase);
             return res != 0 ? res : _SortByFieldArtistTitle(s1, s2);
+        }
+
+        private static bool _HasDefaultDescendingSort(ESongSorting sorting)
+        {
+            return sorting == ESongSorting.TR_CONFIG_DATEADDED;
+        }
+
+        private static bool _IsSortDescending(ESongSorting sorting, bool reverseSorting)
+        {
+            return _HasDefaultDescendingSort(sorting) ^ reverseSorting;
         }
 
         private void _AddSongToList(CSong song, List<CSongPointer> list)
@@ -208,7 +236,7 @@ namespace Vocaluxe.Base
                     break;
             }
 
-            if (_SongSorting == ESongSorting.TR_CONFIG_DATEADDED)
+            if (_IsSortDescending(_SongSorting, _ReverseSorting))
                 sortList.Reverse();
 
             _SortedSongs = sortList.ToArray();

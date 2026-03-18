@@ -377,13 +377,9 @@ namespace Vocaluxe.Screens
                         case Keys.D9:
                             if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
                             {
-                                int tempSortNr = -1;
-                                int.TryParse(keyEvent.Key.ToString().Substring(1), out tempSortNr);
-                                
-                                if (tempSortNr == 0)
-                                    tempSortNr = 10;
-
-                                _ToggleSort(tempSortNr);
+                                int tempSortNr;
+                                if (_TryGetSortNumberFromKey(keyEvent.Key, out tempSortNr))
+                                    _ToggleSort(tempSortNr);
                             }
                             break;
 
@@ -996,15 +992,67 @@ namespace Vocaluxe.Screens
             {
                 CBase.Songs.SetCategory(-1);
             }
-            
-            CSongs.Sorter.SongSorting = (ESongSorting)sortNr;
+
+            ESongSorting selectedSorting = (ESongSorting)sortNr;
+            if (CSongs.Sorter.SongSorting == selectedSorting)
+                CSongs.Sorter.ReverseSorting = !CSongs.Sorter.ReverseSorting;
+            else
+            {
+                CSongs.Sorter.SongSorting = selectedSorting;
+                CSongs.Sorter.ReverseSorting = false;
+            }
+
             CConfig.Config.Game.SongSorting = CSongs.Sorter.SongSorting;
+            CConfig.Config.Game.SongSortingReverse = CSongs.Sorter.ReverseSorting;
             _Sso.Sorting.SongSorting = CSongs.Sorter.SongSorting;
-            
+
             _SongMenu.Update(_Sso);
             _SongMenu.OnShow();
 
-            _ShowInfoText(CBase.Language.Translate("TR_SCREENSONG_SORTING").Replace("%s", CBase.Language.Translate(_Sso.Sorting.SongSorting.ToString())));
+            string direction = CSongs.Sorter.SortDescending ? " ↓" : " ↑";
+            _ShowInfoText(CBase.Language.Translate("TR_SCREENSONG_SORTING").Replace("%s", CBase.Language.Translate(_Sso.Sorting.SongSorting.ToString()) + direction));
+        }
+
+        private static bool _TryGetSortNumberFromKey(Keys key, out int sortNr)
+        {
+            switch (key)
+            {
+                case Keys.D0:
+                    sortNr = 0;
+                    break;
+                case Keys.D1:
+                    sortNr = 1;
+                    break;
+                case Keys.D2:
+                    sortNr = 2;
+                    break;
+                case Keys.D3:
+                    sortNr = 3;
+                    break;
+                case Keys.D4:
+                    sortNr = 4;
+                    break;
+                case Keys.D5:
+                    sortNr = 5;
+                    break;
+                case Keys.D6:
+                    sortNr = 6;
+                    break;
+                case Keys.D7:
+                    sortNr = 7;
+                    break;
+                case Keys.D8:
+                    sortNr = 8;
+                    break;
+                case Keys.D9:
+                    sortNr = 9;
+                    break;
+                default:
+                    sortNr = -1;
+                    break;
+            }
+
+            return sortNr >= 0 && sortNr < Enum.GetValues(typeof(ESongSorting)).Length;
         }
 
         private void _ShowInfoText(String text)
