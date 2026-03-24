@@ -250,6 +250,68 @@ namespace Vocaluxe.Screens
                 _SelectSlidesPause.Add(t.GetThemeName());
         }
 
+        public override void ReloadTheme(string xmlPath)
+        {
+            // Call base to reload theme XML
+            base.ReloadTheme(xmlPath);
+
+            // Rebuild all texts and statics as in Init()
+            var texts = new List<string> { _TextShortInfoTop, _TextSongName, _TextTime, _TextDuetName1, _TextDuetName2, _TextMedleyCountdown };
+            _BuildTextStrings(texts);
+            _ThemeTexts = texts.ToArray();
+
+            var statics = new List<string>
+                {
+                    _StaticShortInfoTop,
+                    _StaticSongText,
+                    _StaticLyrics,
+                    _StaticLyricsDuet,
+                    _StaticLyricsTop,
+                    _StaticTimeBar,
+                    _StaticTimeLine,
+                    _StaticTimeLineExpandedNormal,
+                    _StaticTimeLineExpandedHighlighted,
+                    _StaticTimePointer,
+                    _StaticLyricHelper,
+                    _StaticLyricHelperDuet,
+                    _StaticLyricHelperTop
+            };
+            _BuildStaticStrings(ref statics);
+            _ThemeStatics = statics.ToArray();
+
+            var progressbars = new List<string>();
+            _BuildProgressBarStrings(ref progressbars);
+            _ThemeProgressBars = progressbars.ToArray();
+
+            var ratingPopups = new List<string>();
+            _BuildRatingPopupStrings(ref ratingPopups);
+            _ThemeRatingPopups = ratingPopups.ToArray();
+
+            _CreatePlayerStatics();
+            _CreatePlayerStrings();
+            _CreateProgressBars();
+            _CreateRatingPopups();
+            _AssignPlayerElements();
+
+            _StaticsPause = new List<string>();
+            _TextsPause = new List<string>();
+            _SelectSlidesPause = new List<string>();
+
+            _SelectSlides[_SelectSlidePauseVocalsVolume].AddValues(new string[]
+                {"0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70", "75", "80", "85", "90", "95", "100"});
+            _SelectSlides[_SelectSlidePauseVocalsVolume].Selection = CConfig.VocalsVolume / 5;
+
+            //Automatically find statics and texts with pause prefix
+            foreach (CStatic s in _Statics.Where(s => s.ThemeLoaded && s.GetThemeName().StartsWith("StaticPause")))
+                _StaticsPause.Add(s.GetThemeName());
+
+            foreach (CText t in _Texts.Where(s => s.ThemeLoaded && s.GetThemeName().StartsWith("TextPause")))
+                _TextsPause.Add(t.GetThemeName());
+
+            foreach (CText t in _Texts.Where(s => s.ThemeLoaded && s.GetThemeName().StartsWith("SelectSlidePause")))
+                _SelectSlidesPause.Add(t.GetThemeName());
+        }
+
         public override bool HandleInput(SKeyEvent keyEvent)
         {
             base.HandleInput(keyEvent);
