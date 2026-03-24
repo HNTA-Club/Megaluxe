@@ -346,9 +346,12 @@
     <SearchBar>SearchBar.png</SearchBar>
     <PlaylistBG>PlaylistBG.png</PlaylistBG>
     <DuetIcon>DuetIcon.png</DuetIcon>
+    <RapIcon>RapIcon.png</RapIcon>
     <VideoIcon>VideoIcon.png</VideoIcon>
     <MedleyCalcIcon>MedleyCalcIcon.png</MedleyCalcIcon>
     <MedleyTagIcon>MedleyTagIcon.png</MedleyTagIcon>
+    <InstrumentalIcon>InstrumentalIcon.png</InstrumentalIcon>
+    <VocalsIcon>VocalsIcon.png</VocalsIcon>
     <PlayerSelector>PlayerSelector.png</PlayerSelector>
     <PreviousIcon>PreviousIcon.png</PreviousIcon>
     <NextIcon>NextIcon.png</NextIcon>
@@ -391,7 +394,6 @@
     <RapNoteBackgroundLeft>RapNotesBGLeft.png</RapNoteBackgroundLeft>
     <RapNoteBackgroundMiddle>RapNotesBGMid.png</RapNoteBackgroundMiddle>
     <RapNoteBackgroundRight>RapNotesBGRight.png</RapNoteBackgroundRight>
-    <RapIcon>RapIcon.png</RapIcon>
     <RatingPopup>RatingPopUp.png</RatingPopup>
   </Skins>
   <Videos>
