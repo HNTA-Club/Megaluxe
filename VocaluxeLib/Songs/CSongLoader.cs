@@ -76,6 +76,48 @@ namespace VocaluxeLib.Songs
             {
                 string filePath = Path.Combine(_Song.Folder, _Song.FileName);
 
+                if (useSetEncoding == false)
+                {
+                    byte[] bytes = File.ReadAllBytes(filePath);
+
+                    bool isUtf8 = true;
+                    int i = 0;
+                    while (i < bytes.Length)
+                    {
+                        byte b = bytes[i];
+                        if (b <= 0x7F)
+                        {
+                            i++;
+                            continue;
+                        }
+                        else if (b >= 0xC2 && b <= 0xDF)
+                        {
+                            if (i + 1 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF)
+                            {
+                                isUtf8 = false;
+                                break;
+                            }
+                            i += 2;
+                        }
+                        else if (b >= 0xE0 && b <= 0xEF)
+                        {
+                            if (i + 2 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF)
+                            {
+                                isUtf8 = false;
+                                break;
+                            }
+                            i += 3;
+                        }
+                        else
+                        {
+                            isUtf8 = false;
+                            break;
+                        }
+                    }
+
+                    _Song.Encoding = isUtf8 ? Encoding.UTF8 : Encoding.Default;
+                }
+
                 if (!File.Exists(filePath))
                     return false;
 
@@ -455,7 +497,7 @@ namespace VocaluxeLib.Songs
                 sr.Dispose();
                 _Song._CheckFiles();
 
-                CBase.DataBase.GetDataBaseSongInfos(_Song.Artist, _Song.Title, out _Song.NumPlayed, out _Song.DateAdded, out _Song.DataBaseSongID);
+                CBase.DataBase.GetDataBaseSongInfos(_Song.Artist, _Song.Title, out _Song.NumPlayed, out _Song.DateAdded, out _Song.DataBaseSongID, out _Song.LastPlayed, out _Song.HighScore);
 
                 //Before saving this tags to .txt: Check, if ArtistSorting and Artist are equal, then don't save this tag.
                 if (String.IsNullOrEmpty(_Song.ArtistSorting))
