@@ -262,6 +262,16 @@ namespace Vocaluxe.Base
                     return ECoverGeneratorType.Decade;
                 case ESongSorting.TR_CONFIG_DATEADDED:
                     return ECoverGeneratorType.Date;
+                case ESongSorting.TR_CONFIG_NUMPLAYED:
+                    return ECoverGeneratorType.NumPlayed;
+                case ESongSorting.TR_CONFIG_CREATOR:
+                    return ECoverGeneratorType.Creator;
+                case ESongSorting.TR_CONFIG_ENCODING:
+                    return ECoverGeneratorType.Encoding;
+                case ESongSorting.TR_CONFIG_LASTPLAYED:
+                    return ECoverGeneratorType.LastPlayed;
+                case ESongSorting.TR_CONFIG_HIGHSCORE:
+                    return ECoverGeneratorType.HighScore;
                 default:
                     throw new ArgumentOutOfRangeException("sorting");
             }

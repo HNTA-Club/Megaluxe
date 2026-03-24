@@ -32,7 +32,12 @@ namespace VocaluxeLib
         Language,
         Year,
         Decade,
-        Date
+        Date,
+        NumPlayed,
+        Creator,
+        Encoding,
+        LastPlayed,
+        HighScore
     }
 
     public enum EDirection
@@ -234,11 +239,16 @@ namespace VocaluxeLib
         TR_CONFIG_TITLE_LETTER,
         TR_CONFIG_EDITION,
         TR_CONFIG_GENRE,
-        TR_CONFIG_TAGS,
         TR_CONFIG_LANGUAGE,
         TR_CONFIG_YEAR,
         TR_CONFIG_DECADE,
-        TR_CONFIG_DATEADDED
+        TR_CONFIG_DATEADDED,
+        TR_CONFIG_TAGS,
+        TR_CONFIG_NUMPLAYED,
+        TR_CONFIG_CREATOR,
+        TR_CONFIG_ENCODING,
+        TR_CONFIG_LASTPLAYED,
+        TR_CONFIG_HIGHSCORE
         // ReSharper restore InconsistentNaming
     }
 

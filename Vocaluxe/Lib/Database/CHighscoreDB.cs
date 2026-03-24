@@ -87,7 +87,7 @@ namespace Vocaluxe.Lib.Database
             //Do nothing
         }
 
-        public bool GetDataBaseSongInfos(string artist, string title, out int numPlayed, out DateTime dateAdded, out int highscoreID)
+        public bool GetDataBaseSongInfos(string artist, string title, out int numPlayed, out DateTime dateAdded, out int highscoreID, out DateTime lastPlayed, out int highScore)
         {
             string sArtist;
             string sTitle;
@@ -109,7 +109,7 @@ namespace Vocaluxe.Lib.Database
                     highscoreID = songID;
                 }
             }
-            return _GetDataBaseSongInfos(songID, out sArtist, out sTitle, out numPlayed, out dateAdded, _FilePath);
+            return _GetDataBaseSongInfos(songID, out sArtist, out sTitle, out numPlayed, out dateAdded, _FilePath, out lastPlayed, out highScore);
         }
 
         public void IncreaseSongCounter(int dataBaseSongID)
@@ -430,12 +430,14 @@ namespace Vocaluxe.Lib.Database
             return -1;
         }
 
-        private bool _GetDataBaseSongInfos(int songID, out string artist, out string title, out int numPlayed, out DateTime dateAdded, string filePath)
+        private bool _GetDataBaseSongInfos(int songID, out string artist, out string title, out int numPlayed, out DateTime dateAdded, string filePath, out DateTime lastPlayed, out int highScore)
         {
             artist = String.Empty;
             title = String.Empty;
             numPlayed = 0;
             dateAdded = DateTime.Today;
+            lastPlayed = new DateTime(1);
+            highScore = 0;
 
             using (var connection = new SqliteConnection())
             {
@@ -453,7 +455,7 @@ namespace Vocaluxe.Lib.Database
                 using (var command = new SqliteCommand())
                 {
                     command.Connection = connection;
-                    command.CommandText = "SELECT Artist, Title, NumPlayed, DateAdded FROM Songs WHERE [id] = @id";
+                    command.CommandText = "SELECT Artist, Title, NumPlayed, DateAdded, (SELECT COALESCE(MAX(Score),0) FROM Scores WHERE SongID = Songs.id) AS MaxScore, (SELECT COALESCE(MAX(Date),1) FROM Scores WHERE SongID = Songs.id) AS LastPlayed FROM Songs WHERE Songs.id = @id;";
                     command.Parameters.Clear();
                     command.Parameters.AddWithValue("@id", songID);
 
@@ -482,6 +484,12 @@ namespace Vocaluxe.Lib.Database
 
                         if (!reader.IsDBNull(3))
                             dateAdded = new DateTime(reader.GetInt64(3));
+
+                        if (!reader.IsDBNull(4))
+                            highScore = reader.GetInt32(4);
+
+                        if (!reader.IsDBNull(5))
+                            lastPlayed = new DateTime(reader.GetInt64(5));
 
                         reader.Dispose();
                         return true;
@@ -1079,11 +1087,13 @@ namespace Vocaluxe.Lib.Database
                         int duet = source.GetInt32(6);
                         int shortsong = source.GetInt32(7);
                         int diff = source.GetInt32(8);
+                        DateTime lastPlayed;
+                        int highScore;
 
                         string artist, title;
                         DateTime dateadded;
                         int numplayed;
-                        if (_GetDataBaseSongInfos(songid, out artist, out title, out numplayed, out dateadded, sourceDBPath))
+                        if (_GetDataBaseSongInfos(songid, out artist, out title, out numplayed, out dateadded, sourceDBPath, out lastPlayed, out highScore))
                             AddScore(player, score, linenr, date, medley, duet, shortsong, diff, artist, title, numplayed, _FilePath);
                     }
                     #endregion import table scores
