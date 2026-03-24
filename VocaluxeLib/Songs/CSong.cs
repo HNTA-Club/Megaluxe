@@ -91,7 +91,7 @@ namespace VocaluxeLib.Songs
 
         public SShortEnd ShortEnd;
 
-        public Encoding Encoding = new UTF8Encoding();
+        public Encoding Encoding = Encoding.Default;
         public bool ManualEncoding;
         public string Folder = String.Empty;
         public string FolderName = String.Empty;
@@ -183,6 +183,8 @@ namespace VocaluxeLib.Songs
         public DateTime DateAdded = DateTime.Today;
         public int NumPlayed;
         public int NumPlayedSession;
+        public DateTime LastPlayed;
+        public int HighScore;
 
         // Notes
         public readonly CNotes Notes = new CNotes();
@@ -280,6 +282,8 @@ namespace VocaluxeLib.Songs
             DateAdded = song.DateAdded;
             NumPlayed = song.NumPlayed;
             NumPlayedSession = song.NumPlayedSession;
+            LastPlayed = song.LastPlayed;
+            HighScore = song.HighScore;
 
             Notes = new CNotes(song.Notes);
         }
