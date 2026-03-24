@@ -72,7 +72,7 @@ namespace Vocaluxe.Screens
             if (CConfig.Config.Sound.PlayBackLib == EPlaybackLib.GstreamerSharp)
             {
                 _SelectSlides[_SelectSlideKaraokeEffect].SetValues<EOffOn>((int)CConfig.Config.Sound.KaraokeEffect);
-                _SelectSlides[_SelectSlideBackgroundMusicSource].Selection = (int)CConfig.Config.Sound.KaraokeEffect;
+                _SelectSlides[_SelectSlideKaraokeEffect].Selection = (int)CConfig.Config.Sound.KaraokeEffect;
             }
         }
 
