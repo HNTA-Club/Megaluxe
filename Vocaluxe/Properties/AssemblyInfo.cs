@@ -23,12 +23,14 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
 
+//[assembly: AssemblyTitle("Vocaluxe 'Not Versioned' 0.0.0 (NA) (0.0.0-na-notversioned)")]
+//[assembly: AssemblyTitle("Vocaluxe 'Not Versioned' 0.0.0 (NA) (0.0.0-na-notversioned)")]
 [assembly: AssemblyTitle("Vocaluxe 'Not Versioned' 0.0.0 (NA) (0.0.0-na-notversioned)")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Vocaluxe")]
-[assembly: AssemblyCopyright("Copyright © 2025")]
+[assembly: AssemblyProduct("Vocaluxe Megaluxe")]
+[assembly: AssemblyCopyright("Copyright © 2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -47,4 +49,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("da631594-f891-4994-9869-c37e626e44f9")]
 
 // Allow internal access from the Tests project
-[assembly:InternalsVisibleTo("Tests")]
+[assembly: InternalsVisibleTo("Tests")]

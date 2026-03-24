@@ -147,9 +147,29 @@ namespace Vocaluxe.Base
             return res != 0 ? res : _SortByFieldArtistTitle(s1, s2);
         }
 
+        private int _SortByNumPlayed(CSongPointer s1, CSongPointer s2)
+        {
+
+            int res = Convert.ToInt32(s1.SortString).CompareTo(Convert.ToInt32(s2.SortString));
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s2.SongID].ArtistSorting, CSongs.Songs[s1.SongID].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongID].TitleSorting, CSongs.Songs[s1.SongID].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s2.SongID].Artist, CSongs.Songs[s1.SongID].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongID].Title, CSongs.Songs[s1.SongID].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
         private static bool _HasDefaultDescendingSort(ESongSorting sorting)
         {
-            return sorting == ESongSorting.TR_CONFIG_DATEADDED;
+            return sorting == ESongSorting.TR_CONFIG_DATEADDED ||
+                   sorting == ESongSorting.TR_CONFIG_NUMPLAYED ||
+                   sorting == ESongSorting.TR_CONFIG_LASTPLAYED ||
+                   sorting == ESongSorting.TR_CONFIG_HIGHSCORE;
         }
 
         private static bool _IsSortDescending(ESongSorting sorting, bool reverseSorting)
@@ -195,6 +215,21 @@ namespace Vocaluxe.Base
                 case ESongSorting.TR_CONFIG_DATEADDED:
                     value = song.DateAdded.ToString("yyyyMMdd");
                     break;
+                case ESongSorting.TR_CONFIG_NUMPLAYED:
+                    value = song.NumPlayed.ToString();
+                    break;
+                case ESongSorting.TR_CONFIG_CREATOR:
+                    value = song.Creator;
+                    break;
+                case ESongSorting.TR_CONFIG_ENCODING:
+                    value = song.Encoding.ToString();
+                    break;
+                case ESongSorting.TR_CONFIG_LASTPLAYED:
+                    value = song.LastPlayed.ToString("yyyyMMddHHmmssfff");
+                    break;
+                case ESongSorting.TR_CONFIG_HIGHSCORE:
+                    value = song.HighScore.ToString();
+                    break;
                 default:
                     Debug.Assert(false, "Forgot sorting option");
                     break;
@@ -230,6 +265,9 @@ namespace Vocaluxe.Base
                     break;
                 case ESongSorting.TR_CONFIG_TITLE_LETTER:
                     sortList.Sort(_SortByLetterFieldArtistTitle);
+                    break;
+                case ESongSorting.TR_CONFIG_NUMPLAYED:
+                    sortList.Sort(_SortByNumPlayed);
                     break;
                 default:
                     sortList.Sort(_SortByFieldArtistTitle);

@@ -118,6 +118,10 @@ namespace Vocaluxe.Base
                     foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
                         songPointer.SortString = CSongs.GetSong(songPointer.SongID).DateAdded.ToString("dd/MM/yyyy");
                     break;
+                case ESongSorting.TR_CONFIG_LASTPLAYED:
+                    foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
+                        songPointer.SortString = CSongs.GetSong(songPointer.SongID).LastPlayed.ToString("dd/MM/yyyy");
+                    break;
             }
         }
 

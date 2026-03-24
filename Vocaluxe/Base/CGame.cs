@@ -244,8 +244,8 @@ namespace Vocaluxe.Base
             {
                 for (int beat = _LastEvalBeat + 1; beat <= RecordedBeat; beat++)
                 {
-                    if ((_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_MEDLEY && song.Medley.EndBeat == beat) ||
-                        (_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_SHORTSONG && song.ShortEnd.EndBeat == beat))
+                    if ((_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_MEDLEY && song.Medley.EndBeat-30 <= beat) ||
+                        (_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_SHORTSONG && song.ShortEnd.EndBeat-30 <= beat))
                         Players[p].SongFinished = true;
 
                     CSongLine[] lines = song.Notes.GetVoice(Players[p].VoiceNr).Lines;
@@ -283,7 +283,7 @@ namespace Vocaluxe.Base
 
                     Players[p].CurrentNote = note;
 
-                    if (line == lines.Length - 1 && beat == lines[line].LastNoteBeat)
+                    if (line == lines.Length - 1 && beat >= lines[line].LastNoteBeat-30)
                         Players[p].SongFinished = true;
 
                     if (notes[note].PointsForBeat > 0 && (CRecord.ToneValid(p)
