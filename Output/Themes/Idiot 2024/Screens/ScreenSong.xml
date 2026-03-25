@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenSong</ScreenName>
@@ -906,6 +906,8 @@
       <VideoIcon>VideoIcon</VideoIcon>
       <MedleyCalcIcon>MedleyCalcIcon</MedleyCalcIcon>
       <MedleyTagIcon>MedleyTagIcon</MedleyTagIcon>
+      <InstrumentalIcon>InstrumentalIcon</InstrumentalIcon>
+      <VocalsIcon>VocalsIcon</VocalsIcon>
       <Color>
         <R>1</R>
         <G>1</G>
@@ -1066,6 +1068,28 @@
             <Z>-1</Z>
           </Rect>
         </StaticMedleyTagIcon>
+        <StaticInstrumentalIcon Name="StaticInstrumentalIcon">
+          <Skin>InstrumentalIcon</Skin>
+          <Color Name="StaticColor" />
+          <Rect>
+            <X>440</X>
+            <Y>795</Y>
+            <W>60</W>
+            <H>60</H>
+            <Z>-1</Z>
+          </Rect>
+        </StaticInstrumentalIcon>
+        <StaticVocalsIcon Name="StaticVocalsIcon">
+          <Skin>VocalsIcon</Skin>
+          <Color Name="StaticColor" />
+          <Rect>
+            <X>530</X>
+            <Y>795</Y>
+            <W>60</W>
+            <H>60</H>
+            <Z>-1</Z>
+          </Rect>
+        </StaticVocalsIcon>
       </SongMenuTileBoard>
       <SongMenuList>
         <ListLength>15</ListLength>
@@ -1218,6 +1242,28 @@
             <Z>-1</Z>
           </Rect>
         </StaticMedleyTagIcon>
+        <StaticInstrumentalIcon Name="StaticInstrumentalIcon">
+          <Skin>InstrumentalIcon</Skin>
+          <Color Name="StaticColor" />
+          <Rect>
+            <X>440</X>
+            <Y>795</Y>
+            <W>60</W>
+            <H>60</H>
+            <Z>-1</Z>
+          </Rect>
+        </StaticInstrumentalIcon>
+        <StaticVocalsIcon Name="StaticVocalsIcon">
+          <Skin>VocalsIcon</Skin>
+          <Color Name="StaticColor" />
+          <Rect>
+            <X>530</X>
+            <Y>795</Y>
+            <W>60</W>
+            <H>60</H>
+            <Z>-1</Z>
+          </Rect>
+        </StaticVocalsIcon>
       </SongMenuList>
     </SongMenu>
   </SongMenus>

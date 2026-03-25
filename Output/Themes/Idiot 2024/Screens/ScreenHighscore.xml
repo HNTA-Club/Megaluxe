@@ -2,7 +2,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>2</ScreenVersion>
+    <ScreenVersion>3</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -22,6 +22,39 @@
         <Y>60</Y>
         <W>1920</W>
         <H>67.5</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticTop1Bar">
+      <Skin />
+      <Color Name="Top1Color" />
+      <Rect>
+        <X>120</X>
+        <Y>155</Y>
+        <W>1620</W>
+        <H>52.5</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticTop2Bar">
+      <Skin />
+      <Color Name="Top2Color" />
+      <Rect>
+        <X>120</X>
+        <Y>245</Y>
+        <W>1620</W>
+        <H>52.5</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticTop3Bar">
+      <Skin />
+      <Color Name="Top3Color" />
+      <Rect>
+        <X>120</X>
+        <Y>335</Y>
+        <W>1620</W>
+        <H>52.5</H>
         <Z>0</Z>
       </Rect>
     </Static>
