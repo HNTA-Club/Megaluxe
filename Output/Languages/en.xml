@@ -200,6 +200,12 @@
   <string name="TR_SCREENSCORE_GAMEDIFFICULTY">Difficulty</string>
   <string name="TR_SCREENSCORE_OVERALLSCORE">Overall score</string>
   <string name="TR_SCREENHIGHSCORE_HIGHSCORE">Highscore</string>
+  <string name="TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE">CURRENT RUN</string>
+  <string name="TR_SCREENHIGHSCORE_SONG_RECORD">SONG RECORD</string>
+  <string name="TR_SCREENHIGHSCORE_SEASON_LEADERBOARD">SEASON LEADERBOARD</string>
+  <string name="TR_SCREENHIGHSCORE_NEW_SONG_RECORD">NEW RECORD</string>
+  <string name="TR_SCREENHIGHSCORE_SONG_LORE">SONG LORE</string>
+  <string name="TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT">CLUB HIGHLIGHTS</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiles</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Player name</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Game difficulty</string>

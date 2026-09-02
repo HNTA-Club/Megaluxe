@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -80,6 +80,11 @@ namespace VocaluxeLib.Menu
                 _HtIndex.Add(key, _Items.Count);
             _Items.Add(item);
             return _Items.Count - 1;
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return _HtIndex.ContainsKey(key);
         }
 
         public IEnumerator<T> GetEnumerator()

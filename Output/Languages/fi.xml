@@ -200,6 +200,12 @@
   <string name="TR_SCREENSCORE_GAMEDIFFICULTY">Vaikeustaso</string>
   <string name="TR_SCREENSCORE_OVERALLSCORE">Kokonaispisteet</string>
   <string name="TR_SCREENHIGHSCORE_HIGHSCORE">Pistetaulukko</string>
+  <string name="TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE">TÄMÄ VETO</string>
+  <string name="TR_SCREENHIGHSCORE_SONG_RECORD">BIISIN ENNÄTYS</string>
+  <string name="TR_SCREENHIGHSCORE_SEASON_LEADERBOARD">KAUDEN KÄRKI</string>
+  <string name="TR_SCREENHIGHSCORE_NEW_SONG_RECORD">UUSI ENNÄTYS</string>
+  <string name="TR_SCREENHIGHSCORE_SONG_LORE">BIISIN TARINA</string>
+  <string name="TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT">KLUBIN KOHOKOHDAT</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiilit</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Pelaajan nimi</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Pelin vaikeustaso</string>
