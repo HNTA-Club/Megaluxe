@@ -347,15 +347,17 @@ namespace Vocaluxe.Lib.Database
                     {
                         while (reader.Read())
                         {
+                            long ticks = reader.GetInt64(2);
                             var score = new SDBScoreEntry
                                 {
                                     Name = reader.GetString(0),
                                     Score = reader.GetInt32(1),
-                                    Date = new DateTime(reader.GetInt64(2)).ToString("dd/MM/yyyy"),
+                                    Date = new DateTime(ticks).ToString("dd/MM/yyyy"),
                                     Difficulty = (EGameDifficulty)reader.GetInt32(3),
                                     VoiceNr = reader.GetInt32(4),
                                     ID = reader.GetInt32(5),
-                                    Year = new DateTime(reader.GetInt64(2)).Year
+                                    Year = new DateTime(ticks).Year,
+                                    DateTicks = ticks
                                 };
 
                             scores.Add(score);

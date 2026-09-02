@@ -370,6 +370,7 @@ namespace VocaluxeLib
         public int VoiceNr;
         public int ID;
         public int Year;
+        public long DateTicks;
     }
     #endregion Game
 }

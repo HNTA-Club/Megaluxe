@@ -320,10 +320,35 @@ namespace Vocaluxe.Screens
 
         private void _UpdateSongLore()
         {
-            int playCount = _Scores[_Round].Count;
-            _SetText(_TextLoreStat1, "Sung " + playCount + " times at the club.");
-            
-            var allTimeBest = _Scores[_Round].OrderByDescending(s => s.Score).FirstOrDefault();
+            var scores = _Scores[_Round];
+            int totalScores = scores.Count;
+
+            long lastTicks = -1;
+            int uniquePerformances = 0;
+            var sortedScores = scores.OrderBy(s => s.DateTicks).ToList();
+            foreach (var s in sortedScores)
+            {
+                if (lastTicks == -1 || Math.Abs(s.DateTicks - lastTicks) > TimeSpan.TicksPerSecond * 10)
+                {
+                    uniquePerformances++;
+                }
+                lastTicks = s.DateTicks;
+            }
+
+            if (uniquePerformances == 0)
+            {
+                _SetText(_TextLoreStat1, "Never sung at the club yet.");
+            }
+            else if (uniquePerformances == totalScores)
+            {
+                _SetText(_TextLoreStat1, "Sung " + uniquePerformances + (uniquePerformances == 1 ? " time" : " times") + " at the club.");
+            }
+            else
+            {
+                _SetText(_TextLoreStat1, "Performed " + uniquePerformances + (uniquePerformances == 1 ? " time" : " times") + " at the club (" + totalScores + " total individual scores).");
+            }
+
+            var allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
             if (allTimeBest.Name != null)
             {
                 _SetText(_TextLoreStat2, "The all-time record is " + allTimeBest.Score + " by " + allTimeBest.Name + ".");
@@ -332,7 +357,7 @@ namespace Vocaluxe.Screens
             {
                 _SetText(_TextLoreStat2, null, false);
             }
-            
+
             _SetText(_TextLoreStat3, null, false);
             _SetText(_TextLoreStat4, null, false);
         }
