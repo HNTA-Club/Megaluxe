@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -369,6 +369,7 @@ namespace VocaluxeLib
         public EGameDifficulty Difficulty;
         public int VoiceNr;
         public int ID;
+        public int Year;
     }
     #endregion Game
 }

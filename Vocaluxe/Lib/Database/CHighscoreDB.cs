@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Text;
 using Community.CsharpSqlite;
@@ -353,7 +354,8 @@ namespace Vocaluxe.Lib.Database
                                     Date = new DateTime(reader.GetInt64(2)).ToString("dd/MM/yyyy"),
                                     Difficulty = (EGameDifficulty)reader.GetInt32(3),
                                     VoiceNr = reader.GetInt32(4),
-                                    ID = reader.GetInt32(5)
+                                    ID = reader.GetInt32(5),
+                                    Year = new DateTime(reader.GetInt64(2)).Year
                                 };
 
                             scores.Add(score);
@@ -363,6 +365,33 @@ namespace Vocaluxe.Lib.Database
                 }
             }
             return scores;
+        }
+
+        public List<SDBScoreEntry> LoadYearlyChampions(int songID, EGameMode gameMode)
+        {
+            var allScores = LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
+            if (allScores == null || allScores.Count == 0)
+                return new List<SDBScoreEntry>();
+
+            return allScores
+                .GroupBy(s => s.Year)
+                .Select(g => g.First())
+                .OrderByDescending(s => s.Year)
+                .ToList();
+        }
+
+        public List<SDBScoreEntry> LoadSeasonScores(int songID, EGameMode gameMode, int year, int limit = 5)
+        {
+            var allScores = LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
+            if (allScores == null || allScores.Count == 0)
+                return new List<SDBScoreEntry>();
+
+            return allScores
+                .Where(s => s.Year == year)
+                .OrderByDescending(s => s.Score)
+                .ThenBy(s => s.Date)
+                .Take(limit)
+                .ToList();
         }
 
         private void _IncreaseSongCounter(int dataBaseSongID, SqliteCommand command)

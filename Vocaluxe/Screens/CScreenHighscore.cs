@@ -33,30 +33,50 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 3; }
+            get { return 4; }
         }
 
-        private const int _NumEntrys = 10;
+        private const int _NumCurrent = 4;
+        private const int _NumRecord = 4;
+        private const int _NumSeason = 5;
+
         private const string _TextSongName = "TextSongName";
         private const string _TextSongMode = "TextSongMode";
-        private string[] _TextNumber;
-        private string[] _TextName;
-        private string[] _TextScore;
-        private string[] _TextDate;
+        
+        // Quadrant 1: Current Performance & Song Record
+        private const string _TextCurrentTitle = "TextCurrentTitle";
+        private string[] _TextCurrentName;
+        private string[] _TextCurrentScore;
+        private string[] _TextCurrentRecord;
         private string[] _ParticleEffectNew;
 
+        // Quadrant 2: Seasonal Leaderboard
+        private const string _TextSeasonTitle = "TextSeasonTitle";
+        private const string _TextSeasonSubTitle = "TextSeasonSubTitle";
+        private string[] _TextSeasonRank;
+        private string[] _TextSeasonScore;
+        private string[] _TextSeasonName;
+        private string[] _TextSeasonDiff;
+        private string[] _TextSeasonDate;
+
+        // Quadrant 3: Song Lore
+        private const string _TextLoreTitle = "TextLoreTitle";
+        private const string _TextLoreStat1 = "TextLoreStat1";
+        private const string _TextLoreStat2 = "TextLoreStat2";
+        private const string _TextLoreStat3 = "TextLoreStat3";
+        private const string _TextLoreStat4 = "TextLoreStat4";
+
+        // Quadrant 4: Club Highlight
+        private const string _TextHighlightTitle = "TextHighlightTitle";
+        private const string _TextHighlightBody = "TextHighlightBody";
+
         private List<SDBScoreEntry>[] _Scores;
+        private List<int>[] _AvailableYears;
+        private int _SeasonYear = DateTime.Now.Year;
         private List<int> _NewEntryIDs;
         private int _Round;
-        private int _Pos;
         private bool _IsDuet;
         private bool _FromScreenSong = false;
-
-        public override EMusicType CurrentMusicType
-        {
-            get { return EMusicType.BackgroundPreview; }
-        }
-
         private int _HighscoreStream = -1;
         private bool _HasPlayedHighscoreSound = false;
         
@@ -64,52 +84,67 @@ namespace Vocaluxe.Screens
         {
             int streamId = CSound.PlaySound(sound, false);
             CSound.SetStreamVolume(streamId, volume);
-
             return streamId;
+        }
+
+        public override EMusicType CurrentMusicType
+        {
+            get { return EMusicType.BackgroundPreview; }
         }
 
         public override void Init()
         {
             base.Init();
 
-            var texts = new List<string> {_TextSongName, _TextSongMode};
-
-            _TextNumber = new string[_NumEntrys];
-            for (int i = 0; i < _NumEntrys; i++)
+            var texts = new List<string>
             {
-                _TextNumber[i] = "TextNumber" + (i + 1);
-                texts.Add(_TextNumber[i]);
-            }
+                _TextSongName, _TextSongMode,
+                _TextCurrentTitle,
+                _TextSeasonTitle,
+                _TextLoreTitle, _TextLoreStat1, _TextLoreStat2, _TextLoreStat3, _TextLoreStat4,
+                _TextHighlightTitle, _TextHighlightBody
+            };
 
-            _TextName = new string[_NumEntrys];
-            for (int i = 0; i < _NumEntrys; i++)
+            // Init Current Performance arrays
+            _TextCurrentName = new string[_NumCurrent];
+            _TextCurrentScore = new string[_NumCurrent];
+            _TextCurrentRecord = new string[_NumCurrent];
+            _ParticleEffectNew = new string[_NumCurrent];
+            for (int i = 0; i < _NumCurrent; i++)
             {
-                _TextName[i] = "TextName" + (i + 1);
-                texts.Add(_TextName[i]);
-            }
-
-            _TextScore = new string[_NumEntrys];
-            for (int i = 0; i < _NumEntrys; i++)
-            {
-                _TextScore[i] = "TextScore" + (i + 1);
-                texts.Add(_TextScore[i]);
-            }
-
-            _TextDate = new string[_NumEntrys];
-            for (int i = 0; i < _NumEntrys; i++)
-            {
-                _TextDate[i] = "TextDate" + (i + 1);
-                texts.Add(_TextDate[i]);
-            }
-
-            _ParticleEffectNew = new string[_NumEntrys];
-            for (int i = 0; i < _NumEntrys; i++)
+                _TextCurrentName[i] = "TextCurrentName" + (i + 1);
+                _TextCurrentScore[i] = "TextCurrentScore" + (i + 1);
+                _TextCurrentRecord[i] = "TextCurrentRecord" + (i + 1);
                 _ParticleEffectNew[i] = "ParticleEffectNew" + (i + 1);
+                texts.Add(_TextCurrentName[i]);
+                texts.Add(_TextCurrentScore[i]);
+                texts.Add(_TextCurrentRecord[i]);
+            }
 
-            _ThemeStatics = new string[] { "StaticTop1Bar", "StaticTop2Bar", "StaticTop3Bar" };
+            // Init Season arrays
+            _TextSeasonRank = new string[_NumSeason];
+            _TextSeasonScore = new string[_NumSeason];
+            _TextSeasonName = new string[_NumSeason];
+            _TextSeasonDiff = new string[_NumSeason];
+            _TextSeasonDate = new string[_NumSeason];
+            for (int i = 0; i < _NumSeason; i++)
+            {
+                _TextSeasonRank[i] = "TextSeasonRank" + (i + 1);
+                _TextSeasonScore[i] = "TextSeasonScore" + (i + 1);
+                _TextSeasonName[i] = "TextSeasonName" + (i + 1);
+                _TextSeasonDiff[i] = "TextSeasonDiff" + (i + 1);
+                _TextSeasonDate[i] = "TextSeasonDate" + (i + 1);
+                texts.Add(_TextSeasonRank[i]);
+                texts.Add(_TextSeasonScore[i]);
+                texts.Add(_TextSeasonName[i]);
+                texts.Add(_TextSeasonDiff[i]);
+                texts.Add(_TextSeasonDate[i]);
+            }
+            texts.Add(_TextSeasonSubTitle);
+
             _ThemeTexts = texts.ToArray();
             _ThemeParticleEffects = _ParticleEffectNew;
-
+            _ThemeStatics = new string[] { "StaticMenuBar", "StaticCurrentBg", "StaticRecordBg", "StaticSeasonBg", "StaticLoreBg", "StaticHighlightBg" };
             _NewEntryIDs = new List<int>();
         }
 
@@ -125,100 +160,186 @@ namespace Vocaluxe.Screens
                     case Keys.Enter:
                         _LeaveScreen();
                         break;
-
-                    case Keys.Down:
-                        if (!_FromScreenSong)
-                            _ChangePos(1);
-                        break;
-
-                    case Keys.Up:
-                        if (!_FromScreenSong)
-                            _ChangePos(-1);
-                        break;
-
                     case Keys.Left:
                         _ChangeRound(-1);
                         break;
-
                     case Keys.Right:
                         _ChangeRound(1);
                         break;
+                    case Keys.Up:
+                        _ChangeSeasonYear(1);
+                        break;
+                    case Keys.Down:
+                        _ChangeSeasonYear(-1);
+                        break;
                 }
             }
-
             return true;
         }
 
         public override bool HandleMouse(SMouseEvent mouseEvent)
         {
-            if (mouseEvent.LB && _IsMouseOverCurSelection(mouseEvent)) {}
-
             if (mouseEvent.LB)
                 _LeaveScreen();
-
             if (mouseEvent.RB)
                 _LeaveScreen();
-
-            if (mouseEvent.MB)
-            {
-                int lastRound = _Round;
-                _ChangeRound(1);
-                if (lastRound == _Round)
-                {
-                    _Round = 0;
-                    _UpdateRound();
-                }
-            }
-
-            _ChangePos(mouseEvent.Wheel);
+            if (mouseEvent.Wheel != 0)
+                _ChangeSeasonYear(mouseEvent.Wheel);
             return true;
+        }
+
+        private void _SetText(string key, string text, bool visible = true)
+        {
+            if (key != null && _Texts.ContainsKey(key))
+            {
+                _Texts[key].Visible = visible;
+                if (visible && text != null)
+                    _Texts[key].Text = text;
+            }
         }
 
         public override bool UpdateGame()
         {
-            int numScores = _Scores[_Round].Count;
-            _Statics["StaticTop1Bar"].Visible = (numScores >= 1);
-            _Statics["StaticTop2Bar"].Visible = (numScores >= 2);
-            _Statics["StaticTop3Bar"].Visible = (numScores >= 3);
+            if (_Round >= _Scores.Length || _Scores[_Round] == null)
+                return true;
+
+            _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE"));
             
-            for (int p = 0; p < _NumEntrys; p++)
+            // For now hardcode season format, later use configuration
+            _SetText(_TextSeasonTitle, _SeasonYear + "-" + (_SeasonYear + 1) + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_LEADERBOARD"));
+            _SetText(_TextSeasonSubTitle, "(08/" + _SeasonYear + " - 07/" + (_SeasonYear + 1) + ")");
+            _SetText(_TextLoreTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_SONG_LORE"));
+            _SetText(_TextHighlightTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT"));
+
+            _UpdateCurrentPerformance();
+            _UpdateSeasonLeaderboard();
+            _UpdateSongLore();
+            _UpdateClubHighlight();
+
+            return true;
+        }
+
+        private void _UpdateCurrentPerformance()
+        {
+            CPoints points = CGame.GetPoints();
+            if (points != null && !_FromScreenSong && CScreenSong.GetAudioMode() != EAudioMode.TR_AUDIOMODE_KARAOKE)
             {
-                if (_Pos + p < _Scores[_Round].Count)
+                SPlayer[] players = points.GetPlayer(_Round, CGame.NumPlayers);
+                for (int p = 0; p < _NumCurrent; p++)
                 {
-                    _Texts[_TextNumber[p]].Visible = true;
-                    _Texts[_TextName[p]].Visible = true;
-                    _Texts[_TextScore[p]].Visible = true;
-                    _Texts[_TextDate[p]].Visible = true;
-
-                    _Texts[_TextNumber[p]].Text = (_Pos + p + 1).ToString();
-
-                    string name = _Scores[_Round][_Pos + p].Name;
-                    name += " [" + CLanguage.Translate(Enum.GetName(typeof(EGameDifficulty), _Scores[_Round][_Pos + p].Difficulty)) + "]";
-                    if (_IsDuet)
-                        name += " (P" + (_Scores[_Round][_Pos + p].VoiceNr + 1) + ")";
-                    _Texts[_TextName[p]].Text = name;
-
-                    _Texts[_TextScore[p]].Text = _Scores[_Round][_Pos + p].Score.ToString("D");
-                    _Texts[_TextDate[p]].Text = _Scores[_Round][_Pos + p].Date;
-
-                    _ParticleEffects[_ParticleEffectNew[p]].Visible = _IsNewEntry(_Scores[_Round][_Pos + p].ID);
-
-                    if (_ParticleEffects[_ParticleEffectNew[p]].Visible && !_HasPlayedHighscoreSound)
+                    if (p < players.Length)
                     {
-                         _HighscoreStream = CScreenHighscore.PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
-                         _HasPlayedHighscoreSound = true;
+                        var player = players[p];
+                        string name = CProfiles.GetPlayerName(player.ProfileID);
+                        if (_IsDuet) name += " (P" + (player.VoiceNr + 1) + ")";
+                        
+                        _SetText(_TextCurrentName[p], name);
+                        _SetText(_TextCurrentScore[p], player.Points.ToString("0"));
+
+                        bool isNewRecord = false; // We can improve this logic in phase 2/3
+                        _SetText(_TextCurrentRecord[p], isNewRecord ? CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") : "");
+
+                        if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
+                        {
+                            _ParticleEffects[_ParticleEffectNew[p]].Visible = isNewRecord;
+                            if (isNewRecord && !_HasPlayedHighscoreSound)
+                            {
+                                _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
+                                _HasPlayedHighscoreSound = true;
+                            }
+                        }
                     }
-                  }
-                else
-                {
-                    _Texts[_TextNumber[p]].Visible = false;
-                    _Texts[_TextName[p]].Visible = false;
-                    _Texts[_TextScore[p]].Visible = false;
-                    _Texts[_TextDate[p]].Visible = false;
-                    _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
+                    else
+                    {
+                        _SetText(_TextCurrentName[p], null, false);
+                        _SetText(_TextCurrentScore[p], null, false);
+                        _SetText(_TextCurrentRecord[p], null, false);
+                        if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
+                            _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
+                    }
                 }
             }
-            return true;
+            else
+            {
+                for (int p = 0; p < _NumCurrent; p++)
+                {
+                    _SetText(_TextCurrentName[p], null, false);
+                    _SetText(_TextCurrentScore[p], null, false);
+                    _SetText(_TextCurrentRecord[p], null, false);
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
+                        _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
+                }
+            }
+        }
+
+        private string _GetShortDifficulty(EGameDifficulty diff)
+        {
+            switch (diff)
+            {
+                case EGameDifficulty.TR_CONFIG_EASY:
+                    return "[Easy]";
+                case EGameDifficulty.TR_CONFIG_NORMAL:
+                    return "[Norm.]";
+                case EGameDifficulty.TR_CONFIG_HARD:
+                    return "[Hard]";
+                default:
+                    return "[Norm.]";
+            }
+        }
+
+        private void _UpdateSeasonLeaderboard()
+        {
+            var seasonScores = _Scores[_Round]
+                .Where(s => s.Year == _SeasonYear || s.Year == _SeasonYear + 1)
+                .GroupBy(s => s.Name)
+                .Select(g => g.First())
+                .OrderByDescending(s => s.Score)
+                .ToList();
+
+            for (int p = 0; p < _NumSeason; p++)
+            {
+                if (p < seasonScores.Count)
+                {
+                    var entry = seasonScores[p];
+                    _SetText(_TextSeasonRank[p], "#" + (p + 1));
+                    _SetText(_TextSeasonScore[p], entry.Score.ToString("D"));
+                    _SetText(_TextSeasonName[p], entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : ""));
+                    _SetText(_TextSeasonDiff[p], _GetShortDifficulty(entry.Difficulty));
+                    _SetText(_TextSeasonDate[p], entry.Date);
+                }
+                else
+                {
+                    _SetText(_TextSeasonRank[p], null, false);
+                    _SetText(_TextSeasonScore[p], null, false);
+                    _SetText(_TextSeasonName[p], null, false);
+                    _SetText(_TextSeasonDiff[p], null, false);
+                    _SetText(_TextSeasonDate[p], null, false);
+                }
+            }
+        }
+
+        private void _UpdateSongLore()
+        {
+            int playCount = _Scores[_Round].Count;
+            _SetText(_TextLoreStat1, "Sung " + playCount + " times at the club.");
+            
+            var allTimeBest = _Scores[_Round].OrderByDescending(s => s.Score).FirstOrDefault();
+            if (allTimeBest.Name != null)
+            {
+                _SetText(_TextLoreStat2, "The all-time record is " + allTimeBest.Score + " by " + allTimeBest.Name + ".");
+            }
+            else
+            {
+                _SetText(_TextLoreStat2, null, false);
+            }
+            
+            _SetText(_TextLoreStat3, null, false);
+            _SetText(_TextLoreStat4, null, false);
+        }
+
+        private void _UpdateClubHighlight()
+        {
+            _SetText(_TextHighlightBody, _NewEntryIDs.Count + " SONG RECORDS broken tonight!");
         }
 
         public override void OnShow()
@@ -226,7 +347,10 @@ namespace Vocaluxe.Screens
             base.OnShow();
             _HasPlayedHighscoreSound = false;
             _Round = 0;
-            _Pos = 0;
+            
+            int currentMonth = DateTime.Now.Month;
+            _SeasonYear = (currentMonth >= 8) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            
             _NewEntryIDs.Clear();
             _AddScoresToDB();
             _LoadScores();
@@ -243,28 +367,25 @@ namespace Vocaluxe.Screens
         private void _AddScoresToDB()
         {
             CPoints points = CGame.GetPoints();
-            if (points == null)
-                return;
-
-            // No points in Karaoke Mode
-            if (CScreenSong.GetAudioMode() == EAudioMode.TR_AUDIOMODE_KARAOKE)
-                return;
+            if (points == null) return;
+            if (CScreenSong.GetAudioMode() == EAudioMode.TR_AUDIOMODE_KARAOKE) return;
 
             for (int round = 0; round < points.NumRounds; round++)
             {
                 SPlayer[] players = points.GetPlayer(round, CGame.NumPlayers);
-
                 for (int p = 0; p < players.Length; p++)
                 {
                     if (players[p].Points > CSettings.MinScoreForDB && players[p].SongFinished && !CProfiles.IsGuestProfile(players[p].ProfileID))
-                        _NewEntryIDs.Add(CDataBase.AddScore(players[p]));
+                    {
+                        int id = CDataBase.AddScore(players[p]);
+                        _NewEntryIDs.Add(id);
+                    }
                 }
             }
         }
 
         private void _LoadScores()
         {
-            _Pos = 0;
             int rounds = CGame.NumRounds;
 
             if (rounds == 0)
@@ -272,13 +393,15 @@ namespace Vocaluxe.Screens
                 _FromScreenSong = true;
                 _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
                 _Scores = new List<SDBScoreEntry>[4];
+                _AvailableYears = new List<int>[4];
                 int songID = CScreenSong.getSelectedSongID();
-                EHighscoreStyle style = CBase.Config.GetHighscoreStyle();
                 bool foundHighscoreEntries = false;
 
                 for (int gameModeNum = 0; gameModeNum < 4; gameModeNum++)
                 {
-                    _Scores[gameModeNum] = CDataBase.LoadScore(songID, (EGameMode)gameModeNum, style);
+                    _Scores[gameModeNum] = CDataBase.LoadScore(songID, (EGameMode)gameModeNum, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
+                    _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => s.Year).Distinct().OrderByDescending(y => y).ToList();
+
                     if (!foundHighscoreEntries && _Scores[gameModeNum].Count > 0)
                     {
                         _Round = gameModeNum;
@@ -290,12 +413,13 @@ namespace Vocaluxe.Screens
             {
                 _FromScreenSong = false;
                 _Scores = new List<SDBScoreEntry>[rounds];
+                _AvailableYears = new List<int>[rounds];
                 for (int round = 0; round < rounds; round++)
                 {
                     int songID = CGame.GetSong(round).ID;
                     EGameMode gameMode = CGame.GetGameMode(round);
-                    EHighscoreStyle style = CBase.Config.GetHighscoreStyle();
-                    _Scores[round] = CDataBase.LoadScore(songID, gameMode, style);
+                    _Scores[round] = CDataBase.LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
+                    _AvailableYears[round] = _Scores[round].Select(s => s.Year).Distinct().OrderByDescending(y => y).ToList();
                 }
             }
         }
@@ -306,13 +430,10 @@ namespace Vocaluxe.Screens
             CPoints points = CGame.GetPoints();
             
             CSong song;
-            if (_FromScreenSong)
-                song = CSongs.GetSong(CScreenSong.getSelectedSongID());
-            else
-                song = CGame.GetSong(_Round);
+            if (_FromScreenSong) song = CSongs.GetSong(CScreenSong.getSelectedSongID());
+            else song = CGame.GetSong(_Round);
 
-            if (song == null)
-                return;
+            if (song == null) return;
 
             _Texts[_TextSongName].Text = song.Artist + " - " + song.Title;
             if (points != null && !_FromScreenSong && points.NumRounds > 1)
@@ -323,36 +444,41 @@ namespace Vocaluxe.Screens
                 case EGameMode.TR_GAMEMODE_NORMAL:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_NORMAL";
                     break;
-
                 case EGameMode.TR_GAMEMODE_MEDLEY:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_MEDLEY";
                     break;
-
                 case EGameMode.TR_GAMEMODE_DUET:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_DUET";
                     _IsDuet = true;
                     break;
-
                 case EGameMode.TR_GAMEMODE_SHORTSONG:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_SHORTSONG";
                     break;
-
                 default:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_NORMAL";
                     break;
             }
-
-            _Pos = 0;
         }
 
-        private void _ChangePos(int num)
+        private void _ChangeSeasonYear(int dir)
         {
-            if (_Scores[_Round].Count == 0 || _Scores[_Round].Count <= _NumEntrys)
-                _Pos = 0;
-            else
+            if (_AvailableYears == null || _Round >= _AvailableYears.Length || _AvailableYears[_Round] == null) return;
+
+            var years = new List<int>(_AvailableYears[_Round]);
+            int currentYear = (DateTime.Now.Month >= 8) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            if (!years.Contains(currentYear)) years.Add(currentYear);
+            years = years.Distinct().OrderByDescending(y => y).ToList();
+
+            if (years.Count <= 1) return;
+
+            int currentIndex = years.IndexOf(_SeasonYear);
+            if (currentIndex == -1) currentIndex = 0;
+
+            int newIndex = (currentIndex - dir).Clamp(0, years.Count - 1);
+            if (newIndex != currentIndex)
             {
-                _Pos += num;
-                _Pos = _Pos.Clamp(0, _Scores[_Round].Count - 1, true);
+                _SeasonYear = years[newIndex];
+                UpdateGame();
             }
         }
 
@@ -360,18 +486,18 @@ namespace Vocaluxe.Screens
         {
             if (_FromScreenSong)
             {
-                if (_Round == (int)EGameMode.TR_GAMEMODE_SHORTSONG)
-                    _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
-                else
-                    ++_Round;
+                if (_Round == (int)EGameMode.TR_GAMEMODE_SHORTSONG) _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
+                else ++_Round;
             }
             else
             {
                 CPoints points = CGame.GetPoints();
-                _Round += num;
-                _Round = _Round.Clamp(0, points.NumRounds - 1);
+                if (points != null)
+                {
+                    _Round += num;
+                    _Round = _Round.Clamp(0, points.NumRounds - 1);
+                }
             }
-
             _UpdateRound();
         }
 
@@ -382,7 +508,6 @@ namespace Vocaluxe.Screens
                  CSound.Close(_HighscoreStream);
                 _HighscoreStream = -1;
             }
-            
             CParty.LeavingHighscore();
         }
     }
