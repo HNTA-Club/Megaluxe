@@ -207,7 +207,7 @@ namespace Vocaluxe.Screens
             
             // For now hardcode season format, later use configuration
             _SetText(_TextSeasonTitle, _SeasonYear + "-" + (_SeasonYear + 1) + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_LEADERBOARD"));
-            _SetText(_TextSeasonSubTitle, "(08/" + _SeasonYear + " - 07/" + (_SeasonYear + 1) + ")");
+            _SetText(_TextSeasonSubTitle, "(09/" + _SeasonYear + " - 08/" + (_SeasonYear + 1) + ")");
             _SetText(_TextLoreTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_SONG_LORE"));
             _SetText(_TextHighlightTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT"));
 
@@ -287,10 +287,16 @@ namespace Vocaluxe.Screens
             }
         }
 
+        private static int GetSeasonYear(SDBScoreEntry entry)
+        {
+            DateTime date = new DateTime(entry.DateTicks);
+            return (date.Month >= 9) ? date.Year : date.Year - 1;
+        }
+
         private void _UpdateSeasonLeaderboard()
         {
             var seasonScores = _Scores[_Round]
-                .Where(s => s.Year == _SeasonYear || s.Year == _SeasonYear + 1)
+                .Where(s => GetSeasonYear(s) == _SeasonYear)
                 .GroupBy(s => s.Name)
                 .Select(g => g.First())
                 .OrderByDescending(s => s.Score)
@@ -376,7 +382,7 @@ namespace Vocaluxe.Screens
             _Round = 0;
             
             int currentMonth = DateTime.Now.Month;
-            _SeasonYear = (currentMonth >= 8) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            _SeasonYear = (currentMonth >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
             
             _NewEntryIDs.Clear();
             _AddScoresToDB();
@@ -427,7 +433,7 @@ namespace Vocaluxe.Screens
                 for (int gameModeNum = 0; gameModeNum < 4; gameModeNum++)
                 {
                     _Scores[gameModeNum] = CDataBase.LoadScore(songID, (EGameMode)gameModeNum, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
-                    _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => s.Year).Distinct().OrderByDescending(y => y).ToList();
+                    _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
 
                     if (!foundHighscoreEntries && _Scores[gameModeNum].Count > 0)
                     {
@@ -446,7 +452,7 @@ namespace Vocaluxe.Screens
                     int songID = CGame.GetSong(round).ID;
                     EGameMode gameMode = CGame.GetGameMode(round);
                     _Scores[round] = CDataBase.LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
-                    _AvailableYears[round] = _Scores[round].Select(s => s.Year).Distinct().OrderByDescending(y => y).ToList();
+                    _AvailableYears[round] = _Scores[round].Select(s => GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
                 }
             }
         }
@@ -492,7 +498,7 @@ namespace Vocaluxe.Screens
             if (_AvailableYears == null || _Round >= _AvailableYears.Length || _AvailableYears[_Round] == null) return;
 
             var years = new List<int>(_AvailableYears[_Round]);
-            int currentYear = (DateTime.Now.Month >= 8) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            int currentYear = (DateTime.Now.Month >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
             if (!years.Contains(currentYear)) years.Add(currentYear);
             years = years.Distinct().OrderByDescending(y => y).ToList();
 

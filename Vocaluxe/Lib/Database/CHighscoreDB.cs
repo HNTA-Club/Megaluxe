@@ -382,16 +382,23 @@ namespace Vocaluxe.Lib.Database
                 .ToList();
         }
 
-        public List<SDBScoreEntry> LoadSeasonScores(int songID, EGameMode gameMode, int year, int limit = 5)
+        public List<SDBScoreEntry> LoadSeasonScores(int songID, EGameMode gameMode, int seasonYear, int limit = 5)
         {
             var allScores = LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
             if (allScores == null || allScores.Count == 0)
                 return new List<SDBScoreEntry>();
 
+            DateTime seasonStart = new DateTime(seasonYear, 9, 1);
+            DateTime seasonEnd = new DateTime(seasonYear + 1, 8, 31, 23, 59, 59);
+
             return allScores
-                .Where(s => s.Year == year)
+                .Where(s => {
+                    DateTime date = new DateTime(s.DateTicks);
+                    return date >= seasonStart && date <= seasonEnd;
+                })
+                .GroupBy(s => s.Name)
+                .Select(g => g.First())
                 .OrderByDescending(s => s.Score)
-                .ThenBy(s => s.Date)
                 .Take(limit)
                 .ToList();
         }
