@@ -337,21 +337,23 @@ namespace Vocaluxe.Screens
 
             if (uniquePerformances == 0)
             {
-                _SetText(_TextLoreStat1, "Never sung at the club yet.");
+                _SetText(_TextLoreStat1, CLanguage.Translate("TR_SCREENHIGHSCORE_NEVER_SUNG"));
             }
             else if (uniquePerformances == totalScores)
             {
-                _SetText(_TextLoreStat1, "Sung " + uniquePerformances + (uniquePerformances == 1 ? " time" : " times") + " at the club.");
+                string key = (uniquePerformances == 1) ? "TR_SCREENHIGHSCORE_SUNG_COUNT_SINGLE" : "TR_SCREENHIGHSCORE_SUNG_COUNT_PLURAL";
+                _SetText(_TextLoreStat1, String.Format(CLanguage.Translate(key), uniquePerformances));
             }
             else
             {
-                _SetText(_TextLoreStat1, "Performed " + uniquePerformances + (uniquePerformances == 1 ? " time" : " times") + " at the club (" + totalScores + " total individual scores).");
+                string key = (uniquePerformances == 1) ? "TR_SCREENHIGHSCORE_PERFORMED_COUNT_SINGLE" : "TR_SCREENHIGHSCORE_PERFORMED_COUNT_PLURAL";
+                _SetText(_TextLoreStat1, String.Format(CLanguage.Translate(key), uniquePerformances, totalScores));
             }
 
             var allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
             if (allTimeBest.Name != null)
             {
-                _SetText(_TextLoreStat2, "The all-time record is " + allTimeBest.Score + " by " + allTimeBest.Name + ".");
+                _SetText(_TextLoreStat2, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_ALLTIME_RECORD"), allTimeBest.Score, allTimeBest.Name));
             }
             else
             {
@@ -364,7 +366,7 @@ namespace Vocaluxe.Screens
 
         private void _UpdateClubHighlight()
         {
-            _SetText(_TextHighlightBody, _NewEntryIDs.Count + " SONG RECORDS broken tonight!");
+            _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORDS_BROKEN"), _NewEntryIDs.Count));
         }
 
         public override void OnShow()
