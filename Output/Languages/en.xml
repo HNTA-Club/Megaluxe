@@ -206,6 +206,13 @@
   <string name="TR_SCREENHIGHSCORE_NEW_SONG_RECORD">NEW RECORD</string>
   <string name="TR_SCREENHIGHSCORE_SONG_LORE">SONG LORE</string>
   <string name="TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT">CLUB HIGHLIGHTS</string>
+  <string name="TR_SCREENHIGHSCORE_SUNG_COUNT_SINGLE">Sung 1 time at the club</string>
+  <string name="TR_SCREENHIGHSCORE_SUNG_COUNT_PLURAL">Sung {0} times at the club</string>
+  <string name="TR_SCREENHIGHSCORE_PERFORMED_COUNT_SINGLE">Performed 1 time at the club ({0} total individual scores)</string>
+  <string name="TR_SCREENHIGHSCORE_PERFORMED_COUNT_PLURAL">Performed {0} times at the club ({1} total individual scores)</string>
+  <string name="TR_SCREENHIGHSCORE_NEVER_SUNG">Never sung at the club yet</string>
+  <string name="TR_SCREENHIGHSCORE_ALLTIME_RECORD">The all-time record is {0} by {1}</string>
+  <string name="TR_SCREENHIGHSCORE_RECORDS_BROKEN">{0} SONG RECORDS broken tonight!</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiles</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Player name</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Game difficulty</string>

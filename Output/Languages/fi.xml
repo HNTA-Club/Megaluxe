@@ -206,6 +206,13 @@
   <string name="TR_SCREENHIGHSCORE_NEW_SONG_RECORD">UUSI ENNÄTYS</string>
   <string name="TR_SCREENHIGHSCORE_SONG_LORE">BIISIN TARINA</string>
   <string name="TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT">KLUBIN KOHOKOHDAT</string>
+  <string name="TR_SCREENHIGHSCORE_SUNG_COUNT_SINGLE">Esitetty 1 kerran klubilla</string>
+  <string name="TR_SCREENHIGHSCORE_SUNG_COUNT_PLURAL">Esitetty {0} kertaa klubilla</string>
+  <string name="TR_SCREENHIGHSCORE_PERFORMED_COUNT_SINGLE">Esitetty 1 kerran klubilla (yhteensä {0} laulusuoritusta)</string>
+  <string name="TR_SCREENHIGHSCORE_PERFORMED_COUNT_PLURAL">Esitetty {0} kertaa klubilla (yhteensä {1} laulusuoritusta)</string>
+  <string name="TR_SCREENHIGHSCORE_NEVER_SUNG">Ei vielä kertaakaan esitetty klubilla</string>
+  <string name="TR_SCREENHIGHSCORE_ALLTIME_RECORD">Kaikkien aikojen ennätys on {0} ({1})</string>
+  <string name="TR_SCREENHIGHSCORE_RECORDS_BROKEN">Tänään rikottu {0} biisiesityksen ennätystä!</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiilit</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Pelaajan nimi</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Pelin vaikeustaso</string>
