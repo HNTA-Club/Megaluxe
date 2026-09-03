@@ -893,13 +893,13 @@
   <Equalizers />
   <Playlists />
   <ParticleEffects>
-    <ParticleEffect Name="ParticleEffectNew1">
+    <ParticleEffect Name="ParticleEffectCurrent1">
       <Skin>Star</Skin>
       <Rect>
         <X>110</X>
         <Y>205</Y>
-        <W>700</W>
-        <H>50</H>
+        <W>740</W>
+        <H>48</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -907,13 +907,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectNew2">
+    <ParticleEffect Name="ParticleEffectCurrent2">
       <Skin>Star</Skin>
       <Rect>
         <X>110</X>
         <Y>257</Y>
-        <W>700</W>
-        <H>50</H>
+        <W>740</W>
+        <H>48</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -921,13 +921,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectNew3">
+    <ParticleEffect Name="ParticleEffectCurrent3">
       <Skin>Star</Skin>
       <Rect>
         <X>110</X>
         <Y>309</Y>
-        <W>700</W>
-        <H>50</H>
+        <W>740</W>
+        <H>48</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -935,13 +935,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectNew4">
+    <ParticleEffect Name="ParticleEffectCurrent4">
       <Skin>Star</Skin>
       <Rect>
         <X>110</X>
         <Y>361</Y>
-        <W>700</W>
-        <H>50</H>
+        <W>740</W>
+        <H>48</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -949,12 +949,40 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectNew5">
+    <ParticleEffect Name="ParticleEffectCurrent5">
       <Skin>Star</Skin>
       <Rect>
         <X>110</X>
         <Y>413</Y>
-        <W>700</W>
+        <W>740</W>
+        <H>48</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectCurrent6">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>110</X>
+        <Y>465</Y>
+        <W>740</W>
+        <H>48</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectSeason1">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>1020</X>
+        <Y>220</Y>
+        <W>830</W>
         <H>50</H>
         <Z>-1</Z>
       </Rect>
@@ -963,12 +991,54 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectNew6">
+    <ParticleEffect Name="ParticleEffectSeason2">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>465</Y>
-        <W>700</W>
+        <X>1020</X>
+        <Y>285</Y>
+        <W>830</W>
+        <H>50</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectSeason3">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>1020</X>
+        <Y>350</Y>
+        <W>830</W>
+        <H>50</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectSeason4">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>1020</X>
+        <Y>415</Y>
+        <W>830</W>
+        <H>50</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectSeason5">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>1020</X>
+        <Y>480</Y>
+        <W>830</W>
         <H>50</H>
         <Z>-1</Z>
       </Rect>
