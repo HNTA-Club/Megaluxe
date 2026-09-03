@@ -97,9 +97,15 @@ texts.append(create_text('TextHighlightTitle', 1020, 640, 38, 'Left', color='Sel
 texts.append(create_text('TextHighlightBody', 1425, 750, 44, 'Center', max_w='800'))
 
 particles = []
+# Particle Effects Top-Left (Current Performance 1..6)
 for i in range(1, 7):
     y = 210 + (i-1)*52
-    particles.append(create_particle(f'ParticleEffectNew{i}', 110, y-5, 700, 50))
+    particles.append(create_particle(f'ParticleEffectCurrent{i}', 110, y-5, 740, 48))
+
+# Particle Effects Top-Right (Season Leaderboard 1..5)
+for i in range(1, 6):
+    y = 225 + (i-1)*65
+    particles.append(create_particle(f'ParticleEffectSeason{i}', 1020, y-5, 830, 50))
 
 xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">

@@ -48,7 +48,7 @@ namespace Vocaluxe.Screens
         private string[] _TextCurrentName;
         private string[] _TextCurrentScore;
         private string[] _TextCurrentRecord;
-        private string[] _ParticleEffectNew;
+        private string[] _ParticleEffectCurrent;
 
         // Quadrant 2: Seasonal Leaderboard
         private const string _TextSeasonTitle = "TextSeasonTitle";
@@ -58,6 +58,7 @@ namespace Vocaluxe.Screens
         private string[] _TextSeasonName;
         private string[] _TextSeasonDiff;
         private string[] _TextSeasonDate;
+        private string[] _ParticleEffectSeason;
 
         // Quadrant 3: Song Lore
         private const string _TextLoreTitle = "TextLoreTitle";
@@ -113,13 +114,13 @@ namespace Vocaluxe.Screens
             _TextCurrentName = new string[_NumCurrent];
             _TextCurrentScore = new string[_NumCurrent];
             _TextCurrentRecord = new string[_NumCurrent];
-            _ParticleEffectNew = new string[_NumCurrent];
+            _ParticleEffectCurrent = new string[_NumCurrent];
             for (int i = 0; i < _NumCurrent; i++)
             {
                 _TextCurrentName[i] = "TextCurrentName" + (i + 1);
                 _TextCurrentScore[i] = "TextCurrentScore" + (i + 1);
                 _TextCurrentRecord[i] = "TextCurrentRecord" + (i + 1);
-                _ParticleEffectNew[i] = "ParticleEffectNew" + (i + 1);
+                _ParticleEffectCurrent[i] = "ParticleEffectCurrent" + (i + 1);
                 texts.Add(_TextCurrentName[i]);
                 texts.Add(_TextCurrentScore[i]);
                 texts.Add(_TextCurrentRecord[i]);
@@ -131,6 +132,7 @@ namespace Vocaluxe.Screens
             _TextSeasonName = new string[_NumSeason];
             _TextSeasonDiff = new string[_NumSeason];
             _TextSeasonDate = new string[_NumSeason];
+            _ParticleEffectSeason = new string[_NumSeason];
             for (int i = 0; i < _NumSeason; i++)
             {
                 _TextSeasonRank[i] = "TextSeasonRank" + (i + 1);
@@ -138,6 +140,7 @@ namespace Vocaluxe.Screens
                 _TextSeasonName[i] = "TextSeasonName" + (i + 1);
                 _TextSeasonDiff[i] = "TextSeasonDiff" + (i + 1);
                 _TextSeasonDate[i] = "TextSeasonDate" + (i + 1);
+                _ParticleEffectSeason[i] = "ParticleEffectSeason" + (i + 1);
                 texts.Add(_TextSeasonRank[i]);
                 texts.Add(_TextSeasonScore[i]);
                 texts.Add(_TextSeasonName[i]);
@@ -146,8 +149,11 @@ namespace Vocaluxe.Screens
             }
             texts.Add(_TextSeasonSubTitle);
 
+            var particleList = new List<string>(_ParticleEffectCurrent);
+            particleList.AddRange(_ParticleEffectSeason);
+
             _ThemeTexts = texts.ToArray();
-            _ThemeParticleEffects = _ParticleEffectNew;
+            _ThemeParticleEffects = particleList.ToArray();
             _ThemeStatics = new string[] { "StaticMenuBar", "StaticCardCurrent", "StaticCardSeason", "StaticCardLore", "StaticCardHighlight" };
             _NewEntryIDs = new List<int>();
         }
@@ -244,24 +250,31 @@ namespace Vocaluxe.Screens
             {
                 _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE"));
                 SPlayer[] players = points.GetPlayer(_Round, CGame.NumPlayers);
+
+                var priorScores = _Scores[_Round].Where(s => !_IsNewEntry(s.ID)).ToList();
+
                 for (int p = 0; p < _NumCurrent; p++)
                 {
                     if (p < players.Length)
                     {
                         var player = players[p];
                         string name = CProfiles.GetPlayerName(player.ProfileID);
-                        if (_IsDuet) name += " (P" + (player.VoiceNr + 1) + ")";
+                        if (_IsDuet || CGame.NumPlayers > 1) name += " (P" + (player.VoiceNr + 1) + ")";
                         
                         _SetText(_TextCurrentName[p], name);
                         _SetText(_TextCurrentScore[p], player.Points.ToString("0"));
 
-                        bool isNewRecord = false;
-                        _SetText(_TextCurrentRecord[p], isNewRecord ? CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") : "");
+                        // Check if player's score is an all-time record for their mic/voice line
+                        var voiceScores = priorScores.Where(s => !_IsDuet || s.VoiceNr == player.VoiceNr).ToList();
+                        int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
+                        bool isAllTimeMicRecord = player.Points > prevVoiceRecord && player.Points > CSettings.MinScoreForDB;
 
-                        if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
+                        _SetText(_TextCurrentRecord[p], isAllTimeMicRecord ? CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") : "");
+
+                        if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
                         {
-                            _ParticleEffects[_ParticleEffectNew[p]].Visible = isNewRecord;
-                            if (isNewRecord && !_HasPlayedHighscoreSound)
+                            _ParticleEffects[_ParticleEffectCurrent[p]].Visible = isAllTimeMicRecord;
+                            if (isAllTimeMicRecord && !_HasPlayedHighscoreSound)
                             {
                                 _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
                                 _HasPlayedHighscoreSound = true;
@@ -273,8 +286,8 @@ namespace Vocaluxe.Screens
                         _SetText(_TextCurrentName[p], null, false);
                         _SetText(_TextCurrentScore[p], null, false);
                         _SetText(_TextCurrentRecord[p], null, false);
-                        if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
-                            _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
+                        if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
+                            _ParticleEffects[_ParticleEffectCurrent[p]].Visible = false;
                     }
                 }
             }
@@ -305,8 +318,8 @@ namespace Vocaluxe.Screens
                         _SetText(_TextCurrentScore[p], null, false);
                         _SetText(_TextCurrentRecord[p], null, false);
                     }
-                    if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
-                        _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
+                        _ParticleEffects[_ParticleEffectCurrent[p]].Visible = false;
                 }
             }
         }
@@ -351,6 +364,17 @@ namespace Vocaluxe.Screens
                     _SetText(_TextSeasonName[p], entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : ""));
                     _SetText(_TextSeasonDiff[p], _GetShortDifficulty(entry.Difficulty));
                     _SetText(_TextSeasonDate[p], entry.Date);
+
+                    bool isNewSeasonalEntry = _IsNewEntry(entry.ID);
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectSeason[p]))
+                    {
+                        _ParticleEffects[_ParticleEffectSeason[p]].Visible = isNewSeasonalEntry;
+                        if (isNewSeasonalEntry && !_HasPlayedHighscoreSound)
+                        {
+                            _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
+                            _HasPlayedHighscoreSound = true;
+                        }
+                    }
                 }
                 else
                 {
@@ -359,6 +383,8 @@ namespace Vocaluxe.Screens
                     _SetText(_TextSeasonName[p], null, false);
                     _SetText(_TextSeasonDiff[p], null, false);
                     _SetText(_TextSeasonDate[p], null, false);
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectSeason[p]))
+                        _ParticleEffects[_ParticleEffectSeason[p]].Visible = false;
                 }
             }
         }
