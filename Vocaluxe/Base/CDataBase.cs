@@ -92,6 +92,11 @@ namespace Vocaluxe.Base
                 _HighscoreDB.IncreaseSongCounter(dataBaseSongID);
         }
 
+        public static int GetTotalScoreCount()
+        {
+            return _HighscoreDB == null ? 0 : _HighscoreDB.GetTotalScoreCount();
+        }
+
         public static bool GetCover(string fileName, ref CTextureRef tex, int maxSize)
         {
             return _CoverDB != null && _CoverDB.GetCover(fileName, ref tex, maxSize);

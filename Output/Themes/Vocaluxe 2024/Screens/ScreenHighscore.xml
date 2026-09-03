@@ -25,6 +25,50 @@
         <Z>0</Z>
       </Rect>
     </Static>
+    <Static Name="StaticCardCurrent">
+      <Skin />
+      <Color Name="BackgroundColorAlpha" />
+      <Rect>
+        <X>60</X>
+        <Y>140</Y>
+        <W>870</W>
+        <H>450</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticCardSeason">
+      <Skin />
+      <Color Name="BackgroundColorAlpha" />
+      <Rect>
+        <X>990</X>
+        <Y>140</Y>
+        <W>870</W>
+        <H>450</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticCardLore">
+      <Skin />
+      <Color Name="BackgroundColorAlpha" />
+      <Rect>
+        <X>60</X>
+        <Y>620</Y>
+        <W>870</W>
+        <H>410</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
+    <Static Name="StaticCardHighlight">
+      <Skin />
+      <Color Name="BackgroundColorAlpha" />
+      <Rect>
+        <X>990</X>
+        <Y>620</Y>
+        <W>870</W>
+        <H>410</H>
+        <Z>0</Z>
+      </Rect>
+    </Static>
   </Statics>
   <Texts>
     <Text Name="TextTitle">
@@ -70,10 +114,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentTitle">
-      <X>120</X>
-      <Y>140</Y>
+      <X>90</X>
+      <Y>160</Y>
       <Z>-1</Z>
-      <H>45</H>
+      <H>38</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -84,11 +128,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentName1">
-      <X>150</X>
-      <Y>250</Y>
+      <X>110</X>
+      <Y>210</Y>
       <Z>-1</Z>
-      <H>75</H>
-      <MaxW>500</MaxW>
+      <H>48</H>
+      <MaxW>460</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -98,10 +142,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentScore1">
-      <X>850</X>
-      <Y>250</Y>
+      <X>780</X>
+      <Y>210</Y>
       <Z>-1</Z>
-      <H>75</H>
+      <H>48</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -112,10 +156,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentRecord1">
-      <X>870</X>
-      <Y>250</Y>
+      <X>800</X>
+      <Y>210</Y>
       <Z>-1</Z>
-      <H>40</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -126,11 +170,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentName2">
-      <X>150</X>
-      <Y>330</Y>
+      <X>110</X>
+      <Y>262</Y>
       <Z>-1</Z>
-      <H>75</H>
-      <MaxW>500</MaxW>
+      <H>48</H>
+      <MaxW>460</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -140,10 +184,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentScore2">
-      <X>850</X>
-      <Y>330</Y>
+      <X>780</X>
+      <Y>262</Y>
       <Z>-1</Z>
-      <H>75</H>
+      <H>48</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -154,10 +198,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentRecord2">
-      <X>870</X>
-      <Y>330</Y>
+      <X>800</X>
+      <Y>262</Y>
       <Z>-1</Z>
-      <H>40</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -168,11 +212,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentName3">
-      <X>150</X>
-      <Y>410</Y>
+      <X>110</X>
+      <Y>314</Y>
       <Z>-1</Z>
-      <H>75</H>
-      <MaxW>500</MaxW>
+      <H>48</H>
+      <MaxW>460</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -182,10 +226,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentScore3">
-      <X>850</X>
-      <Y>410</Y>
+      <X>780</X>
+      <Y>314</Y>
       <Z>-1</Z>
-      <H>75</H>
+      <H>48</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -196,10 +240,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentRecord3">
-      <X>870</X>
-      <Y>410</Y>
+      <X>800</X>
+      <Y>314</Y>
       <Z>-1</Z>
-      <H>40</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -210,11 +254,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentName4">
-      <X>150</X>
-      <Y>490</Y>
+      <X>110</X>
+      <Y>366</Y>
       <Z>-1</Z>
-      <H>75</H>
-      <MaxW>500</MaxW>
+      <H>48</H>
+      <MaxW>460</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -224,10 +268,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentScore4">
-      <X>850</X>
-      <Y>490</Y>
+      <X>780</X>
+      <Y>366</Y>
       <Z>-1</Z>
-      <H>75</H>
+      <H>48</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -238,10 +282,94 @@
       <Text></Text>
     </Text>
     <Text Name="TextCurrentRecord4">
-      <X>870</X>
-      <Y>490</Y>
+      <X>800</X>
+      <Y>366</Y>
       <Z>-1</Z>
-      <H>40</H>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="SelectedColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentName5">
+      <X>110</X>
+      <Y>418</Y>
+      <Z>-1</Z>
+      <H>48</H>
+      <MaxW>460</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentScore5">
+      <X>780</X>
+      <Y>418</Y>
+      <Z>-1</Z>
+      <H>48</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentRecord5">
+      <X>800</X>
+      <Y>418</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="SelectedColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentName6">
+      <X>110</X>
+      <Y>470</Y>
+      <Z>-1</Z>
+      <H>48</H>
+      <MaxW>460</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentScore6">
+      <X>780</X>
+      <Y>470</Y>
+      <Z>-1</Z>
+      <H>48</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextCurrentRecord6">
+      <X>800</X>
+      <Y>470</Y>
+      <Z>-1</Z>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -253,9 +381,9 @@
     </Text>
     <Text Name="TextSeasonTitle">
       <X>1020</X>
-      <Y>140</Y>
+      <Y>160</Y>
       <Z>-1</Z>
-      <H>40</H>
+      <H>38</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -266,14 +394,14 @@
       <Text></Text>
     </Text>
     <Text Name="TextSeasonSubTitle">
-      <X>1020</X>
-      <Y>185</Y>
+      <X>1830</X>
+      <Y>168</Y>
       <Z>-1</Z>
       <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
+      <Align>Right</Align>
       <ResizeAlign>Center</ResizeAlign>
       <Style>Bold</Style>
       <Font>Outline</Font>
@@ -283,7 +411,7 @@
       <X>1020</X>
       <Y>225</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -297,7 +425,7 @@
       <X>1180</X>
       <Y>225</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -311,8 +439,8 @@
       <X>1200</X>
       <Y>225</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>300</MaxW>
+      <H>36</H>
+      <MaxW>280</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -325,7 +453,7 @@
       <X>1520</X>
       <Y>225</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -339,7 +467,7 @@
       <X>1830</X>
       <Y>225</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -353,7 +481,7 @@
       <X>1020</X>
       <Y>290</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -367,7 +495,7 @@
       <X>1180</X>
       <Y>290</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -381,8 +509,8 @@
       <X>1200</X>
       <Y>290</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>300</MaxW>
+      <H>36</H>
+      <MaxW>280</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -395,7 +523,7 @@
       <X>1520</X>
       <Y>290</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -409,7 +537,7 @@
       <X>1830</X>
       <Y>290</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -423,7 +551,7 @@
       <X>1020</X>
       <Y>355</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -437,7 +565,7 @@
       <X>1180</X>
       <Y>355</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -451,8 +579,8 @@
       <X>1200</X>
       <Y>355</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>300</MaxW>
+      <H>36</H>
+      <MaxW>280</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -465,7 +593,7 @@
       <X>1520</X>
       <Y>355</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -479,7 +607,7 @@
       <X>1830</X>
       <Y>355</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -493,7 +621,7 @@
       <X>1020</X>
       <Y>420</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -507,7 +635,7 @@
       <X>1180</X>
       <Y>420</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -521,8 +649,8 @@
       <X>1200</X>
       <Y>420</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>300</MaxW>
+      <H>36</H>
+      <MaxW>280</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -535,7 +663,7 @@
       <X>1520</X>
       <Y>420</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -549,7 +677,7 @@
       <X>1830</X>
       <Y>420</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -563,7 +691,7 @@
       <X>1020</X>
       <Y>485</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -577,7 +705,7 @@
       <X>1180</X>
       <Y>485</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -591,8 +719,8 @@
       <X>1200</X>
       <Y>485</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>300</MaxW>
+      <H>36</H>
+      <MaxW>280</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -605,7 +733,7 @@
       <X>1520</X>
       <Y>485</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -619,7 +747,7 @@
       <X>1830</X>
       <Y>485</Y>
       <Z>-1</Z>
-      <H>35</H>
+      <H>32</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -630,10 +758,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreTitle">
-      <X>120</X>
-      <Y>650</Y>
+      <X>90</X>
+      <Y>640</Y>
       <Z>-1</Z>
-      <H>45</H>
+      <H>38</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -643,40 +771,26 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
+    <Text Name="TextLoreStat1_Num">
+      <X>110</X>
+      <Y>700</Y>
+      <Z>-1</Z>
+      <H>70</H>
+      <MaxW>380</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
     <Text Name="TextLoreStat1">
-      <X>150</X>
-      <Y>720</Y>
+      <X>110</X>
+      <Y>785</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>750</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextLoreStat2">
-      <X>150</X>
-      <Y>770</Y>
-      <Z>-1</Z>
-      <H>38</H>
-      <MaxW>750</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextLoreStat3">
-      <X>150</X>
-      <Y>820</Y>
-      <Z>-1</Z>
-      <H>38</H>
-      <MaxW>750</MaxW>
+      <H>28</H>
+      <MaxW>380</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -686,11 +800,53 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat4">
-      <X>150</X>
-      <Y>870</Y>
+      <X>110</X>
+      <Y>825</Y>
       <Z>-1</Z>
-      <H>38</H>
-      <MaxW>750</MaxW>
+      <H>26</H>
+      <MaxW>380</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat2_Num">
+      <X>500</X>
+      <Y>700</Y>
+      <Z>-1</Z>
+      <H>70</H>
+      <MaxW>410</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat2">
+      <X>500</X>
+      <Y>785</Y>
+      <Z>-1</Z>
+      <H>28</H>
+      <MaxW>410</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat3">
+      <X>500</X>
+      <Y>825</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -701,9 +857,9 @@
     </Text>
     <Text Name="TextHighlightTitle">
       <X>1020</X>
-      <Y>650</Y>
+      <Y>640</Y>
       <Z>-1</Z>
-      <H>45</H>
+      <H>38</H>
       <MaxW>0</MaxW>
       <Color Name="SelectedColor" />
       <SelColor Name="TextSelColor" />
@@ -714,14 +870,14 @@
       <Text></Text>
     </Text>
     <Text Name="TextHighlightBody">
-      <X>1050</X>
-      <Y>720</Y>
+      <X>1425</X>
+      <Y>750</Y>
       <Z>-1</Z>
-      <H>50</H>
-      <MaxW>750</MaxW>
+      <H>44</H>
+      <MaxW>800</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
+      <Align>Center</Align>
       <ResizeAlign>Center</ResizeAlign>
       <Style>Bold</Style>
       <Font>Outline</Font>
@@ -740,10 +896,10 @@
     <ParticleEffect Name="ParticleEffectNew1">
       <Skin>Star</Skin>
       <Rect>
-        <X>150</X>
-        <Y>240</Y>
+        <X>110</X>
+        <Y>205</Y>
         <W>700</W>
-        <H>90</H>
+        <H>50</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -754,10 +910,10 @@
     <ParticleEffect Name="ParticleEffectNew2">
       <Skin>Star</Skin>
       <Rect>
-        <X>150</X>
-        <Y>320</Y>
+        <X>110</X>
+        <Y>257</Y>
         <W>700</W>
-        <H>90</H>
+        <H>50</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -768,10 +924,10 @@
     <ParticleEffect Name="ParticleEffectNew3">
       <Skin>Star</Skin>
       <Rect>
-        <X>150</X>
-        <Y>400</Y>
+        <X>110</X>
+        <Y>309</Y>
         <W>700</W>
-        <H>90</H>
+        <H>50</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -782,10 +938,38 @@
     <ParticleEffect Name="ParticleEffectNew4">
       <Skin>Star</Skin>
       <Rect>
-        <X>150</X>
-        <Y>480</Y>
+        <X>110</X>
+        <Y>361</Y>
         <W>700</W>
-        <H>90</H>
+        <H>50</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectNew5">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>110</X>
+        <Y>413</Y>
+        <W>700</W>
+        <H>50</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectNew6">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>110</X>
+        <Y>465</Y>
+        <W>700</W>
+        <H>50</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
