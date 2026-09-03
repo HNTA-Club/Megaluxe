@@ -308,7 +308,7 @@ namespace Vocaluxe.Screens
                     {
                         var entry = topScores[p];
                         string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
-                        _SetText(_TextCurrentName[p], (p + 1) + ". " + displayName);
+                        _SetText(_TextCurrentName[p], displayName);
                         _SetText(_TextCurrentScore[p], entry.Score.ToString("D"));
                         _SetText(_TextCurrentRecord[p], null, false);
                     }
