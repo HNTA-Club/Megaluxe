@@ -106,7 +106,7 @@ namespace Vocaluxe.Screens
                 _TextCurrentTitle,
                 _TextSeasonTitle,
                 _TextLoreTitle, _TextLoreStat1, _TextLoreStat2, _TextLoreStat3, _TextLoreStat4,
-                "TextLoreStat1_Num", "TextLoreStat1_Label", "TextLoreStat2_Num", "TextLoreStat2_Label",
+                "TextLoreStat1_Num", "TextLoreStat1_Label", "TextLoreStat2_Num", "TextLoreStat2_Label", "TextLoreFact",
                 _TextHighlightTitle, _TextHighlightBody
             };
 
@@ -456,56 +456,72 @@ namespace Vocaluxe.Screens
                     _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SET_DAYS_AGO"), ageDays, allTimeBest.Date));
                 }
             }
-            else
-            {
-                _SetText("TextLoreStat2_Num", null, false);
-                _SetText(_TextLoreStat2, null, false);
-                _SetText(_TextLoreStat3, null, false);
-            }
+            // Fun Fact Line at Bottom of Card 3 (Song Lore)
+            _UpdateSongLoreFact(scores);
         }
 
-        private void _UpdateClubHighlight()
+        private void _UpdateSongLoreFact(List<SDBScoreEntry> scores)
         {
-            var scores = _Scores[_Round];
-            var sortedScores = scores.OrderBy(s => s.DateTicks).ToList();
+            var sortedScores = (scores ?? new List<SDBScoreEntry>()).OrderBy(s => s.DateTicks).ToList();
+            int totalDbScores = CDataBase.GetTotalScoreCount();
 
-            // Candidate 1: Long Drought Broken (>= 30 days)
-            var pastScores = sortedScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
-            if (pastScores.Count > 0)
+            // Priority 1: Overall Club Milestones (Every 1,000 performances: 1000, 2000...) - Highest Priority!
+            if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
             {
-                int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
-                if (daysAgo >= 30)
+                int thousandMilestone = (totalDbScores / 1000) * 1000;
+                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone));
+                return;
+            }
+
+            // Priority 2: Long Drought Broken (>= 30 days since song was last performed)
+            if (sortedScores.Count > 0)
+            {
+                var pastScores = sortedScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
+                if (pastScores.Count > 0)
                 {
-                    _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo));
+                    int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
+                    if (daysAgo >= 30)
+                    {
+                        _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo));
+                        return;
+                    }
+                }
+            }
+
+            // Priority 3: Session Records Broken
+            if (_SessionRecordsBroken > 0)
+            {
+                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), _SessionRecordsBroken));
+                return;
+            }
+
+            // Priority 4: Session Songs Milestone (Only every 50 songs: 50, 100, 150...)
+            if (_SessionSongsSung.Count >= 50 && (_SessionSongsSung.Count % 50 == 0))
+            {
+                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), _SessionSongsSung.Count));
+                return;
+            }
+
+            // Priority 5: First Performance Date at Club (if > 7 days ago)
+            if (sortedScores.Count > 0)
+            {
+                var earliest = sortedScores.First();
+                int daysSinceFirst = (int)(DateTime.Now - new DateTime(earliest.DateTicks)).TotalDays;
+                if (daysSinceFirst > 7)
+                {
+                    _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED"), earliest.Date, daysSinceFirst));
                     return;
                 }
             }
 
-            // Candidate 2: Session Records Broken
-            if (_SessionRecordsBroken > 0)
-            {
-                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), _SessionRecordsBroken));
-                return;
-            }
+            // Priority 6: Total Club Performances Fallback
+            _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores));
+        }
 
-            // Candidate 3: 1000th Performance Milestone
-            int totalDbScores = CDataBase.GetTotalScoreCount();
-            if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
-            {
-                int thousandMilestone = (totalDbScores / 1000) * 1000;
-                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone));
-                return;
-            }
-
-            // Candidate 4: Session Songs Sung
-            if (_SessionSongsSung.Count > 1)
-            {
-                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), _SessionSongsSung.Count));
-                return;
-            }
-
-            // Candidate 5: Total Club Performances Fallback
-            _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores));
+        private void _UpdateClubHighlight()
+        {
+            // Bottom-Right card prepared for visualization panel
+            _SetText(_TextHighlightBody, null, false);
         }
 
         public override void OnShow()
