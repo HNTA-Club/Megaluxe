@@ -403,6 +403,34 @@ namespace Vocaluxe.Lib.Database
                 .ToList();
         }
 
+        public int GetTotalScoreCount()
+        {
+            using (var connection = new SqliteConnection())
+            {
+                connection.ConnectionString = "Data Source=" + _FilePath;
+                try
+                {
+                    connection.Open();
+                }
+                catch (Exception)
+                {
+                    return 0;
+                }
+
+                using (var command = new SqliteCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandText = "SELECT COUNT(*) FROM Scores";
+                    object result = command.ExecuteScalar();
+                    if (result != null && int.TryParse(result.ToString(), out int count))
+                    {
+                        return count;
+                    }
+                }
+            }
+            return 0;
+        }
+
         private void _IncreaseSongCounter(int dataBaseSongID, SqliteCommand command)
         {
             command.CommandText = "UPDATE Songs SET NumPlayed = NumPlayed + 1 WHERE [id] = @id";

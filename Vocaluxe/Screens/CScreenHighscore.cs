@@ -36,7 +36,7 @@ namespace Vocaluxe.Screens
             get { return 4; }
         }
 
-        private const int _NumCurrent = 4;
+        private const int _NumCurrent = 6;
         private const int _NumRecord = 4;
         private const int _NumSeason = 5;
 
@@ -79,6 +79,9 @@ namespace Vocaluxe.Screens
         private bool _FromScreenSong = false;
         private int _HighscoreStream = -1;
         private bool _HasPlayedHighscoreSound = false;
+
+        private static HashSet<int> _SessionSongsSung = new HashSet<int>();
+        private static int _SessionRecordsBroken = 0;
         
         private static int PlaySound(ESounds sound, int volume)
         {
@@ -102,6 +105,7 @@ namespace Vocaluxe.Screens
                 _TextCurrentTitle,
                 _TextSeasonTitle,
                 _TextLoreTitle, _TextLoreStat1, _TextLoreStat2, _TextLoreStat3, _TextLoreStat4,
+                "TextLoreStat1_Num", "TextLoreStat1_Label", "TextLoreStat2_Num", "TextLoreStat2_Label",
                 _TextHighlightTitle, _TextHighlightBody
             };
 
@@ -144,8 +148,22 @@ namespace Vocaluxe.Screens
 
             _ThemeTexts = texts.ToArray();
             _ThemeParticleEffects = _ParticleEffectNew;
-            _ThemeStatics = new string[] { "StaticMenuBar", "StaticCurrentBg", "StaticRecordBg", "StaticSeasonBg", "StaticLoreBg", "StaticHighlightBg" };
+            _ThemeStatics = new string[] { "StaticMenuBar", "StaticCardCurrent", "StaticCardSeason", "StaticCardLore", "StaticCardHighlight" };
             _NewEntryIDs = new List<int>();
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
+
+            if (_Texts != null && _Texts.ContainsKey(_TextCurrentTitle))
+            {
+                SColorF accent = _Texts[_TextCurrentTitle].Color;
+                CDraw.DrawRect(accent, new SRectF(60, 140, 870, 4, -1f));
+                CDraw.DrawRect(accent, new SRectF(990, 140, 870, 4, -1f));
+                CDraw.DrawRect(accent, new SRectF(60, 620, 870, 4, -1f));
+                CDraw.DrawRect(accent, new SRectF(990, 620, 870, 4, -1f));
+            }
         }
 
         public override bool HandleInput(SKeyEvent keyEvent)
@@ -224,6 +242,7 @@ namespace Vocaluxe.Screens
             CPoints points = CGame.GetPoints();
             if (points != null && !_FromScreenSong && CScreenSong.GetAudioMode() != EAudioMode.TR_AUDIOMODE_KARAOKE)
             {
+                _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE"));
                 SPlayer[] players = points.GetPlayer(_Round, CGame.NumPlayers);
                 for (int p = 0; p < _NumCurrent; p++)
                 {
@@ -236,7 +255,7 @@ namespace Vocaluxe.Screens
                         _SetText(_TextCurrentName[p], name);
                         _SetText(_TextCurrentScore[p], player.Points.ToString("0"));
 
-                        bool isNewRecord = false; // We can improve this logic in phase 2/3
+                        bool isNewRecord = false;
                         _SetText(_TextCurrentRecord[p], isNewRecord ? CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") : "");
 
                         if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
@@ -261,11 +280,31 @@ namespace Vocaluxe.Screens
             }
             else
             {
+                // From ScreenSong (Song Selection) or Karaoke Mode -> Show All-Time Top Hall of Fame!
+                _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_ALLTIME_TOP"));
+                var topScores = _Scores[_Round]
+                    .GroupBy(s => s.Name + (_IsDuet ? s.VoiceNr.ToString() : ""))
+                    .Select(g => g.First())
+                    .OrderByDescending(s => s.Score)
+                    .Take(_NumCurrent)
+                    .ToList();
+
                 for (int p = 0; p < _NumCurrent; p++)
                 {
-                    _SetText(_TextCurrentName[p], null, false);
-                    _SetText(_TextCurrentScore[p], null, false);
-                    _SetText(_TextCurrentRecord[p], null, false);
+                    if (p < topScores.Count)
+                    {
+                        var entry = topScores[p];
+                        string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
+                        _SetText(_TextCurrentName[p], (p + 1) + ". " + displayName);
+                        _SetText(_TextCurrentScore[p], entry.Score.ToString("D"));
+                        _SetText(_TextCurrentRecord[p], null, false);
+                    }
+                    else
+                    {
+                        _SetText(_TextCurrentName[p], null, false);
+                        _SetText(_TextCurrentScore[p], null, false);
+                        _SetText(_TextCurrentRecord[p], null, false);
+                    }
                     if (_ParticleEffects.ContainsKey(_ParticleEffectNew[p]))
                         _ParticleEffects[_ParticleEffectNew[p]].Visible = false;
                 }
@@ -341,38 +380,106 @@ namespace Vocaluxe.Screens
                 lastTicks = s.DateTicks;
             }
 
+            // Column 1: PERFORMANCES HISTORY
             if (uniquePerformances == 0)
             {
+                _SetText("TextLoreStat1_Num", "0");
                 _SetText(_TextLoreStat1, CLanguage.Translate("TR_SCREENHIGHSCORE_NEVER_SUNG"));
-            }
-            else if (uniquePerformances == totalScores)
-            {
-                string key = (uniquePerformances == 1) ? "TR_SCREENHIGHSCORE_SUNG_COUNT_SINGLE" : "TR_SCREENHIGHSCORE_SUNG_COUNT_PLURAL";
-                _SetText(_TextLoreStat1, String.Format(CLanguage.Translate(key), uniquePerformances));
+                _SetText(_TextLoreStat4, null, false);
             }
             else
             {
-                string key = (uniquePerformances == 1) ? "TR_SCREENHIGHSCORE_PERFORMED_COUNT_SINGLE" : "TR_SCREENHIGHSCORE_PERFORMED_COUNT_PLURAL";
-                _SetText(_TextLoreStat1, String.Format(CLanguage.Translate(key), uniquePerformances, totalScores));
+                _SetText("TextLoreStat1_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_TIMES_SUNG"), uniquePerformances));
+
+                if (totalScores > uniquePerformances)
+                {
+                    _SetText(_TextLoreStat1, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SCORES_COUNT"), totalScores));
+                }
+                else
+                {
+                    _SetText(_TextLoreStat1, null, false);
+                }
+
+                int seasonCount = scores.Count(s => GetSeasonYear(s) == _SeasonYear);
+                if (seasonCount > 0)
+                {
+                    _SetText(_TextLoreStat4, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_PERFORMANCES"), seasonCount));
+                }
+                else
+                {
+                    _SetText(_TextLoreStat4, null, false);
+                }
             }
 
+            // Column 2: ALL-TIME RECORD
             var allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
             if (allTimeBest.Name != null)
             {
-                _SetText(_TextLoreStat2, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_ALLTIME_RECORD"), allTimeBest.Score, allTimeBest.Name));
+                _SetText("TextLoreStat2_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_POINTS"), allTimeBest.Score.ToString("N0")));
+                string recordHolderName = allTimeBest.Name + (_IsDuet ? " (P" + (allTimeBest.VoiceNr + 1) + ")" : "");
+                _SetText(_TextLoreStat2, recordHolderName);
+
+                DateTime recordDate = new DateTime(allTimeBest.DateTicks);
+                int ageDays = (int)(DateTime.Now - recordDate).TotalDays;
+                if (ageDays <= 0)
+                {
+                    _SetText(_TextLoreStat3, CLanguage.Translate("TR_SCREENHIGHSCORE_SET_TODAY"));
+                }
+                else
+                {
+                    _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SET_DAYS_AGO"), ageDays, allTimeBest.Date));
+                }
             }
             else
             {
+                _SetText("TextLoreStat2_Num", null, false);
                 _SetText(_TextLoreStat2, null, false);
+                _SetText(_TextLoreStat3, null, false);
             }
-
-            _SetText(_TextLoreStat3, null, false);
-            _SetText(_TextLoreStat4, null, false);
         }
 
         private void _UpdateClubHighlight()
         {
-            _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORDS_BROKEN"), _NewEntryIDs.Count));
+            var scores = _Scores[_Round];
+            var sortedScores = scores.OrderBy(s => s.DateTicks).ToList();
+
+            // Candidate 1: Long Drought Broken (>= 30 days)
+            var pastScores = sortedScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
+            if (pastScores.Count > 0)
+            {
+                int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
+                if (daysAgo >= 30)
+                {
+                    _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo));
+                    return;
+                }
+            }
+
+            // Candidate 2: Session Records Broken
+            if (_SessionRecordsBroken > 0)
+            {
+                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), _SessionRecordsBroken));
+                return;
+            }
+
+            // Candidate 3: 1000th Performance Milestone
+            int totalDbScores = CDataBase.GetTotalScoreCount();
+            if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
+            {
+                int thousandMilestone = (totalDbScores / 1000) * 1000;
+                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone));
+                return;
+            }
+
+            // Candidate 4: Session Songs Sung
+            if (_SessionSongsSung.Count > 1)
+            {
+                _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), _SessionSongsSung.Count));
+                return;
+            }
+
+            // Candidate 5: Total Club Performances Fallback
+            _SetText(_TextHighlightBody, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores));
         }
 
         public override void OnShow()
@@ -414,6 +521,14 @@ namespace Vocaluxe.Screens
                         _NewEntryIDs.Add(id);
                     }
                 }
+            }
+
+            if (!_FromScreenSong)
+            {
+                int currentSongID = CScreenSong.getSelectedSongID();
+                if (currentSongID >= 0)
+                    _SessionSongsSung.Add(currentSongID);
+                _SessionRecordsBroken += _NewEntryIDs.Count;
             }
         }
 
