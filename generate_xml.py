@@ -61,15 +61,15 @@ texts.append(create_text('TextSongName', 960, 75, 40.5, 'Center'))
 texts.append(create_text('TextSongMode', 1830, 75, 40.5, 'Right'))
 
 # Card 1 (Top-Left): Current Performance / All-Time Top (Up to 6 rows)
-texts.append(create_text('TextCurrentTitle', 90, 160, 38, 'Left', color='SelectedColor'))
+texts.append(create_text('TextCurrentTitle', 90, 160, 38, 'Left', color='TextColor'))
 for i in range(1, 7):
     y = 210 + (i-1)*52
     texts.append(create_text(f'TextCurrentName{i}', 110, y, 48, 'Left', max_w='460'))
     texts.append(create_text(f'TextCurrentScore{i}', 780, y, 48, 'Right'))
-    texts.append(create_text(f'TextCurrentRecord{i}', 800, y, 32, 'Left', color='SelectedColor'))
+    texts.append(create_text(f'TextCurrentRecord{i}', 800, y, 32, 'Left', color='TextColor'))
 
 # Card 2 (Top-Right): Season Leaderboard
-texts.append(create_text('TextSeasonTitle', 1020, 160, 38, 'Left', color='SelectedColor'))
+texts.append(create_text('TextSeasonTitle', 1020, 160, 38, 'Left', color='TextColor'))
 texts.append(create_text('TextSeasonSubTitle', 1830, 168, 26, 'Right'))
 for i in range(1, 6):
     y = 225 + (i-1)*65
@@ -80,7 +80,7 @@ for i in range(1, 6):
     texts.append(create_text(f'TextSeasonDate{i}', 1830, y, 32, 'Right'))
 
 # Card 3 (Bottom-Left): Song Lore (Side-by-Side Key Metrics with Units)
-texts.append(create_text('TextLoreTitle', 90, 640, 38, 'Left', color='SelectedColor'))
+texts.append(create_text('TextLoreTitle', 90, 640, 38, 'Left', color='TextColor'))
 
 # Left Column (Performances)
 texts.append(create_text('TextLoreStat1_Num', 110, 700, 70, 'Left', color='TextColor', max_w='380'))
@@ -92,8 +92,11 @@ texts.append(create_text('TextLoreStat2_Num', 500, 700, 70, 'Left', color='TextC
 texts.append(create_text('TextLoreStat2', 500, 785, 28, 'Left', max_w='410'))
 texts.append(create_text('TextLoreStat3', 500, 825, 26, 'Left', max_w='410'))
 
+# Fun Fact / Highlight Line (Bottom of Card 3)
+texts.append(create_text('TextLoreFact', 110, 965, 32, 'Left', max_w='780', color='TextColor'))
+
 # Card 4 (Bottom-Right): Club Highlight (Hero Metric Card)
-texts.append(create_text('TextHighlightTitle', 1020, 640, 38, 'Left', color='SelectedColor'))
+texts.append(create_text('TextHighlightTitle', 1020, 640, 38, 'Left', color='TextColor'))
 texts.append(create_text('TextHighlightBody', 1425, 750, 44, 'Center', max_w='800'))
 
 particles = []

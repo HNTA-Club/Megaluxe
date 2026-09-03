@@ -201,6 +201,7 @@
   <string name="TR_SCREENSCORE_OVERALLSCORE">Overall score</string>
   <string name="TR_SCREENHIGHSCORE_HIGHSCORE">Highscore</string>
   <string name="TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE">CURRENT RUN</string>
+  <string name="TR_SCREENHIGHSCORE_ALLTIME_TOP">ALL-TIME TOP</string>
   <string name="TR_SCREENHIGHSCORE_SONG_RECORD">SONG RECORD</string>
   <string name="TR_SCREENHIGHSCORE_SEASON_LEADERBOARD">SEASON LEADERBOARD</string>
   <string name="TR_SCREENHIGHSCORE_NEW_SONG_RECORD">NEW RECORD</string>
@@ -223,6 +224,10 @@
   <string name="TR_SCREENHIGHSCORE_LAST_PERFORMED_AGO">Last performed: {0} days ago ({1})</string>
   <string name="TR_SCREENHIGHSCORE_LAST_PERFORMED">Last performed on {0}</string>
   <string name="TR_SCREENHIGHSCORE_SEASON_PERFORMANCES">Performed {0} times this season</string>
+  <string name="TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED">First performed at the club: {0} ({1} days ago)</string>
+  <string name="TR_SCREENHIGHSCORE_FACT_RECORD_HELD">Record by {0} has held for {1} days!</string>
+  <string name="TR_SCREENHIGHSCORE_FACT_LAST_PERFORMED">Last performed: {0} days ago ({1})</string>
+  <string name="TR_SCREENHIGHSCORE_FACT_SINGERS_COUNT">Performed by {0} different club members</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT">First time in {0} days this song was sung!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS">{0} song records broken this session!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS">{0} songs performed this session</string>
