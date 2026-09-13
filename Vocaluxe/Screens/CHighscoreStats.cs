@@ -102,13 +102,11 @@ namespace Vocaluxe.Screens
             switch (diff)
             {
                 case EGameDifficulty.TR_CONFIG_EASY:
-                    return "[Easy]";
                 case EGameDifficulty.TR_CONFIG_NORMAL:
-                    return "[Norm.]";
                 case EGameDifficulty.TR_CONFIG_HARD:
-                    return "[Hard]";
+                    return "[" + CLanguage.Translate(diff.ToString()) + "]";
                 default:
-                    return "[Norm.]";
+                    return "[" + CLanguage.Translate("TR_CONFIG_NORMAL") + "]";
             }
         }
 
