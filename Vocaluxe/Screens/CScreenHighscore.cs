@@ -33,7 +33,7 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 10; }
+            get { return 11; }
         }
 
         private const int _NumLeaderboard = 12;
