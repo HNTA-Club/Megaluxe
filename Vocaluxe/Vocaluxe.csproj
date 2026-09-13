@@ -330,6 +330,7 @@
     <Compile Include="Screens\CPopupScreenVolumeControl.cs" />
     <Compile Include="Screens\CScreenCredits.cs" />
     <Compile Include="Screens\CHighscoreChart.cs" />
+    <Compile Include="Screens\CHighscoreStats.cs" />
     <Compile Include="Screens\CScreenHighscore.cs" />
     <Compile Include="Screens\CScreenLoad.cs" />
     <Compile Include="Screens\CScreenMain.cs" />
