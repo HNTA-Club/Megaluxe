@@ -75,7 +75,7 @@ namespace Vocaluxe.Screens
 
         private List<SDBScoreEntry>[] _Scores;
         private List<int>[] _AvailableYears;
-        private int _SeasonYear = DateTime.Now.Year;
+        private int _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
         private List<int> _NewEntryIDs;
         private int _Round;
         private bool _IsDuet;
@@ -233,7 +233,7 @@ namespace Vocaluxe.Screens
             if (mouseEvent.RB)
                 _LeaveScreen();
             if (mouseEvent.Wheel != 0)
-                _ChangeSeasonYear(mouseEvent.Wheel);
+                _ChangeSeasonYear(-Math.Sign(mouseEvent.Wheel));
             return true;
         }
 
@@ -350,8 +350,11 @@ namespace Vocaluxe.Screens
             {
                 // From song selection: identify recent session entries (only if played within the last 12 hours)
                 long latestTicks = scores.Max(s => s.DateTicks);
-                if (latestTicks > 0 && (DateTime.Now - new DateTime(latestTicks)).TotalHours < 12)
+                if (latestTicks > 0 && latestTicks <= DateTime.MaxValue.Ticks)
                 {
+                    double hoursAgo = (DateTime.Now - new DateTime(latestTicks)).TotalHours;
+                    if (hoursAgo >= -0.5 && hoursAgo < 12)
+                    {
                     var latestSession = scores
                         .Where(s => Math.Abs(s.DateTicks - latestTicks) < TimeSpan.TicksPerSecond * 15)
                         .OrderByDescending(s => s.Score)
@@ -375,6 +378,7 @@ namespace Vocaluxe.Screens
                     }
                 }
             }
+        }
 
             var displayRows = CHighscoreStats.BuildLeaderboardRows(
                 scores,

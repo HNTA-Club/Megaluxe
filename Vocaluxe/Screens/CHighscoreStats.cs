@@ -61,8 +61,8 @@ namespace Vocaluxe.Screens
 
         public static int GetSeasonYear(long ticks)
         {
-            if (ticks <= 0) return GetCurrentSeasonYear();
-            return GetSeasonYear(new DateTime(ticks));
+            if (ticks <= 0 || ticks > DateTime.MaxValue.Ticks) return GetCurrentSeasonYear();
+            try { return GetSeasonYear(new DateTime(ticks)); } catch { return GetCurrentSeasonYear(); }
         }
 
         public static int GetSeasonYear(SDBScoreEntry entry)
@@ -81,10 +81,14 @@ namespace Vocaluxe.Screens
 
         public static string FormatScoreDateTime(SDBScoreEntry entry)
         {
-            if (entry.DateTicks > 0)
+            if (entry.DateTicks > 0 && entry.DateTicks <= DateTime.MaxValue.Ticks)
             {
-                DateTime dt = new DateTime(entry.DateTicks);
-                return dt.ToString("dd/MM/yyyy HH:mm");
+                try
+                {
+                    DateTime dt = new DateTime(entry.DateTicks);
+                    return dt.ToString("dd/MM/yyyy HH:mm");
+                }
+                catch {}
             }
             if (!string.IsNullOrEmpty(entry.Date))
             {
@@ -332,11 +336,19 @@ namespace Vocaluxe.Screens
             if (best.Name != null)
             {
                 info.HasAllTimeBest = true;
-                info.AllTimeBest = best;
-                if (best.DateTicks > 0)
+                if (string.IsNullOrEmpty(best.Date) && best.DateTicks > 0 && best.DateTicks <= DateTime.MaxValue.Ticks)
                 {
-                    DateTime recordDate = new DateTime(best.DateTicks);
-                    info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - recordDate).TotalDays);
+                    try { best.Date = new DateTime(best.DateTicks).ToString("dd/MM/yyyy"); } catch {}
+                }
+                info.AllTimeBest = best;
+                if (best.DateTicks > 0 && best.DateTicks <= DateTime.MaxValue.Ticks)
+                {
+                    try
+                    {
+                        DateTime recordDate = new DateTime(best.DateTicks);
+                        info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - recordDate).TotalDays);
+                    }
+                    catch {}
                 }
                 else if (!string.IsNullOrEmpty(best.Date) && DateTime.TryParse(best.Date, out DateTime parsedDate))
                 {
@@ -355,7 +367,7 @@ namespace Vocaluxe.Screens
             int sessionSongsCount)
         {
             var validScores = (scores ?? new List<SDBScoreEntry>())
-                .Where(s => s.DateTicks > 0)
+                .Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks)
                 .OrderBy(s => s.DateTicks)
                 .ToList();
 
@@ -363,13 +375,14 @@ namespace Vocaluxe.Screens
             if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
             {
                 int thousandMilestone = (totalDbScores / 1000) * 1000;
-                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone);
+                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone.ToString("N0"));
             }
 
             // Priority 2: Long Drought Broken (>= 30 days since song was last performed, and sung recently within last 12h)
             if (validScores.Count > 1)
             {
-                bool sungRecently = (DateTime.Now - new DateTime(validScores.Last().DateTicks)).TotalHours <= 12;
+                double lastHoursAgo = (DateTime.Now - new DateTime(validScores.Last().DateTicks)).TotalHours;
+                bool sungRecently = lastHoursAgo >= -0.5 && lastHoursAgo <= 12;
                 if (sungRecently)
                 {
                     var pastScores = validScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
@@ -391,7 +404,8 @@ namespace Vocaluxe.Screens
                 int daysSinceFirst = (int)(DateTime.Now - new DateTime(earliest.DateTicks)).TotalDays;
                 if (daysSinceFirst > 7)
                 {
-                    return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED"), earliest.Date, daysSinceFirst);
+                    string dateStr = !string.IsNullOrEmpty(earliest.Date) ? earliest.Date : new DateTime(earliest.DateTicks).ToString("dd/MM/yyyy");
+                    return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED"), dateStr, daysSinceFirst);
                 }
             }
 
@@ -408,7 +422,7 @@ namespace Vocaluxe.Screens
             }
 
             // Priority 6: Total Club Performances Fallback
-            return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores);
+            return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores.ToString("N0"));
         }
     }
 }
