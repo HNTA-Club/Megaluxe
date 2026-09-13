@@ -108,6 +108,15 @@ namespace VocaluxeLib.Songs
                             }
                             i += 3;
                         }
+                        else if (b >= 0xF0 && b <= 0xF4)
+                        {
+                            if (i + 3 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF || bytes[i + 3] < 0x80 || bytes[i + 3] > 0xBF)
+                            {
+                                isUtf8 = false;
+                                break;
+                            }
+                            i += 4;
+                        }
                         else
                         {
                             isUtf8 = false;
