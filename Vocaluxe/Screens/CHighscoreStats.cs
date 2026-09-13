@@ -61,7 +61,7 @@ namespace Vocaluxe.Screens
 
         public static int GetSeasonYear(long ticks)
         {
-            if (ticks <= 0) return DateTime.Now.Year;
+            if (ticks <= 0) return GetCurrentSeasonYear();
             return GetSeasonYear(new DateTime(ticks));
         }
 
@@ -71,7 +71,7 @@ namespace Vocaluxe.Screens
                 return GetSeasonYear(entry.DateTicks);
             if (!string.IsNullOrEmpty(entry.Date) && DateTime.TryParse(entry.Date, out DateTime dt))
                 return GetSeasonYear(dt);
-            return DateTime.Now.Year;
+            return GetCurrentSeasonYear();
         }
 
         public static int GetCurrentSeasonYear()
@@ -88,10 +88,6 @@ namespace Vocaluxe.Screens
             }
             if (!string.IsNullOrEmpty(entry.Date))
             {
-                if (DateTime.TryParse(entry.Date, out DateTime dt))
-                {
-                    return dt.ToString("dd/MM/yyyy HH:mm");
-                }
                 return entry.Date;
             }
             return "";
@@ -115,19 +111,30 @@ namespace Vocaluxe.Screens
             if (scores == null || scores.Count == 0)
                 return 0;
 
-            long lastTicks = -1;
             int count = 0;
-            var sorted = scores.OrderBy(s => s.DateTicks);
-            long windowTicks = TimeSpan.TicksPerSecond * timeWindowSeconds;
+            var withTicks = scores.Where(s => s.DateTicks > 0).OrderBy(s => s.DateTicks).ToList();
+            var withoutTicks = scores.Where(s => s.DateTicks <= 0).ToList();
 
-            foreach (var s in sorted)
+            if (withTicks.Count > 0)
             {
-                if (lastTicks == -1 || Math.Abs(s.DateTicks - lastTicks) > windowTicks)
+                long lastTicks = -1;
+                long windowTicks = TimeSpan.TicksPerSecond * timeWindowSeconds;
+                foreach (var s in withTicks)
                 {
-                    count++;
+                    if (lastTicks == -1 || Math.Abs(s.DateTicks - lastTicks) > windowTicks)
+                    {
+                        count++;
+                    }
+                    lastTicks = s.DateTicks;
                 }
-                lastTicks = s.DateTicks;
             }
+
+            if (withoutTicks.Count > 0)
+            {
+                var dateGroups = withoutTicks.GroupBy(s => !string.IsNullOrEmpty(s.Date) ? s.Date : s.ID.ToString());
+                count += dateGroups.Count();
+            }
+
             return count;
         }
 
@@ -265,7 +272,8 @@ namespace Vocaluxe.Screens
 
                 foreach (var sess in sessionRows.Where(s => !isDuet || s.VoiceNr == v))
                 {
-                    if (!pool.Contains(sess.Score))
+                    // Avoid duplicating an entry if it was already loaded from DB scores
+                    if (sess.ID <= 0 || !scores.Any(s => s.ID == sess.ID))
                         pool.Add(sess.Score);
                 }
 
@@ -297,7 +305,7 @@ namespace Vocaluxe.Screens
                     .Where(r => r.IsSession)
                     .ToList();
 
-                int normalSlots = maxRows - overflowSessionRows.Count;
+                int normalSlots = Math.Max(0, maxRows - overflowSessionRows.Count);
                 displayRows.AddRange(candidateRows.Take(normalSlots));
                 displayRows.AddRange(overflowSessionRows);
             }
@@ -357,33 +365,25 @@ namespace Vocaluxe.Screens
                 return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone);
             }
 
-            // Priority 2: Long Drought Broken (>= 30 days since song was last performed)
-            if (validScores.Count > 0)
+            // Priority 2: Long Drought Broken (>= 30 days since song was last performed, and sung recently within last 12h)
+            if (validScores.Count > 1)
             {
-                var pastScores = validScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
-                if (pastScores.Count > 0)
+                bool sungRecently = (DateTime.Now - new DateTime(validScores.Last().DateTicks)).TotalHours <= 12;
+                if (sungRecently)
                 {
-                    int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
-                    if (daysAgo >= 30)
+                    var pastScores = validScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
+                    if (pastScores.Count > 0)
                     {
-                        return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo);
+                        int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
+                        if (daysAgo >= 30)
+                        {
+                            return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo);
+                        }
                     }
                 }
             }
 
-            // Priority 3: Session Records Broken
-            if (sessionRecordsBroken > 0)
-            {
-                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), sessionRecordsBroken);
-            }
-
-            // Priority 4: Session Songs Milestone (Only every 50 songs: 50, 100, 150...)
-            if (sessionSongsCount >= 50 && (sessionSongsCount % 50 == 0))
-            {
-                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), sessionSongsCount);
-            }
-
-            // Priority 5: First Performance Date at Club (if > 7 days ago)
+            // Priority 3: First Performance Date at Club (if > 7 days ago) - song-specific history
             if (validScores.Count > 0)
             {
                 var earliest = validScores.First();
@@ -392,6 +392,18 @@ namespace Vocaluxe.Screens
                 {
                     return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED"), earliest.Date, daysSinceFirst);
                 }
+            }
+
+            // Priority 4: Session Records Broken
+            if (sessionRecordsBroken > 0)
+            {
+                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), sessionRecordsBroken);
+            }
+
+            // Priority 5: Session Songs Milestone (Only every 50 songs: 50, 100, 150...)
+            if (sessionSongsCount >= 50 && (sessionSongsCount % 50 == 0))
+            {
+                return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), sessionSongsCount);
             }
 
             // Priority 6: Total Club Performances Fallback
