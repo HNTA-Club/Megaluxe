@@ -286,9 +286,9 @@ namespace Vocaluxe.Screens
                 for (int p = 0; p < players.Length; p++)
                 {
                     var player = players[p];
-                    string name = CProfiles.GetPlayerName(player.ProfileID);
-                    if (_IsDuet || CGame.NumPlayers > 1) name += " (P" + (player.VoiceNr + 1) + ")";
-                    int score = (int)player.Points;
+                    string playerName = CProfiles.GetPlayerName(player.ProfileID);
+                    string displayName = playerName + (_IsDuet ? " (P" + (player.VoiceNr + 1) + ")" : "");
+                    int score = (int)Math.Round(player.Points);
 
                     // Check if player's score is an all-time record for their mic/voice line
                     var voiceScores = priorScores.Where(s => !_IsDuet || s.VoiceNr == player.VoiceNr).ToList();
@@ -298,13 +298,32 @@ namespace Vocaluxe.Screens
                     string tag = isAllTimeMicRecord ? ("★ " + CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") + " ★") : CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION");
                     SColorF color = _ColorSession;
 
+                    // Match with database entry that was just inserted in _AddScoresToDB()
+                    int entryId = -1;
+                    string dateStr = "";
+                    var dbEntry = scores.FirstOrDefault(s => _NewEntryIDs.Contains(s.ID) && s.VoiceNr == player.VoiceNr && s.Name == playerName);
+                    if (dbEntry.ID > 0)
+                    {
+                        entryId = dbEntry.ID;
+                        score = dbEntry.Score;
+                        dateStr = CHighscoreStats.FormatScoreDateTime(dbEntry);
+                    }
+                    else if (player.DateTicks > 0)
+                    {
+                        dateStr = CHighscoreStats.FormatScoreDateTime(new SDBScoreEntry { DateTicks = player.DateTicks });
+                    }
+                    else
+                    {
+                        dateStr = DateTime.Now.ToString("dd/MM/yyyy HH:mm");
+                    }
+
                     sessionRows.Add(new SLeaderboardRow
                     {
-                        ID = -1,
-                        Name = name,
+                        ID = entryId,
+                        Name = displayName,
                         Score = score,
                         Tag = tag,
-                        Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
+                        Date = dateStr,
                         Color = color,
                         HasParticles = isAllTimeMicRecord,
                         IsSession = true,
