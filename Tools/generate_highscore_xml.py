@@ -151,15 +151,15 @@ for i in range(1, NUM_LEADERBOARD_ROWS + 1):
 # Top-Right Pane: Song Lore
 texts.append(create_text('TextLoreTitle', LORE_CARD.x + 30, LORE_CARD.y + 20, 38, 'Left', color='TextColor'))
 
-# Left Column (Performances)
-texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 210, 64, 'Left', color='TextColor', max_w='360'))
-texts.append(create_text('TextLoreStat1', LORE_COL1_X, 290, 34, 'Left', max_w='360'))
-texts.append(create_text('TextLoreStat4', LORE_COL1_X, 340, 30, 'Left', max_w='360'))
+# Left Column: Performance History & Lore
+texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 210, 64, 'Left', color='TextColor', max_w='740'))
+texts.append(create_text('TextLoreStat1', LORE_COL1_X, 285, 32, 'Left', max_w='740'))
+texts.append(create_text('TextLoreStat4', LORE_COL1_X, 335, 30, 'Left', max_w='740'))
+texts.append(create_text('TextLoreStat3', LORE_COL1_X, 385, 30, 'Left', max_w='740'))
 
-# Right Column (Record & Date)
+# Right Column: Reserved for difficulty metric (placeholders)
 texts.append(create_text('TextLoreStat2_Num', LORE_COL2_X, 210, 64, 'Left', color='TextColor', max_w='370'))
-texts.append(create_text('TextLoreStat2', LORE_COL2_X, 290, 34, 'Left', max_w='370'))
-texts.append(create_text('TextLoreStat3', LORE_COL2_X, 340, 30, 'Left', max_w='370'))
+texts.append(create_text('TextLoreStat2', LORE_COL2_X, 285, 32, 'Left', max_w='370'))
 
 # Fun Fact / Highlight Line
 texts.append(create_text('TextLoreFact', LORE_COL1_X, 480, 34, 'Left', max_w='740', color='TextColor'))

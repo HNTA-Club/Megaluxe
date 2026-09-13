@@ -435,17 +435,20 @@ namespace Vocaluxe.Screens
             int totalDbScores = CDataBase.GetTotalScoreCount();
             var info = CHighscoreStats.GetSongLoreInfo(scores, _SeasonYear, totalDbScores, _SessionRecordsBroken, _SessionSongsSung.Count);
 
-            // Column 1: PERFORMANCES HISTORY
+            // Left Pane: Performance History & Record Info
             if (info.UniquePerformances == 0)
             {
                 _SetText("TextLoreStat1_Num", "0");
                 _SetText(_TextLoreStat1, CLanguage.Translate("TR_SCREENHIGHSCORE_NEVER_SUNG"));
                 _SetText(_TextLoreStat4, null, false);
+                _SetText(_TextLoreStat3, null, false);
             }
             else
             {
+                // Line 1: A times
                 _SetText("TextLoreStat1_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_TIMES_SUNG"), info.UniquePerformances));
 
+                // Line 2: B individual scores (if multi-mic runs exist)
                 if (info.TotalScores > info.UniquePerformances)
                 {
                     _SetText(_TextLoreStat1, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SCORES_COUNT"), info.TotalScores));
@@ -455,38 +458,47 @@ namespace Vocaluxe.Screens
                     _SetText(_TextLoreStat1, null, false);
                 }
 
-                if (info.SeasonCount > 0)
+                // Line 3: Last sung C days ago (C-date)
+                if (info.HasLastSung)
                 {
-                    _SetText(_TextLoreStat4, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_PERFORMANCES"), info.SeasonCount));
+                    if (info.LastSungAgeDays <= 0)
+                    {
+                        string todayText = info.UniquePerformances == 1
+                            ? CLanguage.Translate("TR_SCREENHIGHSCORE_FIRST_SUNG_TODAY")
+                            : CLanguage.Translate("TR_SCREENHIGHSCORE_LAST_SUNG_TODAY");
+                        _SetText(_TextLoreStat4, todayText);
+                    }
+                    else
+                    {
+                        _SetText(_TextLoreStat4, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_LAST_SUNG_DAYS_AGO"), info.LastSungAgeDays, info.LastSungDate));
+                    }
                 }
                 else
                 {
                     _SetText(_TextLoreStat4, null, false);
                 }
-            }
 
-            // Column 2: ALL-TIME RECORD
-            if (info.HasAllTimeBest)
-            {
-                _SetText("TextLoreStat2_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_POINTS"), info.AllTimeBest.Score.ToString("N0")));
-                string recordHolderName = info.AllTimeBest.Name + (_IsDuet ? " (P" + (info.AllTimeBest.VoiceNr + 1) + ")" : "");
-                _SetText(_TextLoreStat2, recordHolderName);
-
-                if (info.RecordAgeDays <= 0)
+                // Line 4: Record set D days ago (D-date)
+                if (info.HasAllTimeBest)
                 {
-                    _SetText(_TextLoreStat3, CLanguage.Translate("TR_SCREENHIGHSCORE_SET_TODAY"));
+                    if (info.RecordAgeDays <= 0)
+                    {
+                        _SetText(_TextLoreStat3, CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_SET_TODAY"));
+                    }
+                    else
+                    {
+                        _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_SET_DAYS_AGO"), info.RecordAgeDays, info.AllTimeBest.Date));
+                    }
                 }
                 else
                 {
-                    _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SET_DAYS_AGO"), info.RecordAgeDays, info.AllTimeBest.Date));
+                    _SetText(_TextLoreStat3, null, false);
                 }
             }
-            else
-            {
-                _SetText("TextLoreStat2_Num", null, false);
-                _SetText(_TextLoreStat2, null, false);
-                _SetText(_TextLoreStat3, null, false);
-            }
+
+            // Right Pane: Kept empty for now (reserved for upcoming difficulty metric)
+            _SetText("TextLoreStat2_Num", null, false);
+            _SetText(_TextLoreStat2, null, false);
 
             _SetText("TextLoreFact", info.FactText);
         }
