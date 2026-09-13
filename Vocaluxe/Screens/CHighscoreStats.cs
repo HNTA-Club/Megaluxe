@@ -142,6 +142,7 @@ namespace Vocaluxe.Screens
             sessionRows = sessionRows ?? new List<SLeaderboardRow>();
 
             Func<SDBScoreEntry, string> getMicKey = s => s.Name + (isDuet ? " (P" + (s.VoiceNr + 1) + ")" : "");
+
             var candidateRows = new List<SLeaderboardRow>();
 
             // (A) Session rows first
@@ -162,7 +163,7 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
                     continue;
 
                 candidateRows.Add(new SLeaderboardRow
@@ -190,7 +191,7 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
                     continue;
 
                 bool isSeason = GetSeasonYear(entry) == seasonYear;
@@ -223,7 +224,7 @@ namespace Vocaluxe.Screens
                     string displayName = getMicKey(entry);
                     string entryDate = FormatScoreDateTime(entry);
 
-                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
+                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
                         continue;
 
                     bool isSeason = GetSeasonYear(entry) == seasonYear;
