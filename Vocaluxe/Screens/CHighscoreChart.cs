@@ -138,14 +138,22 @@ namespace Vocaluxe.Screens
                 return data;
 
             int currentSeason = CHighscoreStats.GetCurrentSeasonYear();
-
+            int maxSeason = currentSeason;
             int minSeason = scores.Select(s => CHighscoreStats.GetSeasonYear(s)).Min();
             if (minSeason > currentSeason) minSeason = currentSeason;
-            if (currentSeason - minSeason + 1 > NumChartRows)
-                minSeason = currentSeason - NumChartRows + 1;
+
+            if (selectedSeasonYear < maxSeason - NumChartRows + 1)
+            {
+                maxSeason = Math.Min(currentSeason, selectedSeasonYear + NumChartRows - 1);
+                minSeason = Math.Max(minSeason, maxSeason - NumChartRows + 1);
+            }
+            else if (maxSeason - minSeason + 1 > NumChartRows)
+            {
+                minSeason = maxSeason - NumChartRows + 1;
+            }
 
             var seasonList = new List<SeasonStat>();
-            for (int sy = currentSeason; sy >= minSeason; sy--)
+            for (int sy = maxSeason; sy >= minSeason; sy--)
             {
                 var seasonScores = scores.Where(s => CHighscoreStats.GetSeasonYear(s) == sy).ToList();
                 int plays = seasonScores.Count;

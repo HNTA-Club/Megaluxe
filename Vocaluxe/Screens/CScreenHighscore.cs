@@ -343,28 +343,31 @@ namespace Vocaluxe.Screens
             }
             else if (_FromScreenSong && scores.Count > 0)
             {
-                // From song selection: identify the latest session entries
+                // From song selection: identify recent session entries (only if played within the last 12 hours)
                 long latestTicks = scores.Max(s => s.DateTicks);
-                var latestSession = scores
-                    .Where(s => Math.Abs(s.DateTicks - latestTicks) < TimeSpan.TicksPerSecond * 15)
-                    .OrderByDescending(s => s.Score)
-                    .ToList();
-
-                foreach (var entry in latestSession)
+                if (latestTicks > 0 && (DateTime.Now - new DateTime(latestTicks)).TotalHours < 12)
                 {
-                    string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
-                    sessionRows.Add(new SLeaderboardRow
+                    var latestSession = scores
+                        .Where(s => Math.Abs(s.DateTicks - latestTicks) < TimeSpan.TicksPerSecond * 15)
+                        .OrderByDescending(s => s.Score)
+                        .ToList();
+
+                    foreach (var entry in latestSession)
                     {
-                        ID = entry.ID,
-                        Name = displayName,
-                        Score = entry.Score,
-                        Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
-                        Date = CHighscoreStats.FormatScoreDateTime(entry),
-                        Color = _ColorSession,
-                        HasParticles = false,
-                        IsSession = true,
-                        VoiceNr = entry.VoiceNr
-                    });
+                        string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
+                        sessionRows.Add(new SLeaderboardRow
+                        {
+                            ID = entry.ID,
+                            Name = displayName,
+                            Score = entry.Score,
+                            Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
+                            Date = CHighscoreStats.FormatScoreDateTime(entry),
+                            Color = _ColorSession,
+                            HasParticles = false,
+                            IsSession = true,
+                            VoiceNr = entry.VoiceNr
+                        });
+                    }
                 }
             }
 

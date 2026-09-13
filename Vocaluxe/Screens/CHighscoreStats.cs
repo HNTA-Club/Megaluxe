@@ -61,12 +61,17 @@ namespace Vocaluxe.Screens
 
         public static int GetSeasonYear(long ticks)
         {
+            if (ticks <= 0) return DateTime.Now.Year;
             return GetSeasonYear(new DateTime(ticks));
         }
 
         public static int GetSeasonYear(SDBScoreEntry entry)
         {
-            return GetSeasonYear(entry.DateTicks);
+            if (entry.DateTicks > 0)
+                return GetSeasonYear(entry.DateTicks);
+            if (!string.IsNullOrEmpty(entry.Date) && DateTime.TryParse(entry.Date, out DateTime dt))
+                return GetSeasonYear(dt);
+            return DateTime.Now.Year;
         }
 
         public static int GetCurrentSeasonYear()
@@ -163,7 +168,7 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                     continue;
 
                 candidateRows.Add(new SLeaderboardRow
@@ -191,7 +196,7 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                     continue;
 
                 bool isSeason = GetSeasonYear(entry) == seasonYear;
@@ -224,7 +229,7 @@ namespace Vocaluxe.Screens
                     string displayName = getMicKey(entry);
                     string entryDate = FormatScoreDateTime(entry);
 
-                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1)))
+                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                         continue;
 
                     bool isSeason = GetSeasonYear(entry) == seasonYear;
@@ -321,8 +326,15 @@ namespace Vocaluxe.Screens
             {
                 info.HasAllTimeBest = true;
                 info.AllTimeBest = best;
-                DateTime recordDate = new DateTime(best.DateTicks);
-                info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - recordDate).TotalDays);
+                if (best.DateTicks > 0)
+                {
+                    DateTime recordDate = new DateTime(best.DateTicks);
+                    info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - recordDate).TotalDays);
+                }
+                else if (!string.IsNullOrEmpty(best.Date) && DateTime.TryParse(best.Date, out DateTime parsedDate))
+                {
+                    info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - parsedDate).TotalDays);
+                }
             }
 
             info.FactText = EvaluateSongLoreFact(scores, totalDbScores, sessionRecordsBroken, sessionSongsCount);
@@ -335,7 +347,10 @@ namespace Vocaluxe.Screens
             int sessionRecordsBroken,
             int sessionSongsCount)
         {
-            var sortedScores = (scores ?? new List<SDBScoreEntry>()).OrderBy(s => s.DateTicks).ToList();
+            var validScores = (scores ?? new List<SDBScoreEntry>())
+                .Where(s => s.DateTicks > 0)
+                .OrderBy(s => s.DateTicks)
+                .ToList();
 
             // Priority 1: Overall Club Milestones (Every 1,000 performances: 1000, 2000...)
             if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
@@ -345,9 +360,9 @@ namespace Vocaluxe.Screens
             }
 
             // Priority 2: Long Drought Broken (>= 30 days since song was last performed)
-            if (sortedScores.Count > 0)
+            if (validScores.Count > 0)
             {
-                var pastScores = sortedScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
+                var pastScores = validScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
                 if (pastScores.Count > 0)
                 {
                     int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
@@ -371,9 +386,9 @@ namespace Vocaluxe.Screens
             }
 
             // Priority 5: First Performance Date at Club (if > 7 days ago)
-            if (sortedScores.Count > 0)
+            if (validScores.Count > 0)
             {
-                var earliest = sortedScores.First();
+                var earliest = validScores.First();
                 int daysSinceFirst = (int)(DateTime.Now - new DateTime(earliest.DateTicks)).TotalDays;
                 if (daysSinceFirst > 7)
                 {
