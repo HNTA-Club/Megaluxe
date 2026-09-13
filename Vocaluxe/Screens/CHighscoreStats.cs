@@ -47,6 +47,9 @@ namespace Vocaluxe.Screens
         public bool HasAllTimeBest;
         public SDBScoreEntry AllTimeBest;
         public int RecordAgeDays;
+        public bool HasLastSung;
+        public int LastSungAgeDays;
+        public string LastSungDate;
         public string FactText;
     }
 
@@ -353,6 +356,34 @@ namespace Vocaluxe.Screens
                 else if (!string.IsNullOrEmpty(best.Date) && DateTime.TryParse(best.Date, out DateTime parsedDate))
                 {
                     info.RecordAgeDays = Math.Max(0, (int)(DateTime.Now - parsedDate).TotalDays);
+                }
+            }
+
+            var validScores = scores
+                .Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks)
+                .OrderBy(s => s.DateTicks)
+                .ToList();
+
+            if (validScores.Count > 0)
+            {
+                var latest = validScores.Last();
+                info.HasLastSung = true;
+                info.LastSungDate = !string.IsNullOrEmpty(latest.Date) ? latest.Date : new DateTime(latest.DateTicks).ToString("dd/MM/yyyy");
+                DateTime lastDate = new DateTime(latest.DateTicks);
+                info.LastSungAgeDays = Math.Max(0, (int)(DateTime.Now - lastDate).TotalDays);
+            }
+            else if (scores.Count > 0)
+            {
+                var scoresWithDate = scores
+                    .Where(s => !string.IsNullOrEmpty(s.Date) && DateTime.TryParse(s.Date, out _))
+                    .ToList();
+                if (scoresWithDate.Count > 0)
+                {
+                    var latest = scoresWithDate.OrderByDescending(s => DateTime.Parse(s.Date)).First();
+                    DateTime lastDate = DateTime.Parse(latest.Date);
+                    info.HasLastSung = true;
+                    info.LastSungDate = lastDate.ToString("dd/MM/yyyy");
+                    info.LastSungAgeDays = Math.Max(0, (int)(DateTime.Now - lastDate).TotalDays);
                 }
             }
 

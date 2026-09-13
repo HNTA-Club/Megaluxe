@@ -215,6 +215,11 @@
   <string name="TR_SCREENHIGHSCORE_NEVER_SUNG">Never sung at the club yet</string>
   <string name="TR_SCREENHIGHSCORE_SET_TODAY">Set today</string>
   <string name="TR_SCREENHIGHSCORE_SET_DAYS_AGO">Set {0} days ago ({1})</string>
+  <string name="TR_SCREENHIGHSCORE_RECORD_SET_TODAY">Record set today</string>
+  <string name="TR_SCREENHIGHSCORE_RECORD_SET_DAYS_AGO">Record set {0} days ago ({1})</string>
+  <string name="TR_SCREENHIGHSCORE_LAST_SUNG_TODAY">Last sung today</string>
+  <string name="TR_SCREENHIGHSCORE_FIRST_SUNG_TODAY">First sung today</string>
+  <string name="TR_SCREENHIGHSCORE_LAST_SUNG_DAYS_AGO">Last sung {0} days ago ({1})</string>
   <string name="TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED">First performed at the club: {0} ({1} days ago)</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT">First time in {0} days this song was sung!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS">{0} song records broken this session!</string>
