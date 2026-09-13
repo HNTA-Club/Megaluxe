@@ -33,7 +33,7 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 6; }
+            get { return 8; }
         }
 
         private const int _NumLeaderboard = 13;
@@ -63,7 +63,7 @@ namespace Vocaluxe.Screens
         private const string _TextHighlightBody = "TextHighlightBody";
         private string[] _TextChartName;
         private string[] _TextChartValue;
-        private EHighscoreChartMode _ChartMode = EHighscoreChartMode.Popular5Months;
+        private EHighscoreChartMode _ChartMode = EHighscoreChartMode.MostSungAllTime;
 
         // Color Palettes: Green for this/latest run, Blue for season, White default
         private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint (Green)
@@ -132,10 +132,10 @@ namespace Vocaluxe.Screens
                 texts.Add(_TextLeaderboardDate[i]);
             }
 
-            // Init Chart arrays (up to 5)
-            _TextChartName = new string[5];
-            _TextChartValue = new string[5];
-            for (int i = 0; i < 5; i++)
+            // Init Chart arrays (up to NumChartRows)
+            _TextChartName = new string[CHighscoreChart.NumChartRows];
+            _TextChartValue = new string[CHighscoreChart.NumChartRows];
+            for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
             {
                 _TextChartName[i] = "TextChartName" + (i + 1);
                 _TextChartValue[i] = "TextChartValue" + (i + 1);
@@ -159,7 +159,7 @@ namespace Vocaluxe.Screens
             // Draw chart texts ON TOP of the bars so they blend properly without depth buffer occlusion
             if (chartData != null && chartData.Rows != null)
             {
-                for (int i = 0; i < chartData.Rows.Count && i < 5; i++)
+                for (int i = 0; i < chartData.Rows.Count && i < CHighscoreChart.NumChartRows; i++)
                 {
                     if (_Texts != null)
                     {
@@ -658,7 +658,7 @@ namespace Vocaluxe.Screens
             _SetText(_TextHighlightTitle, CLanguage.Translate(data.TitleKey));
             _SetText(_TextHighlightBody, null, false);
 
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
             {
                 if (i < data.Rows.Count)
                 {

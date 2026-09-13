@@ -28,6 +28,7 @@ namespace Vocaluxe.Screens
 {
     public enum EHighscoreChartMode
     {
+        MostSungAllTime = 0,
         Popular5Months = 0,
         LongestUnbrokenRecords = 1,
         ForgottenBangers = 2
@@ -48,6 +49,7 @@ namespace Vocaluxe.Screens
 
     public static class CHighscoreChart
     {
+        public const int NumChartRows = 8;
         private static Dictionary<EHighscoreChartMode, SChartData> _Cache = new Dictionary<EHighscoreChartMode, SChartData>();
         private static DateTime _LastCacheTime = DateTime.MinValue;
 
@@ -69,7 +71,7 @@ namespace Vocaluxe.Screens
             if (_Cache.ContainsKey(mode))
                 return _Cache[mode];
 
-            return new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_POPULAR_5MONTHS" };
+            return new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_MOST_SUNG" };
         }
 
         private static void _BuildAllChartData()
@@ -81,8 +83,7 @@ namespace Vocaluxe.Screens
             if (songs == null || songs.Count == 0)
                 return;
 
-            long fiveMonthsAgoTicks = DateTime.Now.AddMonths(-5).Ticks;
-            long thirtyDaysAgoTicks = DateTime.Now.AddDays(-30).Ticks;
+            long sixtyDaysAgoTicks = DateTime.Now.AddDays(-60).Ticks;
 
             var songStats = new List<SongStatSummary>();
 
@@ -92,7 +93,6 @@ namespace Vocaluxe.Screens
                 if (scores == null || scores.Count == 0)
                     continue;
 
-                int recent5MonthsCount = scores.Count(s => s.DateTicks >= fiveMonthsAgoTicks);
                 SDBScoreEntry allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
                 SDBScoreEntry latestScore = scores.OrderByDescending(s => s.DateTicks).FirstOrDefault();
 
@@ -100,42 +100,42 @@ namespace Vocaluxe.Screens
                 {
                     Song = song,
                     TotalScores = scores.Count,
-                    Recent5MonthsCount = recent5MonthsCount,
                     AllTimeRecordDateTicks = allTimeBest.DateTicks,
                     LatestDateTicks = latestScore.DateTicks,
                     RecordHolder = allTimeBest.Name
                 });
             }
 
-            // 1. Popular 5 Months
-            var popData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_POPULAR_5MONTHS" };
-            var topPop = songStats.Where(s => s.Recent5MonthsCount > 0)
-                .OrderByDescending(s => s.Recent5MonthsCount)
-                .Take(5)
+            // 1. All-Time Most Sung / Club Classics
+            var popData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_MOST_SUNG" };
+            var topPop = songStats
+                .OrderByDescending(s => s.TotalScores)
+                .Take(NumChartRows)
                 .ToList();
 
             if (topPop.Count > 0)
             {
-                int maxVal = topPop.Max(s => s.Recent5MonthsCount);
+                int maxVal = topPop.Max(s => s.TotalScores);
                 foreach (var item in topPop)
                 {
                     popData.Rows.Add(new SChartRow
                     {
                         Label = item.Song.Title,
-                        ValueText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT"), item.Recent5MonthsCount),
-                        Ratio = maxVal > 0 ? (float)item.Recent5MonthsCount / maxVal : 0f
+                        ValueText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT"), item.TotalScores),
+                        Ratio = maxVal > 0 ? (float)item.TotalScores / maxVal : 0f
                     });
                 }
             }
-            _Cache[EHighscoreChartMode.Popular5Months] = popData;
+            _Cache[EHighscoreChartMode.MostSungAllTime] = popData;
 
-            // 2. Longest Unbroken Records
+            // 2. Longest Unbroken Records (filtered to genuine club songs with >= 5 performances)
             var recData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_LONGEST_RECORDS" };
             var topRec = songStats
+                .Where(s => s.TotalScores >= 5)
                 .Select(s => new { s.Song, DaysAge = (int)(DateTime.Now - new DateTime(s.AllTimeRecordDateTicks)).TotalDays })
                 .Where(x => x.DaysAge > 0)
                 .OrderByDescending(x => x.DaysAge)
-                .Take(5)
+                .Take(NumChartRows)
                 .ToList();
 
             if (topRec.Count > 0)
@@ -153,13 +153,13 @@ namespace Vocaluxe.Screens
             }
             _Cache[EHighscoreChartMode.LongestUnbrokenRecords] = recData;
 
-            // 3. Forgotten Bangers
+            // 3. Forgotten Bangers (unplayed for >= 60 days, with >= 5 performances)
             var bangData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_FORGOTTEN_BANGERS" };
             var topBang = songStats
-                .Where(s => s.TotalScores >= 3 && s.LatestDateTicks < thirtyDaysAgoTicks)
+                .Where(s => s.TotalScores >= 5 && s.LatestDateTicks < sixtyDaysAgoTicks)
                 .Select(s => new { s.Song, DroughtDays = (int)(DateTime.Now - new DateTime(s.LatestDateTicks)).TotalDays })
                 .OrderByDescending(x => x.DroughtDays)
-                .Take(5)
+                .Take(NumChartRows)
                 .ToList();
 
             if (topBang.Count > 0)
@@ -182,7 +182,6 @@ namespace Vocaluxe.Screens
         {
             public CSong Song;
             public int TotalScores;
-            public int Recent5MonthsCount;
             public long AllTimeRecordDateTicks;
             public long LatestDateTicks;
             public string RecordHolder;
@@ -195,12 +194,15 @@ namespace Vocaluxe.Screens
 
             const float barStartX = 1085f;
             const float barMaxWidth = 770f;
+            const float barHeight = 32f;
+            const float rowPitch = 40f;
+            const float startY = 690f;
 
             // Soft translucent vibrant mode color
             SColorF fillColor;
             switch (mode)
             {
-                case EHighscoreChartMode.Popular5Months:
+                case EHighscoreChartMode.MostSungAllTime:
                     fillColor = new SColorF(0.18f, 0.58f, 0.90f, 0.45f); // Soft Cyan/Blue
                     break;
                 case EHighscoreChartMode.LongestUnbrokenRecords:
@@ -214,22 +216,22 @@ namespace Vocaluxe.Screens
                     break;
             }
 
-            for (int i = 0; i < data.Rows.Count && i < 5; i++)
+            for (int i = 0; i < data.Rows.Count && i < NumChartRows; i++)
             {
-                float y = 698f + i * 62f;
+                float y = startY + i * rowPitch;
                 float barWidth = Math.Max(25f, barMaxWidth * Math.Min(1.0f, Math.Max(0.05f, data.Rows[i].Ratio)));
 
                 // 1. Draw dark translucent background tray at Z = -0.4f (behind fill bar!)
-                SRectF bgRect = new SRectF(barStartX, y, barMaxWidth, 44f, -0.4f);
+                SRectF bgRect = new SRectF(barStartX, y, barMaxWidth, barHeight, -0.4f);
                 SColorF bgColor = new SColorF(0.06f, 0.08f, 0.14f, 0.65f);
                 CDraw.DrawRect(bgColor, bgRect);
 
                 // 2. Draw filled progress bar rect with soft vibrant color at Z = -0.5f (in front of tray!)
-                SRectF fillRect = new SRectF(barStartX, y, barWidth, 44f, -0.5f);
+                SRectF fillRect = new SRectF(barStartX, y, barWidth, barHeight, -0.5f);
                 CDraw.DrawRect(fillColor, fillRect);
 
                 // 3. Draw bright edge highlight on the right end of the fill bar at Z = -0.6f (frontmost!)
-                SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, 44f, -0.6f);
+                SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, barHeight, -0.6f);
                 SColorF edgeColor = new SColorF(Math.Min(1.0f, fillColor.R * 1.25f), Math.Min(1.0f, fillColor.G * 1.25f), Math.Min(1.0f, fillColor.B * 1.25f), 0.95f);
                 CDraw.DrawRect(edgeColor, edgeRect);
             }

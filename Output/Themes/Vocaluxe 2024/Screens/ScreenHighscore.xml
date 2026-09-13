@@ -2,7 +2,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>6</ScreenVersion>
+    <ScreenVersion>8</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -1156,7 +1156,7 @@
       <X>1090</X>
       <Y>640</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>36</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -1182,10 +1182,10 @@
     </Text>
     <Text Name="TextChartName1">
       <X>1095</X>
-      <Y>700</Y>
+      <Y>693</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>470</MaxW>
+      <H>25</H>
+      <MaxW>580</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1196,9 +1196,9 @@
     </Text>
     <Text Name="TextChartValue1">
       <X>1845</X>
-      <Y>700</Y>
+      <Y>693</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>25</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -1210,10 +1210,10 @@
     </Text>
     <Text Name="TextChartName2">
       <X>1095</X>
-      <Y>762</Y>
+      <Y>733</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>470</MaxW>
+      <H>25</H>
+      <MaxW>580</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1224,9 +1224,9 @@
     </Text>
     <Text Name="TextChartValue2">
       <X>1845</X>
-      <Y>762</Y>
+      <Y>733</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>25</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -1238,10 +1238,10 @@
     </Text>
     <Text Name="TextChartName3">
       <X>1095</X>
-      <Y>824</Y>
+      <Y>773</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>470</MaxW>
+      <H>25</H>
+      <MaxW>580</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1252,9 +1252,9 @@
     </Text>
     <Text Name="TextChartValue3">
       <X>1845</X>
-      <Y>824</Y>
+      <Y>773</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>25</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -1266,10 +1266,10 @@
     </Text>
     <Text Name="TextChartName4">
       <X>1095</X>
-      <Y>886</Y>
+      <Y>813</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>470</MaxW>
+      <H>25</H>
+      <MaxW>580</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1280,9 +1280,9 @@
     </Text>
     <Text Name="TextChartValue4">
       <X>1845</X>
-      <Y>886</Y>
+      <Y>813</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>25</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -1294,10 +1294,10 @@
     </Text>
     <Text Name="TextChartName5">
       <X>1095</X>
-      <Y>948</Y>
+      <Y>853</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>470</MaxW>
+      <H>25</H>
+      <MaxW>580</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1308,9 +1308,93 @@
     </Text>
     <Text Name="TextChartValue5">
       <X>1845</X>
-      <Y>948</Y>
+      <Y>853</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>25</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName6">
+      <X>1095</X>
+      <Y>893</Y>
+      <Z>-1</Z>
+      <H>25</H>
+      <MaxW>580</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue6">
+      <X>1845</X>
+      <Y>893</Y>
+      <Z>-1</Z>
+      <H>25</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName7">
+      <X>1095</X>
+      <Y>933</Y>
+      <Z>-1</Z>
+      <H>25</H>
+      <MaxW>580</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue7">
+      <X>1845</X>
+      <Y>933</Y>
+      <Z>-1</Z>
+      <H>25</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName8">
+      <X>1095</X>
+      <Y>973</Y>
+      <Z>-1</Z>
+      <H>25</H>
+      <MaxW>580</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue8">
+      <X>1845</X>
+      <Y>973</Y>
+      <Z>-1</Z>
+      <H>25</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />

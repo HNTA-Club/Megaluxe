@@ -1,5 +1,5 @@
-import xml.etree.ElementTree as ET
 import os
+from dataclasses import dataclass
 
 def create_text(name, x, y, h, align='Left', text='', max_w='0', style='Bold', color='TextColor', font='Outline'):
     return f'''    <Text Name="{name}">
@@ -46,65 +46,132 @@ def create_particle(name, x, y, w, h):
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>'''
 
-statics = []
-statics.append(create_static('StaticMenuBar', 0, 60, 1920, 67.5))
-statics.append(create_static('StaticCardCurrent', 40, 140, 980, 890))
-statics.append(create_static('StaticCardLore', 1060, 140, 820, 450))
-statics.append(create_static('StaticCardHighlight', 1060, 620, 820, 410))
+# =============================================================================
+# Layout Engine & Geometry
+# =============================================================================
+@dataclass
+class Rect:
+    x: float
+    y: float
+    w: float
+    h: float
+
+    @property
+    def right(self) -> float:
+        return self.x + self.w
+
+    @property
+    def bottom(self) -> float:
+        return self.y + self.h
+
+    def inset(self, dx: float = 0, dy: float = 0) -> 'Rect':
+        return Rect(self.x + dx, self.y + dy, self.w - 2 * dx, self.h - 2 * dy)
+
+# 1. Screen & Primary Cards
+SCREEN_W, SCREEN_H = 1920, 1080
+MARGIN_X           = 40
+TOP_Y              = 140
+PANEL_GAP          = 40
+
+MENU_BAR   = Rect(x=0, y=60, w=SCREEN_W, h=67.5)
+LEFT_CARD  = Rect(x=MARGIN_X, y=TOP_Y, w=980, h=890)
+
+RIGHT_X    = LEFT_CARD.right + PANEL_GAP                   # 1060
+RIGHT_W    = SCREEN_W - RIGHT_X - MARGIN_X                 # 820
+LORE_CARD  = Rect(x=RIGHT_X, y=TOP_Y, w=RIGHT_W, h=450)
+CHART_CARD = Rect(x=RIGHT_X, y=LORE_CARD.bottom + 30, w=RIGHT_W, h=410)
+
+# 2. Left Pane: Unified Master Leaderboard (13 Rows, 5 Columns)
+NUM_LEADERBOARD_ROWS = 13
+LEADERBOARD_START_Y  = LEFT_CARD.y + 65                    # 205
+LEADERBOARD_PITCH    = 54
+COL_RANK             = LEFT_CARD.x + 30                    # 70
+COL_NAME             = COL_RANK + 65                       # 135 (max_w=410)
+COL_SCORE            = LEFT_CARD.x + 650                   # 690 (align Right)
+COL_TAG              = LEFT_CARD.x + 675                   # 715 (max_w=180)
+COL_DATE             = LEFT_CARD.right - 30                # 990 (align Right)
+
+# 3. Top-Right Pane: Song Lore (2 Columns + Fact Footer)
+LORE_COL1_X = LORE_CARD.x + 40                             # 1100
+LORE_COL2_X = LORE_CARD.x + 420                            # 1480
+
+# 4. Bottom-Right Pane: Club Visualization Panel (8 Rows)
+NUM_CHART_ROWS   = 8
+CHART_BAR_INSET  = 25
+CHART_BARS       = CHART_CARD.inset(dx=CHART_BAR_INSET)    # X=1085, W=770
+CHART_START_Y    = CHART_CARD.y + 70                       # 690
+CHART_ROW_PITCH  = 40
+CHART_BAR_H      = 32
+CHART_TEXT_H     = 25
+CHART_TEXT_PAD_Y = (CHART_BAR_H - CHART_TEXT_H) // 2       # 3px centering offset -> Y=693
+CHART_NAME_X     = CHART_BARS.x + 10                       # 1095
+CHART_VAL_X      = CHART_BARS.right - 10                   # 1845 (align Right)
+
+# =============================================================================
+# Assembly
+# =============================================================================
+statics = [
+    create_static('StaticMenuBar', MENU_BAR.x, MENU_BAR.y, MENU_BAR.w, MENU_BAR.h),
+    create_static('StaticCardCurrent', LEFT_CARD.x, LEFT_CARD.y, LEFT_CARD.w, LEFT_CARD.h),
+    create_static('StaticCardLore', LORE_CARD.x, LORE_CARD.y, LORE_CARD.w, LORE_CARD.h),
+    create_static('StaticCardHighlight', CHART_CARD.x, CHART_CARD.y, CHART_CARD.w, CHART_CARD.h),
+]
 
 texts = []
 
 # Top Menu Header
 texts.append(create_text('TextTitle', 90, 75, 40.5, 'Left', 'TR_SCREENHIGHSCORE_HIGHSCORE'))
-texts.append(create_text('TextSongName', 960, 75, 40.5, 'Center'))
+texts.append(create_text('TextSongName', SCREEN_W // 2, 75, 40.5, 'Center'))
 texts.append(create_text('TextSongMode', 1830, 75, 40.5, 'Right'))
 
-# Left Pane - Unified Master Leaderboard (13 rows, wider pane W=980)
-texts.append(create_text('TextLeaderboardTitle', 70, 155, 34, 'Left', text='TR_SCREENHIGHSCORE_LEADERBOARD', color='TextColor'))
-texts.append(create_text('TextLeaderboardSubTitle', 990, 162, 24, 'Right', text='TR_SCREENHIGHSCORE_SUBTITLE_ALLTIME'))
-for i in range(1, 14):
-    y = 205 + (i-1)*54
-    texts.append(create_text(f'TextLeaderboardRank{i}', 70, y, 30, 'Left'))
-    texts.append(create_text(f'TextLeaderboardName{i}', 135, y, 30, 'Left', max_w='410'))
-    texts.append(create_text(f'TextLeaderboardScore{i}', 690, y, 30, 'Right'))
-    texts.append(create_text(f'TextLeaderboardTag{i}', 715, y, 26, 'Left', max_w='180'))
-    texts.append(create_text(f'TextLeaderboardDate{i}', 990, y, 26, 'Right'))
+# Left Pane: Master Leaderboard
+texts.append(create_text('TextLeaderboardTitle', COL_RANK, LEFT_CARD.y + 15, 34, 'Left', text='TR_SCREENHIGHSCORE_LEADERBOARD', color='TextColor'))
+texts.append(create_text('TextLeaderboardSubTitle', COL_DATE, LEFT_CARD.y + 22, 24, 'Right', text='TR_SCREENHIGHSCORE_SUBTITLE_ALLTIME'))
 
-# Card 2 (Top-Right): Song Lore (Side-by-Side Key Metrics with Units)
-texts.append(create_text('TextLoreTitle', 1090, 160, 38, 'Left', color='TextColor'))
+for i in range(1, NUM_LEADERBOARD_ROWS + 1):
+    y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
+    texts.append(create_text(f'TextLeaderboardRank{i}', COL_RANK, y, 30, 'Left'))
+    texts.append(create_text(f'TextLeaderboardName{i}', COL_NAME, y, 30, 'Left', max_w='410'))
+    texts.append(create_text(f'TextLeaderboardScore{i}', COL_SCORE, y, 30, 'Right'))
+    texts.append(create_text(f'TextLeaderboardTag{i}', COL_TAG, y, 26, 'Left', max_w='180'))
+    texts.append(create_text(f'TextLeaderboardDate{i}', COL_DATE, y, 26, 'Right'))
+
+# Top-Right Pane: Song Lore
+texts.append(create_text('TextLoreTitle', LORE_CARD.x + 30, LORE_CARD.y + 20, 38, 'Left', color='TextColor'))
 
 # Left Column (Performances)
-texts.append(create_text('TextLoreStat1_Num', 1100, 215, 64, 'Left', color='TextColor', max_w='350'))
-texts.append(create_text('TextLoreStat1', 1100, 290, 28, 'Left', max_w='350'))
-texts.append(create_text('TextLoreStat4', 1100, 330, 26, 'Left', max_w='350'))
+texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 215, 64, 'Left', color='TextColor', max_w='350'))
+texts.append(create_text('TextLoreStat1', LORE_COL1_X, 290, 28, 'Left', max_w='350'))
+texts.append(create_text('TextLoreStat4', LORE_COL1_X, 330, 26, 'Left', max_w='350'))
 
 # Right Column (Record & Date)
-texts.append(create_text('TextLoreStat2_Num', 1480, 215, 64, 'Left', color='TextColor', max_w='380'))
-texts.append(create_text('TextLoreStat2', 1480, 290, 28, 'Left', max_w='380'))
-texts.append(create_text('TextLoreStat3', 1480, 330, 26, 'Left', max_w='380'))
+texts.append(create_text('TextLoreStat2_Num', LORE_COL2_X, 215, 64, 'Left', color='TextColor', max_w='380'))
+texts.append(create_text('TextLoreStat2', LORE_COL2_X, 290, 28, 'Left', max_w='380'))
+texts.append(create_text('TextLoreStat3', LORE_COL2_X, 330, 26, 'Left', max_w='380'))
 
-# Fun Fact / Highlight Line (Bottom of Song Lore Card)
-texts.append(create_text('TextLoreFact', 1100, 485, 32, 'Left', max_w='740', color='TextColor'))
+# Fun Fact / Highlight Line
+texts.append(create_text('TextLoreFact', LORE_COL1_X, 485, 32, 'Left', max_w='740', color='TextColor'))
 
-# Card 4 (Bottom-Right): Visualization Panel
-texts.append(create_text('TextHighlightTitle', 1090, 640, 38, 'Left', color='TextColor'))
-texts.append(create_text('TextHighlightBody', 1470, 750, 44, 'Center', max_w='760'))
-for i in range(1, 6):
-    y = 700 + (i-1)*62
-    texts.append(create_text(f'TextChartName{i}', 1095, y, 32, 'Left', max_w='470'))
-    texts.append(create_text(f'TextChartValue{i}', 1845, y, 32, 'Right'))
+# Bottom-Right Pane: Club Visualization Panel
+texts.append(create_text('TextHighlightTitle', CHART_CARD.x + 30, CHART_CARD.y + 20, 36, 'Left', color='TextColor'))
+texts.append(create_text('TextHighlightBody', CHART_CARD.x + CHART_CARD.w // 2, 750, 44, 'Center', max_w='760'))
+
+for i in range(1, NUM_CHART_ROWS + 1):
+    y = CHART_START_Y + (i - 1) * CHART_ROW_PITCH + CHART_TEXT_PAD_Y
+    texts.append(create_text(f'TextChartName{i}', CHART_NAME_X, y, CHART_TEXT_H, 'Left', max_w='580'))
+    texts.append(create_text(f'TextChartValue{i}', CHART_VAL_X, y, CHART_TEXT_H, 'Right'))
 
 particles = []
 # Particle Effects for Leaderboard (1..13)
-for i in range(1, 14):
-    y = 205 + (i-1)*54
-    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', 65, y-4, 930, 38))
+for i in range(1, NUM_LEADERBOARD_ROWS + 1):
+    y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
+    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', LEFT_CARD.x + 25, y - 4, LEFT_CARD.w - 50, 38))
 
 xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>6</ScreenVersion>
+    <ScreenVersion>8</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
