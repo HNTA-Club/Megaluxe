@@ -107,7 +107,7 @@ namespace Vocaluxe.Screens
                 _TextSongName, _TextSongMode,
                 _TextLeaderboardTitle, _TextLeaderboardSubTitle,
                 _TextLoreTitle, _TextLoreStat1, _TextLoreStat2, _TextLoreStat3, _TextLoreStat4,
-                "TextLoreStat1_Num", "TextLoreStat1_Label", "TextLoreStat2_Num", "TextLoreStat2_Label", "TextLoreFact",
+                "TextLoreStat1_Num", "TextLoreStat2_Num", "TextLoreFact",
                 _TextHighlightTitle, _TextHighlightBody
             };
 
@@ -609,15 +609,21 @@ namespace Vocaluxe.Screens
                 SPlayer[] players = points.GetPlayer(round, CGame.NumPlayers);
                 bool isDuet = (CGame.GetGameMode(round) == EGameMode.TR_GAMEMODE_DUET);
 
-                for (int p = 0; p < players.Length; p++)
+                // Group valid players by voice line so multi-player single-mic rounds only count at most 1 broken record
+                var playerVoices = players
+                    .Where(p => p.Points > CSettings.MinScoreForDB && p.SongFinished && !CProfiles.IsGuestProfile(p.ProfileID))
+                    .GroupBy(p => isDuet ? p.VoiceNr : 0);
+
+                foreach (var voiceGroup in playerVoices)
                 {
-                    var player = players[p];
-                    if (player.Points > CSettings.MinScoreForDB && player.SongFinished && !CProfiles.IsGuestProfile(player.ProfileID))
+                    int voiceNr = voiceGroup.Key;
+                    var voiceScores = priorScores.Where(s => !isDuet || s.VoiceNr == voiceNr).ToList();
+                    // Only count as broken if an existing prior record existed in the database
+                    if (voiceScores.Count > 0)
                     {
-                        int score = (int)Math.Round(player.Points);
-                        var voiceScores = priorScores.Where(s => !isDuet || s.VoiceNr == player.VoiceNr).ToList();
-                        int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
-                        if (score > prevVoiceRecord)
+                        int prevVoiceRecord = voiceScores.Max(s => s.Score);
+                        int maxRoundScore = voiceGroup.Max(p => (int)Math.Round(p.Points));
+                        if (maxRoundScore > prevVoiceRecord)
                         {
                             _SessionRecordsBroken++;
                         }
@@ -647,9 +653,12 @@ namespace Vocaluxe.Screens
 
             if (!_FromScreenSong)
             {
-                int currentSongID = CScreenSong.getSelectedSongID();
-                if (currentSongID >= 0)
-                    _SessionSongsSung.Add(currentSongID);
+                for (int round = 0; round < points.NumRounds; round++)
+                {
+                    var song = CGame.GetSong(round);
+                    if (song != null && song.ID >= 0)
+                        _SessionSongsSung.Add(song.ID);
+                }
             }
         }
 
@@ -777,6 +786,7 @@ namespace Vocaluxe.Screens
                 }
             }
             _UpdateRound();
+            _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
             _NeedsRefresh = true;
             UpdateGame();
         }
