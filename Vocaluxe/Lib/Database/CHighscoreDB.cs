@@ -249,6 +249,7 @@ namespace Vocaluxe.Lib.Database
                 command.Parameters.AddWithValue("@ShortSong", shortSong);
                 command.Parameters.AddWithValue("@Difficulty", difficulty);
                 command.ExecuteNonQuery();
+                _CachedTotalScoreCount = -1;
 
                 //Read last insert line
                 command.CommandText = "SELECT id FROM Scores ORDER BY id DESC LIMIT 0, 1";
@@ -368,8 +369,13 @@ namespace Vocaluxe.Lib.Database
             return scores;
         }
 
+        private int _CachedTotalScoreCount = -1;
+
         public int GetTotalScoreCount()
         {
+            if (_CachedTotalScoreCount >= 0)
+                return _CachedTotalScoreCount;
+
             using (var connection = new SqliteConnection())
             {
                 connection.ConnectionString = "Data Source=" + _FilePath;
@@ -389,6 +395,7 @@ namespace Vocaluxe.Lib.Database
                     object result = command.ExecuteScalar();
                     if (result != null && int.TryParse(result.ToString(), out int count))
                     {
+                        _CachedTotalScoreCount = count;
                         return count;
                     }
                 }

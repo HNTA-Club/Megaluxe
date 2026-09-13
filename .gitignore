@@ -35,9 +35,12 @@ tx.exe
 *.dll.config
 /*.vsp
 /*.ctl
+*.zip
+/Output/*.zip
 /Output/Config.xml
 /Output/CoverDB.sqlite
 /Output/HighscoreDB.sqlite
+/Output/*.sqlite
 /Output/ClientServerLib.dll
 /Output/Vocaluxe.exe*
 /Output/Vocaluxe_x64.exe*
