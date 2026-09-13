@@ -254,7 +254,7 @@ namespace Vocaluxe.Screens
 
         public override bool UpdateGame()
         {
-            if (_Round >= _Scores.Length || _Scores[_Round] == null)
+            if (_Scores == null || _Round >= _Scores.Length || _Scores[_Round] == null)
                 return true;
 
             _SetText(_TextLoreTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_SONG_LORE"));
@@ -568,10 +568,12 @@ namespace Vocaluxe.Screens
             _HasPlayedHighscoreSound = false;
             _Round = 0;
             _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
+            _FromScreenSong = (CGame.NumRounds == 0);
             
             _NewEntryIDs.Clear();
             _AddScoresToDB();
             _LoadScores();
+            _CountBrokenRecords();
             _UpdateRound();
 
             UpdateGame();
@@ -580,6 +582,39 @@ namespace Vocaluxe.Screens
         private bool _IsNewEntry(int id)
         {
             return _NewEntryIDs.Any(t => t == id);
+        }
+
+        private void _CountBrokenRecords()
+        {
+            if (_FromScreenSong) return;
+
+            CPoints points = CGame.GetPoints();
+            if (points == null) return;
+
+            for (int round = 0; round < points.NumRounds; round++)
+            {
+                if (_Scores == null || round >= _Scores.Length || _Scores[round] == null) continue;
+
+                var roundScores = _Scores[round];
+                var priorScores = roundScores.Where(s => !_IsNewEntry(s.ID)).ToList();
+                SPlayer[] players = points.GetPlayer(round, CGame.NumPlayers);
+                bool isDuet = (CGame.GetGameMode(round) == EGameMode.TR_GAMEMODE_DUET);
+
+                for (int p = 0; p < players.Length; p++)
+                {
+                    var player = players[p];
+                    if (player.Points > CSettings.MinScoreForDB && player.SongFinished && !CProfiles.IsGuestProfile(player.ProfileID))
+                    {
+                        int score = (int)Math.Round(player.Points);
+                        var voiceScores = priorScores.Where(s => !isDuet || s.VoiceNr == player.VoiceNr).ToList();
+                        int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
+                        if (score > prevVoiceRecord)
+                        {
+                            _SessionRecordsBroken++;
+                        }
+                    }
+                }
+            }
         }
 
         private void _AddScoresToDB()
@@ -606,7 +641,6 @@ namespace Vocaluxe.Screens
                 int currentSongID = CScreenSong.getSelectedSongID();
                 if (currentSongID >= 0)
                     _SessionSongsSung.Add(currentSongID);
-                _SessionRecordsBroken += _NewEntryIDs.Count;
             }
         }
 
@@ -712,8 +746,16 @@ namespace Vocaluxe.Screens
         {
             if (_FromScreenSong)
             {
-                if (_Round == (int)EGameMode.TR_GAMEMODE_SHORTSONG) _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
-                else ++_Round;
+                if (num < 0)
+                {
+                    if (_Round == (int)EGameMode.TR_GAMEMODE_NORMAL) _Round = (int)EGameMode.TR_GAMEMODE_SHORTSONG;
+                    else --_Round;
+                }
+                else
+                {
+                    if (_Round == (int)EGameMode.TR_GAMEMODE_SHORTSONG) _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
+                    else ++_Round;
+                }
             }
             else
             {
