@@ -22,16 +22,13 @@ using Vocaluxe.Base;
 using VocaluxeLib;
 using VocaluxeLib.Draw;
 using VocaluxeLib.Menu;
-using VocaluxeLib.Songs;
 
 namespace Vocaluxe.Screens
 {
     public enum EHighscoreChartMode
     {
-        MostSungAllTime = 0,
-        Popular5Months = 0,
-        LongestUnbrokenRecords = 1,
-        ForgottenBangers = 2
+        SeasonalPlays = 0,
+        SeasonalRecords = 1
     }
 
     public class SChartRow
@@ -39,6 +36,8 @@ namespace Vocaluxe.Screens
         public string Label;
         public string ValueText;
         public float Ratio;
+        public int SeasonYear;
+        public bool IsSelectedSeason;
     }
 
     public class SChartData
@@ -47,192 +46,206 @@ namespace Vocaluxe.Screens
         public List<SChartRow> Rows = new List<SChartRow>();
     }
 
+    public struct SChartLayout
+    {
+        public float StartY;
+        public float BarHeight;
+        public float Gap;
+        public float RowPitch;
+        public float FontHeight;
+    }
+
     public static class CHighscoreChart
     {
         public const int NumChartRows = 8;
-        private static Dictionary<EHighscoreChartMode, SChartData> _Cache = new Dictionary<EHighscoreChartMode, SChartData>();
-        private static DateTime _LastCacheTime = DateTime.MinValue;
 
-        public static void ClearCache()
+        public static SChartLayout GetLayout(int count)
         {
-            _Cache.Clear();
-            _LastCacheTime = DateTime.MinValue;
-        }
+            count = Math.Max(1, Math.Min(NumChartRows, count));
+            const float cardTop = 688f;
+            const float cardAvailableH = 324f;
 
-        public static SChartData GetChartData(EHighscoreChartMode mode)
-        {
-            if (_Cache.ContainsKey(mode) && (DateTime.Now - _LastCacheTime).TotalSeconds < 30)
+            float barH;
+            float gap;
+            float fontH;
+
+            switch (count)
             {
-                return _Cache[mode];
+                case 1:
+                    barH = 90f;
+                    gap = 0f;
+                    fontH = 42f;
+                    break;
+                case 2:
+                    barH = 110f;
+                    gap = 26f;
+                    fontH = 40f;
+                    break;
+                case 3:
+                    barH = 75f;
+                    gap = 20f;
+                    fontH = 34f;
+                    break;
+                case 4:
+                    barH = 58f;
+                    gap = 16f;
+                    fontH = 30f;
+                    break;
+                case 5:
+                    barH = 47f;
+                    gap = 14f;
+                    fontH = 28f;
+                    break;
+                case 6:
+                    barH = 40f;
+                    gap = 12f;
+                    fontH = 26f;
+                    break;
+                case 7:
+                    barH = 35f;
+                    gap = 10f;
+                    fontH = 25f;
+                    break;
+                case 8:
+                default:
+                    barH = 32f;
+                    gap = 8f;
+                    fontH = 24f;
+                    break;
             }
 
-            _BuildAllChartData();
+            float totalHeight = count * barH + (count - 1) * gap;
+            float startY = cardTop + (cardAvailableH - totalHeight) / 2f;
 
-            if (_Cache.ContainsKey(mode))
-                return _Cache[mode];
-
-            return new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_MOST_SUNG" };
+            return new SChartLayout
+            {
+                StartY = startY,
+                BarHeight = barH,
+                Gap = gap,
+                RowPitch = barH + gap,
+                FontHeight = fontH
+            };
         }
 
-        private static void _BuildAllChartData()
+        private static int GetSeasonYear(SDBScoreEntry entry)
         {
-            _Cache.Clear();
-            _LastCacheTime = DateTime.Now;
+            DateTime date = new DateTime(entry.DateTicks);
+            return (date.Month >= 9) ? date.Year : date.Year - 1;
+        }
 
-            List<CSong> songs = CSongs.Songs;
-            if (songs == null || songs.Count == 0)
-                return;
+        public static SChartData GetChartData(List<SDBScoreEntry> scores, EHighscoreChartMode mode, int selectedSeasonYear)
+        {
+            var data = new SChartData();
+            data.TitleKey = (mode == EHighscoreChartMode.SeasonalPlays)
+                ? "TR_SCREENHIGHSCORE_CHART_SEASONAL_PLAYS"
+                : "TR_SCREENHIGHSCORE_CHART_SEASONAL_RECORDS";
 
-            long sixtyDaysAgoTicks = DateTime.Now.AddDays(-60).Ticks;
+            if (scores == null || scores.Count == 0)
+                return data;
 
-            var songStats = new List<SongStatSummary>();
+            int currentMonth = DateTime.Now.Month;
+            int currentSeason = (currentMonth >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
 
-            foreach (var song in songs)
+            int minSeason = scores.Select(s => GetSeasonYear(s)).Min();
+            if (minSeason > currentSeason) minSeason = currentSeason;
+            if (currentSeason - minSeason + 1 > NumChartRows)
+                minSeason = currentSeason - NumChartRows + 1;
+
+            var seasonList = new List<SeasonStat>();
+            for (int sy = currentSeason; sy >= minSeason; sy--)
             {
-                List<SDBScoreEntry> scores = CDataBase.LoadScore(song.ID, EGameMode.TR_GAMEMODE_NORMAL, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
-                if (scores == null || scores.Count == 0)
-                    continue;
-
-                SDBScoreEntry allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
-                SDBScoreEntry latestScore = scores.OrderByDescending(s => s.DateTicks).FirstOrDefault();
-
-                songStats.Add(new SongStatSummary
+                var seasonScores = scores.Where(s => GetSeasonYear(s) == sy).ToList();
+                int plays = seasonScores.Count;
+                int peak = plays > 0 ? seasonScores.Max(s => s.Score) : 0;
+                seasonList.Add(new SeasonStat
                 {
-                    Song = song,
-                    TotalScores = scores.Count,
-                    AllTimeRecordDateTicks = allTimeBest.DateTicks,
-                    LatestDateTicks = latestScore.DateTicks,
-                    RecordHolder = allTimeBest.Name
+                    SeasonYear = sy,
+                    Plays = plays,
+                    PeakScore = peak,
+                    IsSelectedSeason = (sy == selectedSeasonYear)
                 });
             }
 
-            // 1. All-Time Most Sung / Club Classics
-            var popData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_MOST_SUNG" };
-            var topPop = songStats
-                .OrderByDescending(s => s.TotalScores)
-                .Take(NumChartRows)
-                .ToList();
+            int maxPlays = seasonList.Count > 0 ? seasonList.Max(s => s.Plays) : 0;
+            int maxPeak = seasonList.Count > 0 ? seasonList.Max(s => s.PeakScore) : 0;
 
-            if (topPop.Count > 0)
+            foreach (var s in seasonList)
             {
-                int maxVal = topPop.Max(s => s.TotalScores);
-                foreach (var item in topPop)
+                string label = s.SeasonYear + "-" + (s.SeasonYear + 1);
+                string valText;
+                float ratio;
+
+                if (mode == EHighscoreChartMode.SeasonalPlays)
                 {
-                    popData.Rows.Add(new SChartRow
-                    {
-                        Label = item.Song.Title,
-                        ValueText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT"), item.TotalScores),
-                        Ratio = maxVal > 0 ? (float)item.TotalScores / maxVal : 0f
-                    });
+                    valText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT"), s.Plays);
+                    ratio = maxPlays > 0 ? (float)s.Plays / maxPlays : 0f;
                 }
-            }
-            _Cache[EHighscoreChartMode.MostSungAllTime] = popData;
-
-            // 2. Longest Unbroken Records (filtered to genuine club songs with >= 5 performances)
-            var recData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_LONGEST_RECORDS" };
-            var topRec = songStats
-                .Where(s => s.TotalScores >= 5)
-                .Select(s => new { s.Song, DaysAge = (int)(DateTime.Now - new DateTime(s.AllTimeRecordDateTicks)).TotalDays })
-                .Where(x => x.DaysAge > 0)
-                .OrderByDescending(x => x.DaysAge)
-                .Take(NumChartRows)
-                .ToList();
-
-            if (topRec.Count > 0)
-            {
-                int maxDays = topRec.Max(x => x.DaysAge);
-                foreach (var item in topRec)
+                else
                 {
-                    recData.Rows.Add(new SChartRow
-                    {
-                        Label = item.Song.Title,
-                        ValueText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_DAYS_UNIT"), item.DaysAge),
-                        Ratio = maxDays > 0 ? (float)item.DaysAge / maxDays : 0f
-                    });
+                    valText = s.PeakScore > 0 ? s.PeakScore.ToString("N0") : "-";
+                    ratio = maxPeak > 0 ? (float)s.PeakScore / maxPeak : 0f;
                 }
-            }
-            _Cache[EHighscoreChartMode.LongestUnbrokenRecords] = recData;
 
-            // 3. Forgotten Bangers (unplayed for >= 60 days, with >= 5 performances)
-            var bangData = new SChartData { TitleKey = "TR_SCREENHIGHSCORE_CHART_FORGOTTEN_BANGERS" };
-            var topBang = songStats
-                .Where(s => s.TotalScores >= 5 && s.LatestDateTicks < sixtyDaysAgoTicks)
-                .Select(s => new { s.Song, DroughtDays = (int)(DateTime.Now - new DateTime(s.LatestDateTicks)).TotalDays })
-                .OrderByDescending(x => x.DroughtDays)
-                .Take(NumChartRows)
-                .ToList();
-
-            if (topBang.Count > 0)
-            {
-                int maxDrought = topBang.Max(x => x.DroughtDays);
-                foreach (var item in topBang)
+                data.Rows.Add(new SChartRow
                 {
-                    bangData.Rows.Add(new SChartRow
-                    {
-                        Label = item.Song.Title,
-                        ValueText = String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_CHART_DROUGHT_UNIT"), item.DroughtDays),
-                        Ratio = maxDrought > 0 ? (float)item.DroughtDays / maxDrought : 0f
-                    });
-                }
+                    Label = label,
+                    ValueText = valText,
+                    Ratio = ratio,
+                    SeasonYear = s.SeasonYear,
+                    IsSelectedSeason = s.IsSelectedSeason
+                });
             }
-            _Cache[EHighscoreChartMode.ForgottenBangers] = bangData;
+
+            return data;
         }
 
-        private class SongStatSummary
+        private class SeasonStat
         {
-            public CSong Song;
-            public int TotalScores;
-            public long AllTimeRecordDateTicks;
-            public long LatestDateTicks;
-            public string RecordHolder;
+            public int SeasonYear;
+            public int Plays;
+            public int PeakScore;
+            public bool IsSelectedSeason;
         }
 
-        public static void DrawChartBars(SChartData data, EHighscoreChartMode mode)
+        public static void DrawChartBars(SChartData data, SChartLayout layout)
         {
             if (data == null || data.Rows == null || data.Rows.Count == 0)
                 return;
 
             const float barStartX = 1085f;
             const float barMaxWidth = 770f;
-            const float barHeight = 32f;
-            const float rowPitch = 40f;
-            const float startY = 690f;
-
-            // Soft translucent vibrant mode color
-            SColorF fillColor;
-            switch (mode)
-            {
-                case EHighscoreChartMode.MostSungAllTime:
-                    fillColor = new SColorF(0.18f, 0.58f, 0.90f, 0.45f); // Soft Cyan/Blue
-                    break;
-                case EHighscoreChartMode.LongestUnbrokenRecords:
-                    fillColor = new SColorF(0.92f, 0.68f, 0.18f, 0.45f); // Soft Gold
-                    break;
-                case EHighscoreChartMode.ForgottenBangers:
-                    fillColor = new SColorF(0.92f, 0.38f, 0.22f, 0.45f); // Soft Amber/Coral
-                    break;
-                default:
-                    fillColor = new SColorF(0.20f, 0.60f, 0.90f, 0.45f);
-                    break;
-            }
 
             for (int i = 0; i < data.Rows.Count && i < NumChartRows; i++)
             {
-                float y = startY + i * rowPitch;
+                float y = layout.StartY + i * layout.RowPitch;
                 float barWidth = Math.Max(25f, barMaxWidth * Math.Min(1.0f, Math.Max(0.05f, data.Rows[i].Ratio)));
 
+                // Color hierarchy: Cyan for currently selected season, default white for other seasons
+                SColorF fillColor;
+                SColorF edgeColor;
+
+                if (data.Rows[i].IsSelectedSeason)
+                {
+                    fillColor = new SColorF(0.25f, 0.80f, 1.00f, 0.45f); // Vibrant Electric Cyan
+                    edgeColor = new SColorF(0.40f, 0.90f, 1.00f, 0.95f);
+                }
+                else
+                {
+                    fillColor = new SColorF(0.96f, 0.96f, 0.98f, 0.28f); // Soft Clean Default White
+                    edgeColor = new SColorF(1.00f, 1.00f, 1.00f, 0.85f);
+                }
+
                 // 1. Draw dark translucent background tray at Z = -0.4f (behind fill bar!)
-                SRectF bgRect = new SRectF(barStartX, y, barMaxWidth, barHeight, -0.4f);
+                SRectF bgRect = new SRectF(barStartX, y, barMaxWidth, layout.BarHeight, -0.4f);
                 SColorF bgColor = new SColorF(0.06f, 0.08f, 0.14f, 0.65f);
                 CDraw.DrawRect(bgColor, bgRect);
 
-                // 2. Draw filled progress bar rect with soft vibrant color at Z = -0.5f (in front of tray!)
-                SRectF fillRect = new SRectF(barStartX, y, barWidth, barHeight, -0.5f);
+                // 2. Draw filled progress bar rect with color at Z = -0.5f (in front of tray!)
+                SRectF fillRect = new SRectF(barStartX, y, barWidth, layout.BarHeight, -0.5f);
                 CDraw.DrawRect(fillColor, fillRect);
 
                 // 3. Draw bright edge highlight on the right end of the fill bar at Z = -0.6f (frontmost!)
-                SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, barHeight, -0.6f);
-                SColorF edgeColor = new SColorF(Math.Min(1.0f, fillColor.R * 1.25f), Math.Min(1.0f, fillColor.G * 1.25f), Math.Min(1.0f, fillColor.B * 1.25f), 0.95f);
+                SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, layout.BarHeight, -0.6f);
                 CDraw.DrawRect(edgeColor, edgeRect);
             }
         }
