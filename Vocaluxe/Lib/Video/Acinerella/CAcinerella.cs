@@ -260,8 +260,8 @@ namespace Vocaluxe.Lib.Video.Acinerella
             }
         }
 
-        [DllImport(_AcDll, EntryPoint = "ac_open_file", ExactSpelling = false, CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Ansi)]
-        private static extern Int32 _ac_open2(IntPtr pAcInstance, string filename);
+        [DllImport(_AcDll, EntryPoint = "ac_open_file", ExactSpelling = false, CallingConvention = CallingConvention.Cdecl)]
+        private static extern Int32 _ac_open2(IntPtr pAcInstance, [MarshalAs(UnmanagedType.LPUTF8Str)] string filename);
 
         // ReSharper disable UnusedMethodReturnValue.Global
         public static Int32 AcOpen2(IntPtr pAcInstance, string filename)
