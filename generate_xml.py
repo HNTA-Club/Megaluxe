@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 import os
 
-def create_text(name, x, y, h, align='Left', text='', max_w='0', style='Bold', color='TextColor'):
+def create_text(name, x, y, h, align='Left', text='', max_w='0', style='Bold', color='TextColor', font='Outline'):
     return f'''    <Text Name="{name}">
       <X>{x}</X>
       <Y>{y}</Y>
@@ -13,7 +13,7 @@ def create_text(name, x, y, h, align='Left', text='', max_w='0', style='Bold', c
       <Align>{align}</Align>
       <ResizeAlign>Center</ResizeAlign>
       <Style>{style}</Style>
-      <Font>Outline</Font>
+      <Font>{font}</Font>
       <Text>{text}</Text>
     </Text>'''
 
@@ -95,9 +95,13 @@ texts.append(create_text('TextLoreStat3', 500, 825, 26, 'Left', max_w='410'))
 # Fun Fact / Highlight Line (Bottom of Card 3)
 texts.append(create_text('TextLoreFact', 110, 965, 32, 'Left', max_w='780', color='TextColor'))
 
-# Card 4 (Bottom-Right): Club Highlight (Hero Metric Card)
+# Card 4 (Bottom-Right): Visualization Panel
 texts.append(create_text('TextHighlightTitle', 1020, 640, 38, 'Left', color='TextColor'))
 texts.append(create_text('TextHighlightBody', 1425, 750, 44, 'Center', max_w='800'))
+for i in range(1, 6):
+    y = 700 + (i-1)*62
+    texts.append(create_text(f'TextChartName{i}', 1030, y, 32, 'Left', max_w='500'))
+    texts.append(create_text(f'TextChartValue{i}', 1820, y, 32, 'Right'))
 
 particles = []
 # Particle Effects Top-Left (Current Performance 1..6)

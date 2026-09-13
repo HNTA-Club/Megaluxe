@@ -897,6 +897,146 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
+    <Text Name="TextChartName1">
+      <X>1030</X>
+      <Y>700</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>500</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue1">
+      <X>1820</X>
+      <Y>700</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName2">
+      <X>1030</X>
+      <Y>762</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>500</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue2">
+      <X>1820</X>
+      <Y>762</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName3">
+      <X>1030</X>
+      <Y>824</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>500</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue3">
+      <X>1820</X>
+      <Y>824</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName4">
+      <X>1030</X>
+      <Y>886</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>500</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue4">
+      <X>1820</X>
+      <Y>886</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartName5">
+      <X>1030</X>
+      <Y>948</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>500</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextChartValue5">
+      <X>1820</X>
+      <Y>948</Y>
+      <Z>-1</Z>
+      <H>32</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
   </Texts>
   <Buttons />
   <SongMenus />
