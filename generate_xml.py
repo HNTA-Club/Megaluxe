@@ -48,9 +48,8 @@ def create_particle(name, x, y, w, h):
 
 statics = []
 statics.append(create_static('StaticMenuBar', 0, 60, 1920, 67.5))
-statics.append(create_static('StaticCardCurrent', 60, 140, 870, 450))
-statics.append(create_static('StaticCardSeason', 990, 140, 870, 450))
-statics.append(create_static('StaticCardLore', 60, 620, 870, 410))
+statics.append(create_static('StaticCardCurrent', 60, 140, 870, 890))
+statics.append(create_static('StaticCardLore', 990, 140, 870, 450))
 statics.append(create_static('StaticCardHighlight', 990, 620, 870, 410))
 
 texts = []
@@ -60,40 +59,32 @@ texts.append(create_text('TextTitle', 90, 75, 40.5, 'Left', 'TR_SCREENHIGHSCORE_
 texts.append(create_text('TextSongName', 960, 75, 40.5, 'Center'))
 texts.append(create_text('TextSongMode', 1830, 75, 40.5, 'Right'))
 
-# Card 1 (Top-Left): Current Performance / All-Time Top (Up to 6 rows)
-texts.append(create_text('TextCurrentTitle', 90, 160, 38, 'Left', color='TextColor'))
-for i in range(1, 7):
-    y = 210 + (i-1)*52
-    texts.append(create_text(f'TextCurrentName{i}', 110, y, 48, 'Left', max_w='460'))
-    texts.append(create_text(f'TextCurrentScore{i}', 780, y, 48, 'Right'))
-    texts.append(create_text(f'TextCurrentRecord{i}', 800, y, 32, 'Left', color='TextColor'))
+# Left Pane - Unified Master Leaderboard (13 rows)
+texts.append(create_text('TextLeaderboardTitle', 90, 155, 34, 'Left', text='TR_SCREENHIGHSCORE_LEADERBOARD', color='TextColor'))
+texts.append(create_text('TextLeaderboardSubTitle', 890, 162, 24, 'Right', text='TR_SCREENHIGHSCORE_SUBTITLE_ALLTIME'))
+for i in range(1, 14):
+    y = 205 + (i-1)*54
+    texts.append(create_text(f'TextLeaderboardRank{i}', 90, y, 30, 'Left'))
+    texts.append(create_text(f'TextLeaderboardName{i}', 155, y, 30, 'Left', max_w='340'))
+    texts.append(create_text(f'TextLeaderboardScore{i}', 620, y, 30, 'Right'))
+    texts.append(create_text(f'TextLeaderboardTag{i}', 645, y, 26, 'Left', max_w='155'))
+    texts.append(create_text(f'TextLeaderboardDate{i}', 890, y, 26, 'Right'))
 
-# Card 2 (Top-Right): Season Leaderboard
-texts.append(create_text('TextSeasonTitle', 1020, 160, 38, 'Left', color='TextColor'))
-texts.append(create_text('TextSeasonSubTitle', 1830, 168, 26, 'Right'))
-for i in range(1, 6):
-    y = 225 + (i-1)*65
-    texts.append(create_text(f'TextSeasonRank{i}', 1020, y, 36, 'Left'))
-    texts.append(create_text(f'TextSeasonScore{i}', 1180, y, 36, 'Right'))
-    texts.append(create_text(f'TextSeasonName{i}', 1200, y, 36, 'Left', max_w='280'))
-    texts.append(create_text(f'TextSeasonDiff{i}', 1520, y, 32, 'Left'))
-    texts.append(create_text(f'TextSeasonDate{i}', 1830, y, 32, 'Right'))
-
-# Card 3 (Bottom-Left): Song Lore (Side-by-Side Key Metrics with Units)
-texts.append(create_text('TextLoreTitle', 90, 640, 38, 'Left', color='TextColor'))
+# Card 2 (Top-Right): Song Lore (Side-by-Side Key Metrics with Units)
+texts.append(create_text('TextLoreTitle', 1020, 160, 38, 'Left', color='TextColor'))
 
 # Left Column (Performances)
-texts.append(create_text('TextLoreStat1_Num', 110, 700, 70, 'Left', color='TextColor', max_w='380'))
-texts.append(create_text('TextLoreStat1', 110, 785, 28, 'Left', max_w='380'))
-texts.append(create_text('TextLoreStat4', 110, 825, 26, 'Left', max_w='380'))
+texts.append(create_text('TextLoreStat1_Num', 1040, 215, 64, 'Left', color='TextColor', max_w='380'))
+texts.append(create_text('TextLoreStat1', 1040, 290, 28, 'Left', max_w='380'))
+texts.append(create_text('TextLoreStat4', 1040, 330, 26, 'Left', max_w='380'))
 
 # Right Column (Record & Date)
-texts.append(create_text('TextLoreStat2_Num', 500, 700, 70, 'Left', color='TextColor', max_w='410'))
-texts.append(create_text('TextLoreStat2', 500, 785, 28, 'Left', max_w='410'))
-texts.append(create_text('TextLoreStat3', 500, 825, 26, 'Left', max_w='410'))
+texts.append(create_text('TextLoreStat2_Num', 1460, 215, 64, 'Left', color='TextColor', max_w='410'))
+texts.append(create_text('TextLoreStat2', 1460, 290, 28, 'Left', max_w='410'))
+texts.append(create_text('TextLoreStat3', 1460, 330, 26, 'Left', max_w='410'))
 
-# Fun Fact / Highlight Line (Bottom of Card 3)
-texts.append(create_text('TextLoreFact', 110, 965, 32, 'Left', max_w='780', color='TextColor'))
+# Fun Fact / Highlight Line (Bottom of Song Lore Card)
+texts.append(create_text('TextLoreFact', 1040, 485, 32, 'Left', max_w='780', color='TextColor'))
 
 # Card 4 (Bottom-Right): Visualization Panel
 texts.append(create_text('TextHighlightTitle', 1020, 640, 38, 'Left', color='TextColor'))
@@ -104,21 +95,16 @@ for i in range(1, 6):
     texts.append(create_text(f'TextChartValue{i}', 1820, y, 32, 'Right'))
 
 particles = []
-# Particle Effects Top-Left (Current Performance 1..6)
-for i in range(1, 7):
-    y = 210 + (i-1)*52
-    particles.append(create_particle(f'ParticleEffectCurrent{i}', 110, y-5, 740, 48))
-
-# Particle Effects Top-Right (Season Leaderboard 1..5)
-for i in range(1, 6):
-    y = 225 + (i-1)*65
-    particles.append(create_particle(f'ParticleEffectSeason{i}', 1020, y-5, 830, 50))
+# Particle Effects for Leaderboard (1..13)
+for i in range(1, 14):
+    y = 205 + (i-1)*54
+    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', 90, y-4, 810, 38))
 
 xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>4</ScreenVersion>
+    <ScreenVersion>5</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">

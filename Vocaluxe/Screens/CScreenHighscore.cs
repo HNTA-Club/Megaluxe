@@ -33,46 +33,43 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 4; }
+            get { return 5; }
         }
 
-        private const int _NumCurrent = 6;
-        private const int _NumRecord = 4;
-        private const int _NumSeason = 5;
+        private const int _NumLeaderboard = 13;
 
         private const string _TextSongName = "TextSongName";
         private const string _TextSongMode = "TextSongMode";
         
-        // Quadrant 1: Current Performance & Song Record
-        private const string _TextCurrentTitle = "TextCurrentTitle";
-        private string[] _TextCurrentName;
-        private string[] _TextCurrentScore;
-        private string[] _TextCurrentRecord;
-        private string[] _ParticleEffectCurrent;
+        // Left Pane - Unified Master Leaderboard (13 rows)
+        private const string _TextLeaderboardTitle = "TextLeaderboardTitle";
+        private const string _TextLeaderboardSubTitle = "TextLeaderboardSubTitle";
+        private string[] _TextLeaderboardRank;
+        private string[] _TextLeaderboardName;
+        private string[] _TextLeaderboardScore;
+        private string[] _TextLeaderboardTag;
+        private string[] _TextLeaderboardDate;
+        private string[] _ParticleEffectLeaderboard;
 
-        // Quadrant 2: Seasonal Leaderboard
-        private const string _TextSeasonTitle = "TextSeasonTitle";
-        private const string _TextSeasonSubTitle = "TextSeasonSubTitle";
-        private string[] _TextSeasonRank;
-        private string[] _TextSeasonScore;
-        private string[] _TextSeasonName;
-        private string[] _TextSeasonDiff;
-        private string[] _TextSeasonDate;
-        private string[] _ParticleEffectSeason;
-
-        // Quadrant 3: Song Lore
+        // Top-Right: Song Lore
         private const string _TextLoreTitle = "TextLoreTitle";
         private const string _TextLoreStat1 = "TextLoreStat1";
         private const string _TextLoreStat2 = "TextLoreStat2";
         private const string _TextLoreStat3 = "TextLoreStat3";
         private const string _TextLoreStat4 = "TextLoreStat4";
 
-        // Quadrant 4: Club Visualization Panel
+        // Bottom-Right: Club Visualization Panel
         private const string _TextHighlightTitle = "TextHighlightTitle";
         private const string _TextHighlightBody = "TextHighlightBody";
         private string[] _TextChartName;
         private string[] _TextChartValue;
         private EHighscoreChartMode _ChartMode = EHighscoreChartMode.Popular5Months;
+
+        // Color Palettes
+        private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint
+        private static readonly SColorF _ColorAllTime = new SColorF(0.96f, 0.78f, 0.26f, 1f); // Radiant Gold
+        private static readonly SColorF _ColorSeason = new SColorF(0.25f, 0.80f, 1.00f, 1f);  // Electric Cyan
+        private static readonly SColorF _ColorNormal = new SColorF(0.85f, 0.88f, 0.92f, 0.95f); // Crisp Light Silver
 
         private List<SDBScoreEntry>[] _Scores;
         private List<int>[] _AvailableYears;
@@ -106,53 +103,37 @@ namespace Vocaluxe.Screens
             var texts = new List<string>
             {
                 _TextSongName, _TextSongMode,
-                _TextCurrentTitle,
-                _TextSeasonTitle,
+                _TextLeaderboardTitle, _TextLeaderboardSubTitle,
                 _TextLoreTitle, _TextLoreStat1, _TextLoreStat2, _TextLoreStat3, _TextLoreStat4,
                 "TextLoreStat1_Num", "TextLoreStat1_Label", "TextLoreStat2_Num", "TextLoreStat2_Label", "TextLoreFact",
                 _TextHighlightTitle, _TextHighlightBody
             };
 
-            // Init Current Performance arrays
-            _TextCurrentName = new string[_NumCurrent];
-            _TextCurrentScore = new string[_NumCurrent];
-            _TextCurrentRecord = new string[_NumCurrent];
-            _ParticleEffectCurrent = new string[_NumCurrent];
-            for (int i = 0; i < _NumCurrent; i++)
+            // Init Unified Leaderboard arrays (13 rows)
+            _TextLeaderboardRank = new string[_NumLeaderboard];
+            _TextLeaderboardName = new string[_NumLeaderboard];
+            _TextLeaderboardScore = new string[_NumLeaderboard];
+            _TextLeaderboardTag = new string[_NumLeaderboard];
+            _TextLeaderboardDate = new string[_NumLeaderboard];
+            _ParticleEffectLeaderboard = new string[_NumLeaderboard];
+
+            for (int i = 0; i < _NumLeaderboard; i++)
             {
-                _TextCurrentName[i] = "TextCurrentName" + (i + 1);
-                _TextCurrentScore[i] = "TextCurrentScore" + (i + 1);
-                _TextCurrentRecord[i] = "TextCurrentRecord" + (i + 1);
-                _ParticleEffectCurrent[i] = "ParticleEffectCurrent" + (i + 1);
-                texts.Add(_TextCurrentName[i]);
-                texts.Add(_TextCurrentScore[i]);
-                texts.Add(_TextCurrentRecord[i]);
+                _TextLeaderboardRank[i] = "TextLeaderboardRank" + (i + 1);
+                _TextLeaderboardName[i] = "TextLeaderboardName" + (i + 1);
+                _TextLeaderboardScore[i] = "TextLeaderboardScore" + (i + 1);
+                _TextLeaderboardTag[i] = "TextLeaderboardTag" + (i + 1);
+                _TextLeaderboardDate[i] = "TextLeaderboardDate" + (i + 1);
+                _ParticleEffectLeaderboard[i] = "ParticleEffectLeaderboard" + (i + 1);
+
+                texts.Add(_TextLeaderboardRank[i]);
+                texts.Add(_TextLeaderboardName[i]);
+                texts.Add(_TextLeaderboardScore[i]);
+                texts.Add(_TextLeaderboardTag[i]);
+                texts.Add(_TextLeaderboardDate[i]);
             }
 
-            // Init Season arrays
-            _TextSeasonRank = new string[_NumSeason];
-            _TextSeasonScore = new string[_NumSeason];
-            _TextSeasonName = new string[_NumSeason];
-            _TextSeasonDiff = new string[_NumSeason];
-            _TextSeasonDate = new string[_NumSeason];
-            _ParticleEffectSeason = new string[_NumSeason];
-            for (int i = 0; i < _NumSeason; i++)
-            {
-                _TextSeasonRank[i] = "TextSeasonRank" + (i + 1);
-                _TextSeasonScore[i] = "TextSeasonScore" + (i + 1);
-                _TextSeasonName[i] = "TextSeasonName" + (i + 1);
-                _TextSeasonDiff[i] = "TextSeasonDiff" + (i + 1);
-                _TextSeasonDate[i] = "TextSeasonDate" + (i + 1);
-                _ParticleEffectSeason[i] = "ParticleEffectSeason" + (i + 1);
-                texts.Add(_TextSeasonRank[i]);
-                texts.Add(_TextSeasonScore[i]);
-                texts.Add(_TextSeasonName[i]);
-                texts.Add(_TextSeasonDiff[i]);
-                texts.Add(_TextSeasonDate[i]);
-            }
-            texts.Add(_TextSeasonSubTitle);
-
-            // Init Chart arrays
+            // Init Chart arrays (up to 5)
             _TextChartName = new string[5];
             _TextChartValue = new string[5];
             for (int i = 0; i < 5; i++)
@@ -163,12 +144,9 @@ namespace Vocaluxe.Screens
                 texts.Add(_TextChartValue[i]);
             }
 
-            var particleList = new List<string>(_ParticleEffectCurrent);
-            particleList.AddRange(_ParticleEffectSeason);
-
             _ThemeTexts = texts.ToArray();
-            _ThemeParticleEffects = particleList.ToArray();
-            _ThemeStatics = new string[] { "StaticMenuBar", "StaticCardCurrent", "StaticCardSeason", "StaticCardLore", "StaticCardHighlight" };
+            _ThemeParticleEffects = _ParticleEffectLeaderboard;
+            _ThemeStatics = new string[] { "StaticMenuBar", "StaticCardCurrent", "StaticCardLore", "StaticCardHighlight" };
             _NewEntryIDs = new List<int>();
         }
 
@@ -194,13 +172,17 @@ namespace Vocaluxe.Screens
                 }
             }
 
-            if (_Texts != null && _Texts.ContainsKey(_TextCurrentTitle))
+            // Draw sleek framing accent lines for panels
+            if (_Texts != null)
             {
-                SColorF accent = _Texts[_TextCurrentTitle].Color;
-                CDraw.DrawRect(accent, new SRectF(60, 140, 870, 4, -1f));
-                CDraw.DrawRect(accent, new SRectF(990, 140, 870, 4, -1f));
-                CDraw.DrawRect(accent, new SRectF(60, 620, 870, 4, -1f));
-                CDraw.DrawRect(accent, new SRectF(990, 620, 870, 4, -1f));
+                // Top border for Left Pane (Emerald/Gold gradient accent)
+                CDraw.DrawRect(new SColorF(0.18f, 0.85f, 0.55f, 0.95f), new SRectF(60, 140, 870, 4, -1f));
+
+                // Top-Right Pane (Song Lore) top accent line
+                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(990, 140, 870, 4, -1f));
+
+                // Bottom-Right Pane (Visualization Chart) top accent line
+                CDraw.DrawRect(new SColorF(0.95f, 0.65f, 0.20f, 0.95f), new SRectF(990, 620, 870, 4, -1f));
             }
         }
 
@@ -248,13 +230,17 @@ namespace Vocaluxe.Screens
             return true;
         }
 
-        private void _SetText(string key, string text, bool visible = true)
+        private void _SetText(string key, string text, bool visible = true, SColorF? color = null)
         {
-            if (key != null && _Texts.ContainsKey(key))
+            if (key != null && _Texts != null && _Texts.ContainsKey(key))
             {
                 _Texts[key].Visible = visible;
                 if (visible && text != null)
+                {
                     _Texts[key].Text = text;
+                    if (color.HasValue)
+                        _Texts[key].Color = color.Value;
+                }
             }
         }
 
@@ -263,101 +249,14 @@ namespace Vocaluxe.Screens
             if (_Round >= _Scores.Length || _Scores[_Round] == null)
                 return true;
 
-            _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE"));
-            
-            // For now hardcode season format, later use configuration
-            _SetText(_TextSeasonTitle, _SeasonYear + "-" + (_SeasonYear + 1) + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_LEADERBOARD"));
-            _SetText(_TextSeasonSubTitle, "(09/" + _SeasonYear + " - 08/" + (_SeasonYear + 1) + ")");
             _SetText(_TextLoreTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_SONG_LORE"));
             _SetText(_TextHighlightTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT"));
 
-            _UpdateCurrentPerformance();
-            _UpdateSeasonLeaderboard();
+            _UpdateLeaderboard();
             _UpdateSongLore();
             _UpdateChart();
 
             return true;
-        }
-
-        private void _UpdateCurrentPerformance()
-        {
-            CPoints points = CGame.GetPoints();
-            if (points != null && !_FromScreenSong && CScreenSong.GetAudioMode() != EAudioMode.TR_AUDIOMODE_KARAOKE)
-            {
-                _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CURRENT_PERFORMANCE"));
-                SPlayer[] players = points.GetPlayer(_Round, CGame.NumPlayers);
-
-                var priorScores = _Scores[_Round].Where(s => !_IsNewEntry(s.ID)).ToList();
-
-                for (int p = 0; p < _NumCurrent; p++)
-                {
-                    if (p < players.Length)
-                    {
-                        var player = players[p];
-                        string name = CProfiles.GetPlayerName(player.ProfileID);
-                        if (_IsDuet || CGame.NumPlayers > 1) name += " (P" + (player.VoiceNr + 1) + ")";
-                        
-                        _SetText(_TextCurrentName[p], name);
-                        _SetText(_TextCurrentScore[p], player.Points.ToString("0"));
-
-                        // Check if player's score is an all-time record for their mic/voice line
-                        var voiceScores = priorScores.Where(s => !_IsDuet || s.VoiceNr == player.VoiceNr).ToList();
-                        int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
-                        bool isAllTimeMicRecord = player.Points > prevVoiceRecord && player.Points > CSettings.MinScoreForDB;
-
-                        _SetText(_TextCurrentRecord[p], isAllTimeMicRecord ? CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") : "");
-
-                        if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
-                        {
-                            _ParticleEffects[_ParticleEffectCurrent[p]].Visible = isAllTimeMicRecord;
-                            if (isAllTimeMicRecord && !_HasPlayedHighscoreSound)
-                            {
-                                _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
-                                _HasPlayedHighscoreSound = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        _SetText(_TextCurrentName[p], null, false);
-                        _SetText(_TextCurrentScore[p], null, false);
-                        _SetText(_TextCurrentRecord[p], null, false);
-                        if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
-                            _ParticleEffects[_ParticleEffectCurrent[p]].Visible = false;
-                    }
-                }
-            }
-            else
-            {
-                // From ScreenSong (Song Selection) or Karaoke Mode -> Show All-Time Top Hall of Fame!
-                _SetText(_TextCurrentTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_ALLTIME_TOP"));
-                var topScores = _Scores[_Round]
-                    .GroupBy(s => s.Name + (_IsDuet ? s.VoiceNr.ToString() : ""))
-                    .Select(g => g.First())
-                    .OrderByDescending(s => s.Score)
-                    .Take(_NumCurrent)
-                    .ToList();
-
-                for (int p = 0; p < _NumCurrent; p++)
-                {
-                    if (p < topScores.Count)
-                    {
-                        var entry = topScores[p];
-                        string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
-                        _SetText(_TextCurrentName[p], displayName);
-                        _SetText(_TextCurrentScore[p], entry.Score.ToString("D"));
-                        _SetText(_TextCurrentRecord[p], null, false);
-                    }
-                    else
-                    {
-                        _SetText(_TextCurrentName[p], null, false);
-                        _SetText(_TextCurrentScore[p], null, false);
-                        _SetText(_TextCurrentRecord[p], null, false);
-                    }
-                    if (_ParticleEffects.ContainsKey(_ParticleEffectCurrent[p]))
-                        _ParticleEffects[_ParticleEffectCurrent[p]].Visible = false;
-                }
-            }
         }
 
         private string _GetShortDifficulty(EGameDifficulty diff)
@@ -381,46 +280,215 @@ namespace Vocaluxe.Screens
             return (date.Month >= 9) ? date.Year : date.Year - 1;
         }
 
-        private void _UpdateSeasonLeaderboard()
+        private class SDisplayRow
         {
-            var seasonScores = _Scores[_Round]
-                .Where(s => GetSeasonYear(s) == _SeasonYear)
-                .GroupBy(s => s.Name)
-                .Select(g => g.First())
-                .OrderByDescending(s => s.Score)
+            public int Rank;
+            public string Name;
+            public int Score;
+            public string Tag;
+            public string Date;
+            public SColorF Color;
+            public bool HasParticles;
+            public bool IsSession;
+        }
+
+        private void _UpdateLeaderboard()
+        {
+            _SetText(_TextLeaderboardTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_LEADERBOARD"), true, new SColorF(1f, 1f, 1f, 1f));
+            _SetText(_TextLeaderboardSubTitle, _SeasonYear + "-" + (_SeasonYear + 1) + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") + " (▲/▼)", true, new SColorF(0.6f, 0.85f, 0.95f, 0.85f));
+
+            var scores = _Scores[_Round] ?? new List<SDBScoreEntry>();
+            var priorScores = scores.Where(s => !_IsNewEntry(s.ID)).ToList();
+
+            // 1. Identify active session runs / players
+            var sessionRows = new List<SDisplayRow>();
+            CPoints points = CGame.GetPoints();
+
+            if (points != null && !_FromScreenSong && CScreenSong.GetAudioMode() != EAudioMode.TR_AUDIOMODE_KARAOKE)
+            {
+                SPlayer[] players = points.GetPlayer(_Round, CGame.NumPlayers);
+                for (int p = 0; p < players.Length; p++)
+                {
+                    var player = players[p];
+                    string name = CProfiles.GetPlayerName(player.ProfileID);
+                    if (_IsDuet || CGame.NumPlayers > 1) name += " (P" + (player.VoiceNr + 1) + ")";
+                    int score = (int)player.Points;
+
+                    // Check if player's score is an all-time record for their mic/voice line
+                    var voiceScores = priorScores.Where(s => !_IsDuet || s.VoiceNr == player.VoiceNr).ToList();
+                    int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
+                    bool isAllTimeMicRecord = score > prevVoiceRecord && score > CSettings.MinScoreForDB;
+
+                    string tag = isAllTimeMicRecord ? ("★ " + CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") + " ★") : CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION");
+                    SColorF color = isAllTimeMicRecord ? _ColorAllTime : _ColorSession;
+
+                    sessionRows.Add(new SDisplayRow
+                    {
+                        Name = name,
+                        Score = score,
+                        Tag = tag,
+                        Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                        Color = color,
+                        HasParticles = isAllTimeMicRecord,
+                        IsSession = true
+                    });
+
+                    if (isAllTimeMicRecord && !_HasPlayedHighscoreSound)
+                    {
+                        _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
+                        _HasPlayedHighscoreSound = true;
+                    }
+                }
+            }
+            else if (_FromScreenSong && scores.Count > 0)
+            {
+                // From song selection: identify the latest session entries
+                long latestTicks = scores.Max(s => s.DateTicks);
+                var latestSession = scores
+                    .Where(s => Math.Abs(s.DateTicks - latestTicks) < TimeSpan.TicksPerSecond * 15)
+                    .OrderByDescending(s => s.Score)
+                    .ToList();
+
+                foreach (var entry in latestSession)
+                {
+                    string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
+                    sessionRows.Add(new SDisplayRow
+                    {
+                        Name = displayName,
+                        Score = entry.Score,
+                        Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_LATEST_SESSION"),
+                        Date = entry.Date,
+                        Color = _ColorSession,
+                        HasParticles = false,
+                        IsSession = true
+                    });
+                }
+            }
+
+            // 2. Build candidate list from DB scores (player bests)
+            int allTimeRecord = scores.Count > 0 ? scores.Max(s => s.Score) : 0;
+
+            var playerBests = scores
+                .GroupBy(s => s.Name + (_IsDuet ? " (P" + (s.VoiceNr + 1) + ")" : ""))
+                .Select(g => g.OrderByDescending(s => s.Score).First())
                 .ToList();
 
-            for (int p = 0; p < _NumSeason; p++)
-            {
-                if (p < seasonScores.Count)
-                {
-                    var entry = seasonScores[p];
-                    _SetText(_TextSeasonRank[p], "#" + (p + 1));
-                    _SetText(_TextSeasonScore[p], entry.Score.ToString("D"));
-                    _SetText(_TextSeasonName[p], entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : ""));
-                    _SetText(_TextSeasonDiff[p], _GetShortDifficulty(entry.Difficulty));
-                    _SetText(_TextSeasonDate[p], entry.Date);
+            var candidateRows = new List<SDisplayRow>();
 
-                    bool isNewSeasonalEntry = _IsNewEntry(entry.ID);
-                    if (_ParticleEffects.ContainsKey(_ParticleEffectSeason[p]))
-                    {
-                        _ParticleEffects[_ParticleEffectSeason[p]].Visible = isNewSeasonalEntry;
-                        if (isNewSeasonalEntry && !_HasPlayedHighscoreSound)
-                        {
-                            _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
-                            _HasPlayedHighscoreSound = true;
-                        }
-                    }
+            // If we have active session players from singing, add them as primary candidates
+            var addedKeys = new HashSet<string>();
+            foreach (var sess in sessionRows)
+            {
+                candidateRows.Add(sess);
+                addedKeys.Add(sess.Name + "_" + sess.Score);
+            }
+
+            // Add player bests from DB
+            foreach (var entry in playerBests)
+            {
+                string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
+                string key = displayName + "_" + entry.Score;
+                if (addedKeys.Contains(key))
+                    continue;
+
+                bool isSeason = GetSeasonYear(entry) == _SeasonYear;
+                bool isAllTimeTop = entry.Score == allTimeRecord;
+
+                SColorF color;
+                string tag;
+
+                if (isAllTimeTop)
+                {
+                    color = _ColorAllTime;
+                    tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_ALLTIME");
+                }
+                else if (isSeason)
+                {
+                    color = _ColorSeason;
+                    tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON");
                 }
                 else
                 {
-                    _SetText(_TextSeasonRank[p], null, false);
-                    _SetText(_TextSeasonScore[p], null, false);
-                    _SetText(_TextSeasonName[p], null, false);
-                    _SetText(_TextSeasonDiff[p], null, false);
-                    _SetText(_TextSeasonDate[p], null, false);
-                    if (_ParticleEffects.ContainsKey(_ParticleEffectSeason[p]))
-                        _ParticleEffects[_ParticleEffectSeason[p]].Visible = false;
+                    color = _ColorNormal;
+                    tag = entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "";
+                }
+
+                candidateRows.Add(new SDisplayRow
+                {
+                    Name = displayName,
+                    Score = entry.Score,
+                    Tag = tag,
+                    Date = entry.Date,
+                    Color = color,
+                    HasParticles = false,
+                    IsSession = false
+                });
+                addedKeys.Add(key);
+            }
+
+            // Sort all candidates by score descending
+            candidateRows = candidateRows.OrderByDescending(r => r.Score).ToList();
+
+            // Assign ranks #1, #2, ...
+            for (int i = 0; i < candidateRows.Count; i++)
+            {
+                candidateRows[i].Rank = i + 1;
+            }
+
+            // 3. Select rows to display in the 13 table rows (with Sticky Session Row support)
+            var displayRows = new List<SDisplayRow>();
+
+            if (candidateRows.Count <= _NumLeaderboard)
+            {
+                displayRows.AddRange(candidateRows);
+            }
+            else
+            {
+                // Check if any session rows ranked beyond the top 13
+                var overflowSessionRows = candidateRows
+                    .Skip(_NumLeaderboard)
+                    .Where(r => r.IsSession)
+                    .ToList();
+
+                int normalSlots = _NumLeaderboard - overflowSessionRows.Count;
+                displayRows.AddRange(candidateRows.Take(normalSlots));
+                displayRows.AddRange(overflowSessionRows);
+            }
+
+            // 4. Render into UI texts and particles
+            for (int i = 0; i < _NumLeaderboard; i++)
+            {
+                if (i < displayRows.Count)
+                {
+                    var row = displayRows[i];
+                    _SetText(_TextLeaderboardRank[i], "#" + row.Rank, true, row.Color);
+                    _SetText(_TextLeaderboardName[i], row.Name, true, row.Color);
+                    _SetText(_TextLeaderboardScore[i], row.Score.ToString("N0"), true, row.Color);
+                    _SetText(_TextLeaderboardTag[i], row.Tag, true, row.Color);
+                    _SetText(_TextLeaderboardDate[i], row.Date, true, new SColorF(row.Color.R * 0.9f, row.Color.G * 0.9f, row.Color.B * 0.9f, 0.85f));
+
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectLeaderboard[i]))
+                        _ParticleEffects[_ParticleEffectLeaderboard[i]].Visible = row.HasParticles;
+                }
+                else if (i == 0 && displayRows.Count == 0)
+                {
+                    _SetText(_TextLeaderboardRank[0], null, false);
+                    _SetText(_TextLeaderboardName[0], CLanguage.Translate("TR_SCREENHIGHSCORE_NO_SESSION"), true, new SColorF(0.6f, 0.7f, 0.6f, 0.8f));
+                    _SetText(_TextLeaderboardScore[0], null, false);
+                    _SetText(_TextLeaderboardTag[0], null, false);
+                    _SetText(_TextLeaderboardDate[0], null, false);
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectLeaderboard[0]))
+                        _ParticleEffects[_ParticleEffectLeaderboard[0]].Visible = false;
+                }
+                else
+                {
+                    _SetText(_TextLeaderboardRank[i], null, false);
+                    _SetText(_TextLeaderboardName[i], null, false);
+                    _SetText(_TextLeaderboardScore[i], null, false);
+                    _SetText(_TextLeaderboardTag[i], null, false);
+                    _SetText(_TextLeaderboardDate[i], null, false);
+                    if (_ParticleEffects.ContainsKey(_ParticleEffectLeaderboard[i]))
+                        _ParticleEffects[_ParticleEffectLeaderboard[i]].Visible = false;
                 }
             }
         }
@@ -768,6 +836,7 @@ namespace Vocaluxe.Screens
                 }
             }
             _UpdateRound();
+            UpdateGame();
         }
 
         private void _LeaveScreen()
