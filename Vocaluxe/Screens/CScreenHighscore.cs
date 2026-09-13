@@ -261,60 +261,6 @@ namespace Vocaluxe.Screens
             return true;
         }
 
-        private string _GetShortDifficulty(EGameDifficulty diff)
-        {
-            switch (diff)
-            {
-                case EGameDifficulty.TR_CONFIG_EASY:
-                    return "[Easy]";
-                case EGameDifficulty.TR_CONFIG_NORMAL:
-                    return "[Norm.]";
-                case EGameDifficulty.TR_CONFIG_HARD:
-                    return "[Hard]";
-                default:
-                    return "[Norm.]";
-            }
-        }
-
-        private static int GetSeasonYear(SDBScoreEntry entry)
-        {
-            DateTime date = new DateTime(entry.DateTicks);
-            return (date.Month >= 9) ? date.Year : date.Year - 1;
-        }
-
-        private static string FormatScoreDateTime(SDBScoreEntry entry)
-        {
-            if (entry.DateTicks > 0)
-            {
-                DateTime dt = new DateTime(entry.DateTicks);
-                return dt.ToString("dd/MM/yyyy HH:mm");
-            }
-            if (!string.IsNullOrEmpty(entry.Date))
-            {
-                if (DateTime.TryParse(entry.Date, out DateTime dt))
-                {
-                    return dt.ToString("dd/MM/yyyy HH:mm");
-                }
-                return entry.Date;
-            }
-            return "";
-        }
-
-        private class SDisplayRow
-        {
-            public int ID;
-            public int Rank;
-            public bool ShowRank;
-            public string Name;
-            public int Score;
-            public string Tag;
-            public string Date;
-            public SColorF Color;
-            public bool HasParticles;
-            public bool IsSession;
-            public int VoiceNr;
-        }
-
         private void _UpdateLeaderboard()
         {
             _SetText(_TextLeaderboardTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_LEADERBOARD"), true, new SColorF(1f, 1f, 1f, 1f));
@@ -325,7 +271,7 @@ namespace Vocaluxe.Screens
             var priorScores = scores.Where(s => !_IsNewEntry(s.ID)).ToList();
 
             // 1. Identify active session runs / players
-            var sessionRows = new List<SDisplayRow>();
+            var sessionRows = new List<SLeaderboardRow>();
             CPoints points = CGame.GetPoints();
 
             if (points != null && !_FromScreenSong && CScreenSong.GetAudioMode() != EAudioMode.TR_AUDIOMODE_KARAOKE)
@@ -346,7 +292,7 @@ namespace Vocaluxe.Screens
                     string tag = isAllTimeMicRecord ? ("★ " + CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") + " ★") : CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION");
                     SColorF color = _ColorSession;
 
-                    sessionRows.Add(new SDisplayRow
+                    sessionRows.Add(new SLeaderboardRow
                     {
                         ID = -1,
                         Name = name,
@@ -378,13 +324,13 @@ namespace Vocaluxe.Screens
                 foreach (var entry in latestSession)
                 {
                     string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
-                    sessionRows.Add(new SDisplayRow
+                    sessionRows.Add(new SLeaderboardRow
                     {
                         ID = entry.ID,
                         Name = displayName,
                         Score = entry.Score,
                         Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
-                        Date = FormatScoreDateTime(entry),
+                        Date = CHighscoreStats.FormatScoreDateTime(entry),
                         Color = _ColorSession,
                         HasParticles = false,
                         IsSession = true,
@@ -393,163 +339,17 @@ namespace Vocaluxe.Screens
                 }
             }
 
-            int allTimeRecord = scores.Count > 0 ? scores.Max(s => s.Score) : 0;
-            Func<SDBScoreEntry, string> getMicKey = s => s.Name + (_IsDuet ? " (P" + (s.VoiceNr + 1) + ")" : "");
+            var displayRows = CHighscoreStats.BuildLeaderboardRows(
+                scores,
+                sessionRows,
+                _SeasonYear,
+                _IsDuet,
+                _NumLeaderboard,
+                _ColorSession,
+                _ColorSeason,
+                _ColorNormal);
 
-            var candidateRows = new List<SDisplayRow>();
-
-            // (A) Session rows first (Green)
-            foreach (var sess in sessionRows)
-            {
-                candidateRows.Add(sess);
-            }
-
-            // (B) Seasonal bests for the selected season (Blue)
-            var seasonScores = scores.Where(s => GetSeasonYear(s) == _SeasonYear).ToList();
-            var seasonBests = seasonScores
-                .GroupBy(getMicKey)
-                .Select(g => g.OrderByDescending(s => s.Score).First())
-                .ToList();
-
-            foreach (var entry in seasonBests)
-            {
-                string displayName = getMicKey(entry);
-                string entryDate = FormatScoreDateTime(entry);
-
-                // Skip if already in candidateRows (e.g. from current session)
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
-                    continue;
-
-                candidateRows.Add(new SDisplayRow
-                {
-                    ID = entry.ID,
-                    Name = displayName,
-                    Score = entry.Score,
-                    Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON"),
-                    Date = entryDate,
-                    Color = _ColorSeason,
-                    HasParticles = false,
-                    IsSession = false,
-                    VoiceNr = entry.VoiceNr
-                });
-            }
-
-            // (C) All-time bests (Blue if this season, White default otherwise)
-            var allTimeBests = scores
-                .GroupBy(getMicKey)
-                .Select(g => g.OrderByDescending(s => s.Score).First())
-                .ToList();
-
-            foreach (var entry in allTimeBests)
-            {
-                string displayName = getMicKey(entry);
-                string entryDate = FormatScoreDateTime(entry);
-
-                // Skip if already in candidateRows (e.g. from session or season)
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
-                    continue;
-
-                bool isSeason = GetSeasonYear(entry) == _SeasonYear;
-                SColorF color = isSeason ? _ColorSeason : _ColorNormal;
-                string tag = isSeason ? CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") : (entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "");
-
-                candidateRows.Add(new SDisplayRow
-                {
-                    ID = entry.ID,
-                    Name = displayName,
-                    Score = entry.Score,
-                    Tag = tag,
-                    Date = entryDate,
-                    Color = color,
-                    HasParticles = false,
-                    IsSession = false,
-                    VoiceNr = entry.VoiceNr
-                });
-            }
-
-            // (D) Backfill: If we still have fewer than _NumLeaderboard rows, fill remaining slots with highest scores overall
-            if (candidateRows.Count < _NumLeaderboard)
-            {
-                var remainingScores = scores
-                    .OrderByDescending(s => s.Score)
-                    .ToList();
-
-                foreach (var entry in remainingScores)
-                {
-                    if (candidateRows.Count >= _NumLeaderboard)
-                        break;
-
-                    string displayName = getMicKey(entry);
-                    string entryDate = FormatScoreDateTime(entry);
-
-                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
-                        continue;
-
-                    bool isSeason = GetSeasonYear(entry) == _SeasonYear;
-                    SColorF color = isSeason ? _ColorSeason : _ColorNormal;
-                    string tag = isSeason ? CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") : (entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "");
-
-                    candidateRows.Add(new SDisplayRow
-                    {
-                        ID = entry.ID,
-                        Name = displayName,
-                        Score = entry.Score,
-                        Tag = tag,
-                        Date = entryDate,
-                        Color = color,
-                        HasParticles = false,
-                        IsSession = false,
-                        VoiceNr = entry.VoiceNr
-                    });
-                }
-            }
-
-            // Sort all candidates by score descending
-            candidateRows = candidateRows.OrderByDescending(r => r.Score).ToList();
-
-            // Compute absolute rank in the song (per mic line) and filter to top 50%
-            for (int i = 0; i < candidateRows.Count; i++)
-            {
-                var row = candidateRows[i];
-
-                var voiceScores = scores
-                    .Where(s => !_IsDuet || s.VoiceNr == row.VoiceNr)
-                    .Select(s => s.Score)
-                    .ToList();
-
-                foreach (var sess in sessionRows.Where(s => !_IsDuet || s.VoiceNr == row.VoiceNr))
-                {
-                    if (!voiceScores.Contains(sess.Score))
-                        voiceScores.Add(sess.Score);
-                }
-
-                int totalScores = voiceScores.Count;
-                int absoluteRank = voiceScores.Count(sc => sc > row.Score) + 1;
-                row.Rank = absoluteRank;
-                row.ShowRank = totalScores == 0 || absoluteRank <= Math.Ceiling(totalScores * 0.5f);
-            }
-
-            // 3. Select rows to display in the 13 table rows (with Sticky Session Row support)
-            var displayRows = new List<SDisplayRow>();
-
-            if (candidateRows.Count <= _NumLeaderboard)
-            {
-                displayRows.AddRange(candidateRows);
-            }
-            else
-            {
-                // Check if any session rows ranked beyond the top 13
-                var overflowSessionRows = candidateRows
-                    .Skip(_NumLeaderboard)
-                    .Where(r => r.IsSession)
-                    .ToList();
-
-                int normalSlots = _NumLeaderboard - overflowSessionRows.Count;
-                displayRows.AddRange(candidateRows.Take(normalSlots));
-                displayRows.AddRange(overflowSessionRows);
-            }
-
-            // 4. Render into UI texts and particles
+            // Render into UI texts and particles
             for (int i = 0; i < _NumLeaderboard; i++)
             {
                 if (i < displayRows.Count)
@@ -591,22 +391,11 @@ namespace Vocaluxe.Screens
         private void _UpdateSongLore()
         {
             var scores = _Scores[_Round];
-            int totalScores = scores.Count;
-
-            long lastTicks = -1;
-            int uniquePerformances = 0;
-            var sortedScores = scores.OrderBy(s => s.DateTicks).ToList();
-            foreach (var s in sortedScores)
-            {
-                if (lastTicks == -1 || Math.Abs(s.DateTicks - lastTicks) > TimeSpan.TicksPerSecond * 10)
-                {
-                    uniquePerformances++;
-                }
-                lastTicks = s.DateTicks;
-            }
+            int totalDbScores = CDataBase.GetTotalScoreCount();
+            var info = CHighscoreStats.GetSongLoreInfo(scores, _SeasonYear, totalDbScores, _SessionRecordsBroken, _SessionSongsSung.Count);
 
             // Column 1: PERFORMANCES HISTORY
-            if (uniquePerformances == 0)
+            if (info.UniquePerformances == 0)
             {
                 _SetText("TextLoreStat1_Num", "0");
                 _SetText(_TextLoreStat1, CLanguage.Translate("TR_SCREENHIGHSCORE_NEVER_SUNG"));
@@ -614,21 +403,20 @@ namespace Vocaluxe.Screens
             }
             else
             {
-                _SetText("TextLoreStat1_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_TIMES_SUNG"), uniquePerformances));
+                _SetText("TextLoreStat1_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_TIMES_SUNG"), info.UniquePerformances));
 
-                if (totalScores > uniquePerformances)
+                if (info.TotalScores > info.UniquePerformances)
                 {
-                    _SetText(_TextLoreStat1, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SCORES_COUNT"), totalScores));
+                    _SetText(_TextLoreStat1, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SCORES_COUNT"), info.TotalScores));
                 }
                 else
                 {
                     _SetText(_TextLoreStat1, null, false);
                 }
 
-                int seasonCount = scores.Count(s => GetSeasonYear(s) == _SeasonYear);
-                if (seasonCount > 0)
+                if (info.SeasonCount > 0)
                 {
-                    _SetText(_TextLoreStat4, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_PERFORMANCES"), seasonCount));
+                    _SetText(_TextLoreStat4, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SEASON_PERFORMANCES"), info.SeasonCount));
                 }
                 else
                 {
@@ -637,84 +425,29 @@ namespace Vocaluxe.Screens
             }
 
             // Column 2: ALL-TIME RECORD
-            var allTimeBest = scores.OrderByDescending(s => s.Score).FirstOrDefault();
-            if (allTimeBest.Name != null)
+            if (info.HasAllTimeBest)
             {
-                _SetText("TextLoreStat2_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_POINTS"), allTimeBest.Score.ToString("N0")));
-                string recordHolderName = allTimeBest.Name + (_IsDuet ? " (P" + (allTimeBest.VoiceNr + 1) + ")" : "");
+                _SetText("TextLoreStat2_Num", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_RECORD_POINTS"), info.AllTimeBest.Score.ToString("N0")));
+                string recordHolderName = info.AllTimeBest.Name + (_IsDuet ? " (P" + (info.AllTimeBest.VoiceNr + 1) + ")" : "");
                 _SetText(_TextLoreStat2, recordHolderName);
 
-                DateTime recordDate = new DateTime(allTimeBest.DateTicks);
-                int ageDays = (int)(DateTime.Now - recordDate).TotalDays;
-                if (ageDays <= 0)
+                if (info.RecordAgeDays <= 0)
                 {
                     _SetText(_TextLoreStat3, CLanguage.Translate("TR_SCREENHIGHSCORE_SET_TODAY"));
                 }
                 else
                 {
-                    _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SET_DAYS_AGO"), ageDays, allTimeBest.Date));
+                    _SetText(_TextLoreStat3, String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_SET_DAYS_AGO"), info.RecordAgeDays, info.AllTimeBest.Date));
                 }
             }
-            // Fun Fact Line at Bottom of Card 3 (Song Lore)
-            _UpdateSongLoreFact(scores);
-        }
-
-        private void _UpdateSongLoreFact(List<SDBScoreEntry> scores)
-        {
-            var sortedScores = (scores ?? new List<SDBScoreEntry>()).OrderBy(s => s.DateTicks).ToList();
-            int totalDbScores = CDataBase.GetTotalScoreCount();
-
-            // Priority 1: Overall Club Milestones (Every 1,000 performances: 1000, 2000...) - Highest Priority!
-            if (totalDbScores >= 1000 && (totalDbScores % 1000 <= 10))
+            else
             {
-                int thousandMilestone = (totalDbScores / 1000) * 1000;
-                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE"), thousandMilestone));
-                return;
+                _SetText("TextLoreStat2_Num", null, false);
+                _SetText(_TextLoreStat2, null, false);
+                _SetText(_TextLoreStat3, null, false);
             }
 
-            // Priority 2: Long Drought Broken (>= 30 days since song was last performed)
-            if (sortedScores.Count > 0)
-            {
-                var pastScores = sortedScores.Where(s => (DateTime.Now - new DateTime(s.DateTicks)).TotalHours > 12).OrderByDescending(s => s.DateTicks).ToList();
-                if (pastScores.Count > 0)
-                {
-                    int daysAgo = (int)(DateTime.Now - new DateTime(pastScores.First().DateTicks)).TotalDays;
-                    if (daysAgo >= 30)
-                    {
-                        _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo));
-                        return;
-                    }
-                }
-            }
-
-            // Priority 3: Session Records Broken
-            if (_SessionRecordsBroken > 0)
-            {
-                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS"), _SessionRecordsBroken));
-                return;
-            }
-
-            // Priority 4: Session Songs Milestone (Only every 50 songs: 50, 100, 150...)
-            if (_SessionSongsSung.Count >= 50 && (_SessionSongsSung.Count % 50 == 0))
-            {
-                _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS"), _SessionSongsSung.Count));
-                return;
-            }
-
-            // Priority 5: First Performance Date at Club (if > 7 days ago)
-            if (sortedScores.Count > 0)
-            {
-                var earliest = sortedScores.First();
-                int daysSinceFirst = (int)(DateTime.Now - new DateTime(earliest.DateTicks)).TotalDays;
-                if (daysSinceFirst > 7)
-                {
-                    _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_FACT_FIRST_PERFORMED"), earliest.Date, daysSinceFirst));
-                    return;
-                }
-            }
-
-            // Priority 6: Total Club Performances Fallback
-            _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores));
+            _SetText("TextLoreFact", info.FactText);
         }
 
         private void _UpdateChart()
@@ -805,9 +538,7 @@ namespace Vocaluxe.Screens
             base.OnShow();
             _HasPlayedHighscoreSound = false;
             _Round = 0;
-            
-            int currentMonth = DateTime.Now.Month;
-            _SeasonYear = (currentMonth >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
             
             _NewEntryIDs.Clear();
             _AddScoresToDB();
@@ -866,7 +597,7 @@ namespace Vocaluxe.Screens
                 for (int gameModeNum = 0; gameModeNum < 4; gameModeNum++)
                 {
                     _Scores[gameModeNum] = CDataBase.LoadScore(songID, (EGameMode)gameModeNum, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
-                    _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
+                    _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => CHighscoreStats.GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
 
                     if (!foundHighscoreEntries && _Scores[gameModeNum].Count > 0)
                     {
@@ -885,7 +616,7 @@ namespace Vocaluxe.Screens
                     int songID = CGame.GetSong(round).ID;
                     EGameMode gameMode = CGame.GetGameMode(round);
                     _Scores[round] = CDataBase.LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
-                    _AvailableYears[round] = _Scores[round].Select(s => GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
+                    _AvailableYears[round] = _Scores[round].Select(s => CHighscoreStats.GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
                 }
             }
         }
@@ -931,7 +662,7 @@ namespace Vocaluxe.Screens
             if (_AvailableYears == null || _Round >= _AvailableYears.Length || _AvailableYears[_Round] == null) return;
 
             var years = new List<int>(_AvailableYears[_Round]);
-            int currentYear = (DateTime.Now.Month >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            int currentYear = CHighscoreStats.GetCurrentSeasonYear();
             if (!years.Contains(currentYear)) years.Add(currentYear);
             years = years.Distinct().OrderByDescending(y => y).ToList();
 

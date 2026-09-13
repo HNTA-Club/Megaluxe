@@ -127,12 +127,6 @@ namespace Vocaluxe.Screens
             };
         }
 
-        private static int GetSeasonYear(SDBScoreEntry entry)
-        {
-            DateTime date = new DateTime(entry.DateTicks);
-            return (date.Month >= 9) ? date.Year : date.Year - 1;
-        }
-
         public static SChartData GetChartData(List<SDBScoreEntry> scores, EHighscoreChartMode mode, int selectedSeasonYear)
         {
             var data = new SChartData();
@@ -143,10 +137,9 @@ namespace Vocaluxe.Screens
             if (scores == null || scores.Count == 0)
                 return data;
 
-            int currentMonth = DateTime.Now.Month;
-            int currentSeason = (currentMonth >= 9) ? DateTime.Now.Year : DateTime.Now.Year - 1;
+            int currentSeason = CHighscoreStats.GetCurrentSeasonYear();
 
-            int minSeason = scores.Select(s => GetSeasonYear(s)).Min();
+            int minSeason = scores.Select(s => CHighscoreStats.GetSeasonYear(s)).Min();
             if (minSeason > currentSeason) minSeason = currentSeason;
             if (currentSeason - minSeason + 1 > NumChartRows)
                 minSeason = currentSeason - NumChartRows + 1;
@@ -154,7 +147,7 @@ namespace Vocaluxe.Screens
             var seasonList = new List<SeasonStat>();
             for (int sy = currentSeason; sy >= minSeason; sy--)
             {
-                var seasonScores = scores.Where(s => GetSeasonYear(s) == sy).ToList();
+                var seasonScores = scores.Where(s => CHighscoreStats.GetSeasonYear(s) == sy).ToList();
                 int plays = seasonScores.Count;
                 int peak = plays > 0 ? seasonScores.Max(s => s.Score) : 0;
                 seasonList.Add(new SeasonStat
