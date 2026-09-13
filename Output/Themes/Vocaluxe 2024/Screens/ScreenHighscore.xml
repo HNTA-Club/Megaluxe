@@ -2,7 +2,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>4</ScreenVersion>
+    <ScreenVersion>5</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -32,18 +32,7 @@
         <X>60</X>
         <Y>140</Y>
         <W>870</W>
-        <H>450</H>
-        <Z>0</Z>
-      </Rect>
-    </Static>
-    <Static Name="StaticCardSeason">
-      <Skin />
-      <Color Name="BackgroundColorAlpha" />
-      <Rect>
-        <X>990</X>
-        <Y>140</Y>
-        <W>870</W>
-        <H>450</H>
+        <H>890</H>
         <Z>0</Z>
       </Rect>
     </Static>
@@ -51,10 +40,10 @@
       <Skin />
       <Color Name="BackgroundColorAlpha" />
       <Rect>
-        <X>60</X>
-        <Y>620</Y>
+        <X>990</X>
+        <Y>140</Y>
         <W>870</W>
-        <H>410</H>
+        <H>450</H>
         <Z>0</Z>
       </Rect>
     </Static>
@@ -113,11 +102,39 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextCurrentTitle">
+    <Text Name="TextLeaderboardTitle">
       <X>90</X>
-      <Y>160</Y>
+      <Y>155</Y>
       <Z>-1</Z>
-      <H>38</H>
+      <H>34</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text>TR_SCREENHIGHSCORE_LEADERBOARD</Text>
+    </Text>
+    <Text Name="TextLeaderboardSubTitle">
+      <X>890</X>
+      <Y>162</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text>TR_SCREENHIGHSCORE_SUBTITLE_ALLTIME</Text>
+    </Text>
+    <Text Name="TextLeaderboardRank1">
+      <X>90</X>
+      <Y>205</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -127,12 +144,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextCurrentName1">
-      <X>110</X>
-      <Y>210</Y>
+    <Text Name="TextLeaderboardName1">
+      <X>155</X>
+      <Y>205</Y>
       <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
+      <H>30</H>
+      <MaxW>340</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -141,11 +158,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextCurrentScore1">
-      <X>780</X>
-      <Y>210</Y>
+    <Text Name="TextLeaderboardScore1">
+      <X>620</X>
+      <Y>205</Y>
       <Z>-1</Z>
-      <H>48</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -155,12 +172,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextCurrentRecord1">
-      <X>800</X>
-      <Y>210</Y>
+    <Text Name="TextLeaderboardTag1">
+      <X>645</X>
+      <Y>205</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -169,233 +186,9 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextCurrentName2">
-      <X>110</X>
-      <Y>262</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentScore2">
-      <X>780</X>
-      <Y>262</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Right</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentRecord2">
-      <X>800</X>
-      <Y>262</Y>
-      <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentName3">
-      <X>110</X>
-      <Y>314</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentScore3">
-      <X>780</X>
-      <Y>314</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Right</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentRecord3">
-      <X>800</X>
-      <Y>314</Y>
-      <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentName4">
-      <X>110</X>
-      <Y>366</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentScore4">
-      <X>780</X>
-      <Y>366</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Right</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentRecord4">
-      <X>800</X>
-      <Y>366</Y>
-      <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentName5">
-      <X>110</X>
-      <Y>418</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentScore5">
-      <X>780</X>
-      <Y>418</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Right</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentRecord5">
-      <X>800</X>
-      <Y>418</Y>
-      <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentName6">
-      <X>110</X>
-      <Y>470</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>460</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentScore6">
-      <X>780</X>
-      <Y>470</Y>
-      <Z>-1</Z>
-      <H>48</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Right</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextCurrentRecord6">
-      <X>800</X>
-      <Y>470</Y>
-      <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonTitle">
-      <X>1020</X>
-      <Y>160</Y>
-      <Z>-1</Z>
-      <H>38</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonSubTitle">
-      <X>1830</X>
-      <Y>168</Y>
+    <Text Name="TextLeaderboardDate1">
+      <X>890</X>
+      <Y>205</Y>
       <Z>-1</Z>
       <H>26</H>
       <MaxW>0</MaxW>
@@ -407,11 +200,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonRank1">
-      <X>1020</X>
-      <Y>225</Y>
+    <Text Name="TextLeaderboardRank2">
+      <X>90</X>
+      <Y>259</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -421,11 +214,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonScore1">
-      <X>1180</X>
-      <Y>225</Y>
+    <Text Name="TextLeaderboardName2">
+      <X>155</X>
+      <Y>259</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore2">
+      <X>620</X>
+      <Y>259</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -435,12 +242,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonName1">
-      <X>1200</X>
-      <Y>225</Y>
+    <Text Name="TextLeaderboardTag2">
+      <X>645</X>
+      <Y>259</Y>
       <Z>-1</Z>
-      <H>36</H>
-      <MaxW>280</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -449,25 +256,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDiff1">
-      <X>1520</X>
-      <Y>225</Y>
+    <Text Name="TextLeaderboardDate2">
+      <X>890</X>
+      <Y>259</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonDate1">
-      <X>1830</X>
-      <Y>225</Y>
-      <Z>-1</Z>
-      <H>32</H>
+      <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -477,11 +270,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonRank2">
-      <X>1020</X>
-      <Y>290</Y>
+    <Text Name="TextLeaderboardRank3">
+      <X>90</X>
+      <Y>313</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -491,11 +284,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonScore2">
-      <X>1180</X>
-      <Y>290</Y>
+    <Text Name="TextLeaderboardName3">
+      <X>155</X>
+      <Y>313</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore3">
+      <X>620</X>
+      <Y>313</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -505,12 +312,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonName2">
-      <X>1200</X>
-      <Y>290</Y>
+    <Text Name="TextLeaderboardTag3">
+      <X>645</X>
+      <Y>313</Y>
       <Z>-1</Z>
-      <H>36</H>
-      <MaxW>280</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -519,25 +326,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDiff2">
-      <X>1520</X>
-      <Y>290</Y>
+    <Text Name="TextLeaderboardDate3">
+      <X>890</X>
+      <Y>313</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonDate2">
-      <X>1830</X>
-      <Y>290</Y>
-      <Z>-1</Z>
-      <H>32</H>
+      <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -547,11 +340,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonRank3">
-      <X>1020</X>
-      <Y>355</Y>
+    <Text Name="TextLeaderboardRank4">
+      <X>90</X>
+      <Y>367</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -561,11 +354,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonScore3">
-      <X>1180</X>
-      <Y>355</Y>
+    <Text Name="TextLeaderboardName4">
+      <X>155</X>
+      <Y>367</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore4">
+      <X>620</X>
+      <Y>367</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -575,12 +382,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonName3">
-      <X>1200</X>
-      <Y>355</Y>
+    <Text Name="TextLeaderboardTag4">
+      <X>645</X>
+      <Y>367</Y>
       <Z>-1</Z>
-      <H>36</H>
-      <MaxW>280</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -589,25 +396,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDiff3">
-      <X>1520</X>
-      <Y>355</Y>
+    <Text Name="TextLeaderboardDate4">
+      <X>890</X>
+      <Y>367</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonDate3">
-      <X>1830</X>
-      <Y>355</Y>
-      <Z>-1</Z>
-      <H>32</H>
+      <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -617,11 +410,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonRank4">
-      <X>1020</X>
-      <Y>420</Y>
+    <Text Name="TextLeaderboardRank5">
+      <X>90</X>
+      <Y>421</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -631,11 +424,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonScore4">
-      <X>1180</X>
-      <Y>420</Y>
+    <Text Name="TextLeaderboardName5">
+      <X>155</X>
+      <Y>421</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore5">
+      <X>620</X>
+      <Y>421</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -645,12 +452,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonName4">
-      <X>1200</X>
-      <Y>420</Y>
+    <Text Name="TextLeaderboardTag5">
+      <X>645</X>
+      <Y>421</Y>
       <Z>-1</Z>
-      <H>36</H>
-      <MaxW>280</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -659,25 +466,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDiff4">
-      <X>1520</X>
-      <Y>420</Y>
+    <Text Name="TextLeaderboardDate5">
+      <X>890</X>
+      <Y>421</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>0</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextSeasonDate4">
-      <X>1830</X>
-      <Y>420</Y>
-      <Z>-1</Z>
-      <H>32</H>
+      <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -687,11 +480,11 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonRank5">
-      <X>1020</X>
-      <Y>485</Y>
+    <Text Name="TextLeaderboardRank6">
+      <X>90</X>
+      <Y>475</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -701,11 +494,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonScore5">
-      <X>1180</X>
-      <Y>485</Y>
+    <Text Name="TextLeaderboardName6">
+      <X>155</X>
+      <Y>475</Y>
       <Z>-1</Z>
-      <H>36</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore6">
+      <X>620</X>
+      <Y>475</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -715,12 +522,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonName5">
-      <X>1200</X>
-      <Y>485</Y>
+    <Text Name="TextLeaderboardTag6">
+      <X>645</X>
+      <Y>475</Y>
       <Z>-1</Z>
-      <H>36</H>
-      <MaxW>280</MaxW>
+      <H>26</H>
+      <MaxW>155</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -729,11 +536,25 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDiff5">
-      <X>1520</X>
-      <Y>485</Y>
+    <Text Name="TextLeaderboardDate6">
+      <X>890</X>
+      <Y>475</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank7">
+      <X>90</X>
+      <Y>529</Y>
+      <Z>-1</Z>
+      <H>30</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -743,11 +564,473 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextSeasonDate5">
-      <X>1830</X>
-      <Y>485</Y>
+    <Text Name="TextLeaderboardName7">
+      <X>155</X>
+      <Y>529</Y>
       <Z>-1</Z>
-      <H>32</H>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore7">
+      <X>620</X>
+      <Y>529</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag7">
+      <X>645</X>
+      <Y>529</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate7">
+      <X>890</X>
+      <Y>529</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank8">
+      <X>90</X>
+      <Y>583</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName8">
+      <X>155</X>
+      <Y>583</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore8">
+      <X>620</X>
+      <Y>583</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag8">
+      <X>645</X>
+      <Y>583</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate8">
+      <X>890</X>
+      <Y>583</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank9">
+      <X>90</X>
+      <Y>637</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName9">
+      <X>155</X>
+      <Y>637</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore9">
+      <X>620</X>
+      <Y>637</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag9">
+      <X>645</X>
+      <Y>637</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate9">
+      <X>890</X>
+      <Y>637</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank10">
+      <X>90</X>
+      <Y>691</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName10">
+      <X>155</X>
+      <Y>691</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore10">
+      <X>620</X>
+      <Y>691</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag10">
+      <X>645</X>
+      <Y>691</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate10">
+      <X>890</X>
+      <Y>691</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank11">
+      <X>90</X>
+      <Y>745</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName11">
+      <X>155</X>
+      <Y>745</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore11">
+      <X>620</X>
+      <Y>745</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag11">
+      <X>645</X>
+      <Y>745</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate11">
+      <X>890</X>
+      <Y>745</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank12">
+      <X>90</X>
+      <Y>799</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName12">
+      <X>155</X>
+      <Y>799</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore12">
+      <X>620</X>
+      <Y>799</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag12">
+      <X>645</X>
+      <Y>799</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate12">
+      <X>890</X>
+      <Y>799</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardRank13">
+      <X>90</X>
+      <Y>853</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardName13">
+      <X>155</X>
+      <Y>853</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>340</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardScore13">
+      <X>620</X>
+      <Y>853</Y>
+      <Z>-1</Z>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardTag13">
+      <X>645</X>
+      <Y>853</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>155</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLeaderboardDate13">
+      <X>890</X>
+      <Y>853</Y>
+      <Z>-1</Z>
+      <H>26</H>
       <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -758,8 +1041,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreTitle">
-      <X>90</X>
-      <Y>640</Y>
+      <X>1020</X>
+      <Y>160</Y>
       <Z>-1</Z>
       <H>38</H>
       <MaxW>0</MaxW>
@@ -772,10 +1055,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat1_Num">
-      <X>110</X>
-      <Y>700</Y>
+      <X>1040</X>
+      <Y>215</Y>
       <Z>-1</Z>
-      <H>70</H>
+      <H>64</H>
       <MaxW>380</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -786,8 +1069,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat1">
-      <X>110</X>
-      <Y>785</Y>
+      <X>1040</X>
+      <Y>290</Y>
       <Z>-1</Z>
       <H>28</H>
       <MaxW>380</MaxW>
@@ -800,8 +1083,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat4">
-      <X>110</X>
-      <Y>825</Y>
+      <X>1040</X>
+      <Y>330</Y>
       <Z>-1</Z>
       <H>26</H>
       <MaxW>380</MaxW>
@@ -814,10 +1097,10 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat2_Num">
-      <X>500</X>
-      <Y>700</Y>
+      <X>1460</X>
+      <Y>215</Y>
       <Z>-1</Z>
-      <H>70</H>
+      <H>64</H>
       <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
@@ -828,8 +1111,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat2">
-      <X>500</X>
-      <Y>785</Y>
+      <X>1460</X>
+      <Y>290</Y>
       <Z>-1</Z>
       <H>28</H>
       <MaxW>410</MaxW>
@@ -842,8 +1125,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat3">
-      <X>500</X>
-      <Y>825</Y>
+      <X>1460</X>
+      <Y>330</Y>
       <Z>-1</Z>
       <H>26</H>
       <MaxW>410</MaxW>
@@ -856,8 +1139,8 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreFact">
-      <X>110</X>
-      <Y>965</Y>
+      <X>1040</X>
+      <Y>485</Y>
       <Z>-1</Z>
       <H>32</H>
       <MaxW>780</MaxW>
@@ -1047,13 +1330,13 @@
   <Equalizers />
   <Playlists />
   <ParticleEffects>
-    <ParticleEffect Name="ParticleEffectCurrent1">
+    <ParticleEffect Name="ParticleEffectLeaderboard1">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>205</Y>
-        <W>740</W>
-        <H>48</H>
+        <X>90</X>
+        <Y>201</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1061,13 +1344,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectCurrent2">
+    <ParticleEffect Name="ParticleEffectLeaderboard2">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>257</Y>
-        <W>740</W>
-        <H>48</H>
+        <X>90</X>
+        <Y>255</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1075,13 +1358,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectCurrent3">
+    <ParticleEffect Name="ParticleEffectLeaderboard3">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
+        <X>90</X>
         <Y>309</Y>
-        <W>740</W>
-        <H>48</H>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1089,13 +1372,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectCurrent4">
+    <ParticleEffect Name="ParticleEffectLeaderboard4">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>361</Y>
-        <W>740</W>
-        <H>48</H>
+        <X>90</X>
+        <Y>363</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1103,13 +1386,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectCurrent5">
+    <ParticleEffect Name="ParticleEffectLeaderboard5">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>413</Y>
-        <W>740</W>
-        <H>48</H>
+        <X>90</X>
+        <Y>417</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1117,13 +1400,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectCurrent6">
+    <ParticleEffect Name="ParticleEffectLeaderboard6">
       <Skin>Star</Skin>
       <Rect>
-        <X>110</X>
-        <Y>465</Y>
-        <W>740</W>
-        <H>48</H>
+        <X>90</X>
+        <Y>471</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1131,13 +1414,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectSeason1">
+    <ParticleEffect Name="ParticleEffectLeaderboard7">
       <Skin>Star</Skin>
       <Rect>
-        <X>1020</X>
-        <Y>220</Y>
-        <W>830</W>
-        <H>50</H>
+        <X>90</X>
+        <Y>525</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1145,13 +1428,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectSeason2">
+    <ParticleEffect Name="ParticleEffectLeaderboard8">
       <Skin>Star</Skin>
       <Rect>
-        <X>1020</X>
-        <Y>285</Y>
-        <W>830</W>
-        <H>50</H>
+        <X>90</X>
+        <Y>579</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1159,13 +1442,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectSeason3">
+    <ParticleEffect Name="ParticleEffectLeaderboard9">
       <Skin>Star</Skin>
       <Rect>
-        <X>1020</X>
-        <Y>350</Y>
-        <W>830</W>
-        <H>50</H>
+        <X>90</X>
+        <Y>633</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1173,13 +1456,13 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectSeason4">
+    <ParticleEffect Name="ParticleEffectLeaderboard10">
       <Skin>Star</Skin>
       <Rect>
-        <X>1020</X>
-        <Y>415</Y>
-        <W>830</W>
-        <H>50</H>
+        <X>90</X>
+        <Y>687</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
@@ -1187,13 +1470,41 @@
       <Size>25</Size>
       <MaxNumber>100</MaxNumber>
     </ParticleEffect>
-    <ParticleEffect Name="ParticleEffectSeason5">
+    <ParticleEffect Name="ParticleEffectLeaderboard11">
       <Skin>Star</Skin>
       <Rect>
-        <X>1020</X>
-        <Y>480</Y>
-        <W>830</W>
-        <H>50</H>
+        <X>90</X>
+        <Y>741</Y>
+        <W>810</W>
+        <H>38</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectLeaderboard12">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>90</X>
+        <Y>795</Y>
+        <W>810</W>
+        <H>38</H>
+        <Z>-1</Z>
+      </Rect>
+      <Color Name="StaticColor" />
+      <Type>Star</Type>
+      <Size>25</Size>
+      <MaxNumber>100</MaxNumber>
+    </ParticleEffect>
+    <ParticleEffect Name="ParticleEffectLeaderboard13">
+      <Skin>Star</Skin>
+      <Rect>
+        <X>90</X>
+        <Y>849</Y>
+        <W>810</W>
+        <H>38</H>
         <Z>-1</Z>
       </Rect>
       <Color Name="StaticColor" />
