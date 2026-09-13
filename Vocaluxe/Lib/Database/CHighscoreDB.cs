@@ -356,7 +356,6 @@ namespace Vocaluxe.Lib.Database
                                     Difficulty = (EGameDifficulty)reader.GetInt32(3),
                                     VoiceNr = reader.GetInt32(4),
                                     ID = reader.GetInt32(5),
-                                    Year = new DateTime(ticks).Year,
                                     DateTicks = ticks
                                 };
 
@@ -367,40 +366,6 @@ namespace Vocaluxe.Lib.Database
                 }
             }
             return scores;
-        }
-
-        public List<SDBScoreEntry> LoadYearlyChampions(int songID, EGameMode gameMode)
-        {
-            var allScores = LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
-            if (allScores == null || allScores.Count == 0)
-                return new List<SDBScoreEntry>();
-
-            return allScores
-                .GroupBy(s => s.Year)
-                .Select(g => g.First())
-                .OrderByDescending(s => s.Year)
-                .ToList();
-        }
-
-        public List<SDBScoreEntry> LoadSeasonScores(int songID, EGameMode gameMode, int seasonYear, int limit = 5)
-        {
-            var allScores = LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL);
-            if (allScores == null || allScores.Count == 0)
-                return new List<SDBScoreEntry>();
-
-            DateTime seasonStart = new DateTime(seasonYear, 9, 1);
-            DateTime seasonEnd = new DateTime(seasonYear + 1, 8, 31, 23, 59, 59);
-
-            return allScores
-                .Where(s => {
-                    DateTime date = new DateTime(s.DateTicks);
-                    return date >= seasonStart && date <= seasonEnd;
-                })
-                .GroupBy(s => s.Name)
-                .Select(g => g.First())
-                .OrderByDescending(s => s.Score)
-                .Take(limit)
-                .ToList();
         }
 
         public int GetTotalScoreCount()

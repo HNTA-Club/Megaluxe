@@ -369,7 +369,6 @@ namespace VocaluxeLib
         public EGameDifficulty Difficulty;
         public int VoiceNr;
         public int ID;
-        public int Year;
         public long DateTicks;
     }
     #endregion Game
