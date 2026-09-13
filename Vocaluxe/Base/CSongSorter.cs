@@ -149,9 +149,12 @@ namespace Vocaluxe.Base
 
         private int _SortByNumPlayed(CSongPointer s1, CSongPointer s2)
         {
+            // Compare integer NumPlayed directly to avoid parsing strings repeatedly during O(N log N) sorts
             int res = CSongs.Songs[s1.SongID].NumPlayed.CompareTo(CSongs.Songs[s2.SongID].NumPlayed);
             if (res == 0)
             {
+                // Note: s2 is compared against s1 because NUMPLAYED default sort is descending (_HasDefaultDescendingSort),
+                // which calls sortList.Reverse(), resulting in A-Z secondary ordering for artist/title.
                 if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
                 {
                     res = String.Compare(CSongs.Songs[s2.SongID].ArtistSorting, CSongs.Songs[s1.SongID].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);

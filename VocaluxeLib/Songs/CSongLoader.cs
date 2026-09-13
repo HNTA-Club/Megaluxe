@@ -110,6 +110,7 @@ namespace VocaluxeLib.Songs
                         }
                         else if (b >= 0xF0 && b <= 0xF4)
                         {
+                            // 4-byte sequence (Unicode supplementary planes: emojis, special symbols)
                             if (i + 3 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF || bytes[i + 3] < 0x80 || bytes[i + 3] > 0xBF)
                             {
                                 isUtf8 = false;

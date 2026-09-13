@@ -244,8 +244,11 @@ namespace Vocaluxe.Base
             {
                 for (int beat = _LastEvalBeat + 1; beat <= RecordedBeat; beat++)
                 {
-                    if ((_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_MEDLEY && song.Medley.EndBeat == beat) ||
-                        (_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_SHORTSONG && song.ShortEnd.EndBeat == beat))
+                    // SongFinished is a qualification flag for saving scores to the database (see CScreenScore),
+                    // NOT an audio end trigger (playback lifecycle is handled in CScreenSing). The 30-beat tolerance (~3-5s)
+                    // ensures that if the audio stream fades out or finishes slightly early, the round is still recorded.
+                    if ((_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_MEDLEY && song.Medley.EndBeat-30 <= beat) ||
+                        (_SongQueue.GetCurrentGameMode() == EGameMode.TR_GAMEMODE_SHORTSONG && song.ShortEnd.EndBeat-30 <= beat))
                         Players[p].SongFinished = true;
 
                     CSongLine[] lines = song.Notes.GetVoice(Players[p].VoiceNr).Lines;
@@ -283,7 +286,9 @@ namespace Vocaluxe.Base
 
                     Players[p].CurrentNote = note;
 
-                    if (line == lines.Length - 1 && beat == lines[line].LastNoteBeat)
+                    // Qualify song as completed if reached the final line within 30 beats of the last note.
+                    // This prevents dropped highscores when audio ends abruptly or mic recording delay lags behind LastNoteBeat.
+                    if (line == lines.Length - 1 && beat >= lines[line].LastNoteBeat-30)
                         Players[p].SongFinished = true;
 
                     if (notes[note].PointsForBeat > 0 && (CRecord.ToneValid(p)
