@@ -64,6 +64,9 @@ namespace Vocaluxe.Screens
         private string[] _TextChartName;
         private string[] _TextChartValue;
         private EHighscoreChartMode _ChartMode = EHighscoreChartMode.SeasonalPlays;
+        private bool _NeedsRefresh = true;
+        private SChartData _CachedChartData;
+        private SChartLayout _CachedChartLayout;
 
         // Color Palettes: Green for this/latest run, Blue for season, White default
         private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint (Green)
@@ -153,17 +156,13 @@ namespace Vocaluxe.Screens
         {
             base.Draw();
 
-            var currentScores = (_Scores != null && _Round < _Scores.Length) ? _Scores[_Round] : new List<SDBScoreEntry>();
-            SChartData chartData = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
-
             SRectF? chartCardRect = (_Statics != null && _Statics.ContainsKey("StaticCardHighlight"))
                 ? (SRectF?)_Statics["StaticCardHighlight"].Rect
                 : null;
 
-            if (chartData != null && chartData.Rows != null && chartData.Rows.Count > 0)
+            if (_CachedChartData != null && _CachedChartData.Rows != null && _CachedChartData.Rows.Count > 0)
             {
-                SChartLayout layout = CHighscoreChart.GetLayout(chartData.Rows.Count, chartCardRect);
-                CHighscoreChart.DrawChart(chartData, layout, chartCardRect, _Texts, _TextChartName, _TextChartValue);
+                CHighscoreChart.DrawChart(_CachedChartData, _CachedChartLayout, chartCardRect, _Texts, _TextChartName, _TextChartValue);
             }
 
             _DrawCardAccents();
@@ -256,6 +255,11 @@ namespace Vocaluxe.Screens
         {
             if (_Scores == null || _Round >= _Scores.Length || _Scores[_Round] == null)
                 return true;
+
+            if (!_NeedsRefresh)
+                return true;
+
+            _NeedsRefresh = false;
 
             _SetText(_TextLoreTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_SONG_LORE"));
             _SetText(_TextHighlightTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_CLUB_HIGHLIGHT"));
@@ -478,40 +482,40 @@ namespace Vocaluxe.Screens
         private void _UpdateChart()
         {
             var currentScores = (_Scores != null && _Round < _Scores.Length) ? _Scores[_Round] : new List<SDBScoreEntry>();
-            SChartData data = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
-            _SetText(_TextHighlightTitle, CLanguage.Translate(data.TitleKey));
+            _CachedChartData = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
+            _SetText(_TextHighlightTitle, CLanguage.Translate(_CachedChartData.TitleKey));
             _SetText(_TextHighlightBody, null, false);
 
             SRectF? chartCardRect = (_Statics != null && _Statics.ContainsKey("StaticCardHighlight"))
                 ? (SRectF?)_Statics["StaticCardHighlight"].Rect
                 : null;
 
-            if (data != null && data.Rows != null && data.Rows.Count > 0)
+            if (_CachedChartData != null && _CachedChartData.Rows != null && _CachedChartData.Rows.Count > 0)
             {
-                SChartLayout layout = CHighscoreChart.GetLayout(data.Rows.Count, chartCardRect);
+                _CachedChartLayout = CHighscoreChart.GetLayout(_CachedChartData.Rows.Count, chartCardRect);
 
                 for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
                 {
-                    if (i < data.Rows.Count)
+                    if (i < _CachedChartData.Rows.Count)
                     {
                         if (_Texts != null)
                         {
-                            float y = layout.StartY + i * layout.RowPitch + (layout.BarHeight - layout.FontHeight) / 2f;
-                            SColorF rowColor = data.Rows[i].IsSelectedSeason ? _ColorSeason : _ColorNormal;
+                            float y = _CachedChartLayout.StartY + i * _CachedChartLayout.RowPitch + (_CachedChartLayout.BarHeight - _CachedChartLayout.FontHeight) / 2f;
+                            SColorF rowColor = _CachedChartData.Rows[i].IsSelectedSeason ? _ColorSeason : _ColorNormal;
 
                             if (_Texts.ContainsKey(_TextChartName[i]))
                             {
-                                _Texts[_TextChartName[i]].Text = data.Rows[i].Label;
+                                _Texts[_TextChartName[i]].Text = _CachedChartData.Rows[i].Label;
                                 _Texts[_TextChartName[i]].Y = y;
-                                _Texts[_TextChartName[i]].Font = new CFont(_Texts[_TextChartName[i]].Font.Name, _Texts[_TextChartName[i]].Font.Style, layout.FontHeight);
+                                _Texts[_TextChartName[i]].Font = new CFont(_Texts[_TextChartName[i]].Font.Name, _Texts[_TextChartName[i]].Font.Style, _CachedChartLayout.FontHeight);
                                 _Texts[_TextChartName[i]].Color = rowColor;
                                 _Texts[_TextChartName[i]].Visible = false;
                             }
                             if (_Texts.ContainsKey(_TextChartValue[i]))
                             {
-                                _Texts[_TextChartValue[i]].Text = data.Rows[i].ValueText;
+                                _Texts[_TextChartValue[i]].Text = _CachedChartData.Rows[i].ValueText;
                                 _Texts[_TextChartValue[i]].Y = y;
-                                _Texts[_TextChartValue[i]].Font = new CFont(_Texts[_TextChartValue[i]].Font.Name, _Texts[_TextChartValue[i]].Font.Style, layout.FontHeight);
+                                _Texts[_TextChartValue[i]].Font = new CFont(_Texts[_TextChartValue[i]].Font.Name, _Texts[_TextChartValue[i]].Font.Style, _CachedChartLayout.FontHeight);
                                 _Texts[_TextChartValue[i]].Color = rowColor;
                                 _Texts[_TextChartValue[i]].Visible = false;
                             }
@@ -559,7 +563,8 @@ namespace Vocaluxe.Screens
         private void _CycleChartMode()
         {
             _ChartMode = (EHighscoreChartMode)(((int)_ChartMode + 1) % 2);
-            _UpdateChart();
+            _NeedsRefresh = true;
+            UpdateGame();
         }
 
         public override void OnShow()
@@ -576,6 +581,7 @@ namespace Vocaluxe.Screens
             _CountBrokenRecords();
             _UpdateRound();
 
+            _NeedsRefresh = true;
             UpdateGame();
         }
 
@@ -738,6 +744,7 @@ namespace Vocaluxe.Screens
             if (newIndex != currentIndex)
             {
                 _SeasonYear = years[newIndex];
+                _NeedsRefresh = true;
                 UpdateGame();
             }
         }
@@ -767,6 +774,7 @@ namespace Vocaluxe.Screens
                 }
             }
             _UpdateRound();
+            _NeedsRefresh = true;
             UpdateGame();
         }
 
