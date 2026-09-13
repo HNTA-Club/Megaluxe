@@ -156,8 +156,8 @@ namespace Vocaluxe.Screens
             for (int sy = maxSeason; sy >= minSeason; sy--)
             {
                 var seasonScores = scores.Where(s => CHighscoreStats.GetSeasonYear(s) == sy).ToList();
-                int plays = seasonScores.Count;
-                int peak = plays > 0 ? seasonScores.Max(s => s.Score) : 0;
+                int plays = CHighscoreStats.CountUniquePerformances(seasonScores);
+                int peak = seasonScores.Count > 0 ? seasonScores.Max(s => s.Score) : 0;
                 seasonList.Add(new SeasonStat
                 {
                     SeasonYear = sy,

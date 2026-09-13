@@ -325,7 +325,8 @@ namespace Vocaluxe.Screens
 
             info.TotalScores = scores.Count;
             info.UniquePerformances = CountUniquePerformances(scores);
-            info.SeasonCount = scores.Count(s => GetSeasonYear(s) == seasonYear);
+            var seasonScores = scores.Where(s => GetSeasonYear(s) == seasonYear).ToList();
+            info.SeasonCount = CountUniquePerformances(seasonScores);
 
             var best = scores.OrderByDescending(s => s.Score).FirstOrDefault();
             if (best.Name != null)

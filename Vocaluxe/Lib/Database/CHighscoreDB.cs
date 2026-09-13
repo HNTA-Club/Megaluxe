@@ -193,7 +193,11 @@ namespace Vocaluxe.Lib.Database
                 using (var command = new SqliteCommand())
                 {
                     command.Connection = connection;
-                    int dataBaseSongID = CSongs.GetSong(player.SongID).DataBaseSongID;
+                    var song = CSongs.GetSong(player.SongID);
+                    if (song == null)
+                        return -1;
+
+                    int dataBaseSongID = song.DataBaseSongID;
                     return _AddScore(CProfiles.GetPlayerName(player.ProfileID), (int)Math.Round(player.Points), player.VoiceNr, player.DateTicks, medley,
                                      duet, shortSong, (int)CProfiles.GetDifficulty(player.ProfileID), dataBaseSongID, command);
                 }
