@@ -59,11 +59,11 @@ namespace Vocaluxe.Screens
     {
         public const int NumChartRows = 8;
 
-        public static SChartLayout GetLayout(int count)
+        public static SChartLayout GetLayout(int count, SRectF? cardBounds = null)
         {
             count = Math.Max(1, Math.Min(NumChartRows, count));
-            const float cardTop = 688f;
-            const float cardAvailableH = 324f;
+            float cardTop = cardBounds.HasValue ? (cardBounds.Value.Y + 68f) : 688f;
+            float cardAvailableH = cardBounds.HasValue ? Math.Max(100f, cardBounds.Value.H - 86f) : 324f;
 
             float barH;
             float gap;
@@ -200,13 +200,13 @@ namespace Vocaluxe.Screens
             public bool IsSelectedSeason;
         }
 
-        public static void DrawChartBars(SChartData data, SChartLayout layout)
+        public static void DrawChartBars(SChartData data, SChartLayout layout, SRectF? cardBounds = null)
         {
             if (data == null || data.Rows == null || data.Rows.Count == 0)
                 return;
 
-            const float barStartX = 1085f;
-            const float barMaxWidth = 770f;
+            float barStartX = cardBounds.HasValue ? (cardBounds.Value.X + 25f) : 1085f;
+            float barMaxWidth = cardBounds.HasValue ? (cardBounds.Value.W - 50f) : 770f;
 
             for (int i = 0; i < data.Rows.Count && i < NumChartRows; i++)
             {
@@ -240,6 +240,30 @@ namespace Vocaluxe.Screens
                 // 3. Draw bright edge highlight on the right end of the fill bar at Z = -0.6f (frontmost!)
                 SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, layout.BarHeight, -0.6f);
                 CDraw.DrawRect(edgeColor, edgeRect);
+            }
+        }
+
+        public static void DrawChart(
+            SChartData data,
+            SChartLayout layout,
+            SRectF? cardBounds,
+            COrderedDictionaryLite<CText> texts,
+            string[] chartNames,
+            string[] chartValues)
+        {
+            DrawChartBars(data, layout, cardBounds);
+
+            if (texts == null || chartNames == null || chartValues == null || data == null || data.Rows == null)
+                return;
+
+            // Render chart texts on top of bars so they blend properly without depth buffer occlusion
+            for (int i = 0; i < data.Rows.Count && i < NumChartRows; i++)
+            {
+                if (i < chartNames.Length && texts.ContainsKey(chartNames[i]))
+                    texts[chartNames[i]].DrawRelative(0, 0);
+
+                if (i < chartValues.Length && texts.ContainsKey(chartValues[i]))
+                    texts[chartValues[i]].DrawRelative(0, 0);
             }
         }
     }

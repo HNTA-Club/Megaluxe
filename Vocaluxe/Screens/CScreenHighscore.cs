@@ -156,35 +156,41 @@ namespace Vocaluxe.Screens
             var currentScores = (_Scores != null && _Round < _Scores.Length) ? _Scores[_Round] : new List<SDBScoreEntry>();
             SChartData chartData = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
 
+            SRectF? chartCardRect = (_Statics != null && _Statics.ContainsKey("StaticCardHighlight"))
+                ? (SRectF?)_Statics["StaticCardHighlight"].Rect
+                : null;
+
             if (chartData != null && chartData.Rows != null && chartData.Rows.Count > 0)
             {
-                SChartLayout layout = CHighscoreChart.GetLayout(chartData.Rows.Count);
-                CHighscoreChart.DrawChartBars(chartData, layout);
-
-                // Draw chart texts ON TOP of the bars so they blend properly without depth buffer occlusion
-                for (int i = 0; i < chartData.Rows.Count && i < CHighscoreChart.NumChartRows; i++)
-                {
-                    if (_Texts != null)
-                    {
-                        if (_Texts.ContainsKey(_TextChartName[i]))
-                            _Texts[_TextChartName[i]].DrawRelative(0, 0);
-                        if (_Texts.ContainsKey(_TextChartValue[i]))
-                            _Texts[_TextChartValue[i]].DrawRelative(0, 0);
-                    }
-                }
+                SChartLayout layout = CHighscoreChart.GetLayout(chartData.Rows.Count, chartCardRect);
+                CHighscoreChart.DrawChart(chartData, layout, chartCardRect, _Texts, _TextChartName, _TextChartValue);
             }
 
-            // Draw sleek framing accent lines for panels
-            if (_Texts != null)
+            _DrawCardAccents();
+        }
+
+        private void _DrawCardAccents()
+        {
+            if (_Statics == null)
+                return;
+
+            // Accent lines dynamically anchored to the top of theme card containers
+            if (_Statics.ContainsKey("StaticCardCurrent"))
             {
-                // Top border for Left Pane (Emerald/Gold gradient accent)
-                CDraw.DrawRect(new SColorF(0.18f, 0.85f, 0.55f, 0.95f), new SRectF(40, 140, 980, 4, -1f));
+                var r = _Statics["StaticCardCurrent"].Rect;
+                CDraw.DrawRect(new SColorF(0.18f, 0.85f, 0.55f, 0.95f), new SRectF(r.X, r.Y, r.W, 4, -1f));
+            }
 
-                // Top-Right Pane (Song Lore) top accent line
-                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(1060, 140, 820, 4, -1f));
+            if (_Statics.ContainsKey("StaticCardLore"))
+            {
+                var r = _Statics["StaticCardLore"].Rect;
+                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(r.X, r.Y, r.W, 4, -1f));
+            }
 
-                // Bottom-Right Pane (Visualization Chart) top accent line
-                CDraw.DrawRect(new SColorF(0.95f, 0.65f, 0.20f, 0.95f), new SRectF(1060, 620, 820, 4, -1f));
+            if (_Statics.ContainsKey("StaticCardHighlight"))
+            {
+                var r = _Statics["StaticCardHighlight"].Rect;
+                CDraw.DrawRect(new SColorF(0.95f, 0.65f, 0.20f, 0.95f), new SRectF(r.X, r.Y, r.W, 4, -1f));
             }
         }
 
@@ -457,9 +463,13 @@ namespace Vocaluxe.Screens
             _SetText(_TextHighlightTitle, CLanguage.Translate(data.TitleKey));
             _SetText(_TextHighlightBody, null, false);
 
+            SRectF? chartCardRect = (_Statics != null && _Statics.ContainsKey("StaticCardHighlight"))
+                ? (SRectF?)_Statics["StaticCardHighlight"].Rect
+                : null;
+
             if (data != null && data.Rows != null && data.Rows.Count > 0)
             {
-                SChartLayout layout = CHighscoreChart.GetLayout(data.Rows.Count);
+                SChartLayout layout = CHighscoreChart.GetLayout(data.Rows.Count, chartCardRect);
 
                 for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
                 {
