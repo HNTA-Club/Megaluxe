@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -149,8 +149,7 @@ namespace Vocaluxe.Base
 
         private int _SortByNumPlayed(CSongPointer s1, CSongPointer s2)
         {
-
-            int res = Convert.ToInt32(s1.SortString).CompareTo(Convert.ToInt32(s2.SortString));
+            int res = CSongs.Songs[s1.SongID].NumPlayed.CompareTo(CSongs.Songs[s2.SongID].NumPlayed);
             if (res == 0)
             {
                 if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
