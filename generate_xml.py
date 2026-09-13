@@ -81,15 +81,15 @@ RIGHT_W    = SCREEN_W - RIGHT_X - MARGIN_X                 # 820
 LORE_CARD  = Rect(x=RIGHT_X, y=TOP_Y, w=RIGHT_W, h=450)
 CHART_CARD = Rect(x=RIGHT_X, y=LORE_CARD.bottom + 30, w=RIGHT_W, h=410)
 
-# 2. Left Pane: Unified Master Leaderboard (13 Rows, 5 Columns)
-NUM_LEADERBOARD_ROWS = 13
-LEADERBOARD_START_Y  = LEFT_CARD.y + 65                    # 205
-LEADERBOARD_PITCH    = 54
+# 2. Left Pane: Unified Master Leaderboard (12 Rows, 5 Columns)
+NUM_LEADERBOARD_ROWS = 12
+LEADERBOARD_START_Y  = LEFT_CARD.y + 70                    # 210
+LEADERBOARD_PITCH    = 65
 COL_RANK             = LEFT_CARD.x + 30                    # 70
-COL_NAME             = COL_RANK + 65                       # 135 (max_w=410)
-COL_SCORE            = LEFT_CARD.x + 650                   # 690 (align Right)
-COL_TAG              = LEFT_CARD.x + 675                   # 715 (max_w=180)
-COL_DATE             = LEFT_CARD.right - 30                # 990 (align Right)
+COL_NAME             = COL_RANK + 70                       # 140 (max_w=415)
+COL_SCORE            = LEFT_CARD.x + 615                   # 655 (align Right)
+COL_TAG              = LEFT_CARD.x + 640                   # 680 (max_w=140)
+COL_DATE             = LEFT_CARD.right - 30                # 990 (align Right, max_w=165)
 
 # 3. Top-Right Pane: Song Lore (2 Columns + Fact Footer)
 LORE_COL1_X = LORE_CARD.x + 40                             # 1100
@@ -130,11 +130,11 @@ texts.append(create_text('TextLeaderboardSubTitle', COL_DATE, LEFT_CARD.y + 22, 
 
 for i in range(1, NUM_LEADERBOARD_ROWS + 1):
     y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
-    texts.append(create_text(f'TextLeaderboardRank{i}', COL_RANK, y, 30, 'Left'))
-    texts.append(create_text(f'TextLeaderboardName{i}', COL_NAME, y, 30, 'Left', max_w='410'))
-    texts.append(create_text(f'TextLeaderboardScore{i}', COL_SCORE, y, 30, 'Right'))
-    texts.append(create_text(f'TextLeaderboardTag{i}', COL_TAG, y, 26, 'Left', max_w='180'))
-    texts.append(create_text(f'TextLeaderboardDate{i}', COL_DATE, y, 26, 'Right'))
+    texts.append(create_text(f'TextLeaderboardRank{i}', COL_RANK, y, 36, 'Left'))
+    texts.append(create_text(f'TextLeaderboardName{i}', COL_NAME, y, 36, 'Left', max_w='415'))
+    texts.append(create_text(f'TextLeaderboardScore{i}', COL_SCORE, y, 36, 'Right'))
+    texts.append(create_text(f'TextLeaderboardTag{i}', COL_TAG, y + 5, 26, 'Left', max_w='140'))
+    texts.append(create_text(f'TextLeaderboardDate{i}', COL_DATE, y + 5, 26, 'Right', max_w='165'))
 
 # Top-Right Pane: Song Lore
 texts.append(create_text('TextLoreTitle', LORE_CARD.x + 30, LORE_CARD.y + 20, 38, 'Left', color='TextColor'))
@@ -162,16 +162,16 @@ for i in range(1, NUM_CHART_ROWS + 1):
     texts.append(create_text(f'TextChartValue{i}', CHART_VAL_X, y, CHART_TEXT_H, 'Right'))
 
 particles = []
-# Particle Effects for Leaderboard (1..13)
+# Particle Effects for Leaderboard (1..12)
 for i in range(1, NUM_LEADERBOARD_ROWS + 1):
     y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
-    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', LEFT_CARD.x + 25, y - 4, LEFT_CARD.w - 50, 38))
+    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', LEFT_CARD.x + 25, y - 4, LEFT_CARD.w - 50, 46))
 
 xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>8</ScreenVersion>
+    <ScreenVersion>10</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">

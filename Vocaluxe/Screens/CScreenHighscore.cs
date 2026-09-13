@@ -33,10 +33,10 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 8; }
+            get { return 10; }
         }
 
-        private const int _NumLeaderboard = 13;
+        private const int _NumLeaderboard = 12;
 
         private const string _TextSongName = "TextSongName";
         private const string _TextSongMode = "TextSongMode";
@@ -63,7 +63,7 @@ namespace Vocaluxe.Screens
         private const string _TextHighlightBody = "TextHighlightBody";
         private string[] _TextChartName;
         private string[] _TextChartValue;
-        private EHighscoreChartMode _ChartMode = EHighscoreChartMode.MostSungAllTime;
+        private EHighscoreChartMode _ChartMode = EHighscoreChartMode.SeasonalPlays;
 
         // Color Palettes: Green for this/latest run, Blue for season, White default
         private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint (Green)
@@ -153,12 +153,15 @@ namespace Vocaluxe.Screens
         {
             base.Draw();
 
-            SChartData chartData = CHighscoreChart.GetChartData(_ChartMode);
-            CHighscoreChart.DrawChartBars(chartData, _ChartMode);
+            var currentScores = (_Scores != null && _Round < _Scores.Length) ? _Scores[_Round] : new List<SDBScoreEntry>();
+            SChartData chartData = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
 
-            // Draw chart texts ON TOP of the bars so they blend properly without depth buffer occlusion
-            if (chartData != null && chartData.Rows != null)
+            if (chartData != null && chartData.Rows != null && chartData.Rows.Count > 0)
             {
+                SChartLayout layout = CHighscoreChart.GetLayout(chartData.Rows.Count);
+                CHighscoreChart.DrawChartBars(chartData, layout);
+
+                // Draw chart texts ON TOP of the bars so they blend properly without depth buffer occlusion
                 for (int i = 0; i < chartData.Rows.Count && i < CHighscoreChart.NumChartRows; i++)
                 {
                     if (_Texts != null)
@@ -279,8 +282,27 @@ namespace Vocaluxe.Screens
             return (date.Month >= 9) ? date.Year : date.Year - 1;
         }
 
+        private static string FormatScoreDateTime(SDBScoreEntry entry)
+        {
+            if (entry.DateTicks > 0)
+            {
+                DateTime dt = new DateTime(entry.DateTicks);
+                return dt.ToString("dd/MM/yyyy HH:mm");
+            }
+            if (!string.IsNullOrEmpty(entry.Date))
+            {
+                if (DateTime.TryParse(entry.Date, out DateTime dt))
+                {
+                    return dt.ToString("dd/MM/yyyy HH:mm");
+                }
+                return entry.Date;
+            }
+            return "";
+        }
+
         private class SDisplayRow
         {
+            public int ID;
             public int Rank;
             public bool ShowRank;
             public string Name;
@@ -326,10 +348,11 @@ namespace Vocaluxe.Screens
 
                     sessionRows.Add(new SDisplayRow
                     {
+                        ID = -1,
                         Name = name,
                         Score = score,
                         Tag = tag,
-                        Date = DateTime.Now.ToString("dd/MM/yyyy"),
+                        Date = DateTime.Now.ToString("dd/MM/yyyy HH:mm"),
                         Color = color,
                         HasParticles = isAllTimeMicRecord,
                         IsSession = true,
@@ -357,10 +380,11 @@ namespace Vocaluxe.Screens
                     string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
                     sessionRows.Add(new SDisplayRow
                     {
+                        ID = entry.ID,
                         Name = displayName,
                         Score = entry.Score,
                         Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
-                        Date = entry.Date,
+                        Date = FormatScoreDateTime(entry),
                         Color = _ColorSession,
                         HasParticles = false,
                         IsSession = true,
@@ -390,17 +414,19 @@ namespace Vocaluxe.Screens
             foreach (var entry in seasonBests)
             {
                 string displayName = getMicKey(entry);
+                string entryDate = FormatScoreDateTime(entry);
 
                 // Skip if already in candidateRows (e.g. from current session)
-                if (candidateRows.Any(r => r.Name == displayName && r.Score == entry.Score && r.Date == entry.Date))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
                     continue;
 
                 candidateRows.Add(new SDisplayRow
                 {
+                    ID = entry.ID,
                     Name = displayName,
                     Score = entry.Score,
                     Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON"),
-                    Date = entry.Date,
+                    Date = entryDate,
                     Color = _ColorSeason,
                     HasParticles = false,
                     IsSession = false,
@@ -417,9 +443,10 @@ namespace Vocaluxe.Screens
             foreach (var entry in allTimeBests)
             {
                 string displayName = getMicKey(entry);
+                string entryDate = FormatScoreDateTime(entry);
 
                 // Skip if already in candidateRows (e.g. from session or season)
-                if (candidateRows.Any(r => r.Name == displayName && r.Score == entry.Score && r.Date == entry.Date))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
                     continue;
 
                 bool isSeason = GetSeasonYear(entry) == _SeasonYear;
@@ -428,15 +455,53 @@ namespace Vocaluxe.Screens
 
                 candidateRows.Add(new SDisplayRow
                 {
+                    ID = entry.ID,
                     Name = displayName,
                     Score = entry.Score,
                     Tag = tag,
-                    Date = entry.Date,
+                    Date = entryDate,
                     Color = color,
                     HasParticles = false,
                     IsSession = false,
                     VoiceNr = entry.VoiceNr
                 });
+            }
+
+            // (D) Backfill: If we still have fewer than _NumLeaderboard rows, fill remaining slots with highest scores overall
+            if (candidateRows.Count < _NumLeaderboard)
+            {
+                var remainingScores = scores
+                    .OrderByDescending(s => s.Score)
+                    .ToList();
+
+                foreach (var entry in remainingScores)
+                {
+                    if (candidateRows.Count >= _NumLeaderboard)
+                        break;
+
+                    string displayName = getMicKey(entry);
+                    string entryDate = FormatScoreDateTime(entry);
+
+                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.Name == displayName && r.Score == entry.Score && r.Date == entryDate)))
+                        continue;
+
+                    bool isSeason = GetSeasonYear(entry) == _SeasonYear;
+                    SColorF color = isSeason ? _ColorSeason : _ColorNormal;
+                    string tag = isSeason ? CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") : (entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "");
+
+                    candidateRows.Add(new SDisplayRow
+                    {
+                        ID = entry.ID,
+                        Name = displayName,
+                        Score = entry.Score,
+                        Tag = tag,
+                        Date = entryDate,
+                        Color = color,
+                        HasParticles = false,
+                        IsSession = false,
+                        VoiceNr = entry.VoiceNr
+                    });
+                }
             }
 
             // Sort all candidates by score descending
@@ -654,29 +719,63 @@ namespace Vocaluxe.Screens
 
         private void _UpdateChart()
         {
-            SChartData data = CHighscoreChart.GetChartData(_ChartMode);
+            var currentScores = (_Scores != null && _Round < _Scores.Length) ? _Scores[_Round] : new List<SDBScoreEntry>();
+            SChartData data = CHighscoreChart.GetChartData(currentScores, _ChartMode, _SeasonYear);
             _SetText(_TextHighlightTitle, CLanguage.Translate(data.TitleKey));
             _SetText(_TextHighlightBody, null, false);
 
-            for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
+            if (data != null && data.Rows != null && data.Rows.Count > 0)
             {
-                if (i < data.Rows.Count)
+                SChartLayout layout = CHighscoreChart.GetLayout(data.Rows.Count);
+
+                for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
                 {
-                    if (_Texts != null)
+                    if (i < data.Rows.Count)
                     {
-                        if (_Texts.ContainsKey(_TextChartName[i]))
+                        if (_Texts != null)
                         {
-                            _Texts[_TextChartName[i]].Text = data.Rows[i].Label;
-                            _Texts[_TextChartName[i]].Visible = false;
+                            float y = layout.StartY + i * layout.RowPitch + (layout.BarHeight - layout.FontHeight) / 2f;
+                            SColorF rowColor = data.Rows[i].IsSelectedSeason ? _ColorSeason : _ColorNormal;
+
+                            if (_Texts.ContainsKey(_TextChartName[i]))
+                            {
+                                _Texts[_TextChartName[i]].Text = data.Rows[i].Label;
+                                _Texts[_TextChartName[i]].Y = y;
+                                _Texts[_TextChartName[i]].Font = new CFont(_Texts[_TextChartName[i]].Font.Name, _Texts[_TextChartName[i]].Font.Style, layout.FontHeight);
+                                _Texts[_TextChartName[i]].Color = rowColor;
+                                _Texts[_TextChartName[i]].Visible = false;
+                            }
+                            if (_Texts.ContainsKey(_TextChartValue[i]))
+                            {
+                                _Texts[_TextChartValue[i]].Text = data.Rows[i].ValueText;
+                                _Texts[_TextChartValue[i]].Y = y;
+                                _Texts[_TextChartValue[i]].Font = new CFont(_Texts[_TextChartValue[i]].Font.Name, _Texts[_TextChartValue[i]].Font.Style, layout.FontHeight);
+                                _Texts[_TextChartValue[i]].Color = rowColor;
+                                _Texts[_TextChartValue[i]].Visible = false;
+                            }
                         }
-                        if (_Texts.ContainsKey(_TextChartValue[i]))
+                    }
+                    else
+                    {
+                        if (_Texts != null)
                         {
-                            _Texts[_TextChartValue[i]].Text = data.Rows[i].ValueText;
-                            _Texts[_TextChartValue[i]].Visible = false;
+                            if (_Texts.ContainsKey(_TextChartName[i]))
+                            {
+                                _Texts[_TextChartName[i]].Text = "";
+                                _Texts[_TextChartName[i]].Visible = false;
+                            }
+                            if (_Texts.ContainsKey(_TextChartValue[i]))
+                            {
+                                _Texts[_TextChartValue[i]].Text = "";
+                                _Texts[_TextChartValue[i]].Visible = false;
+                            }
                         }
                     }
                 }
-                else
+            }
+            else
+            {
+                for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
                 {
                     if (_Texts != null)
                     {
@@ -697,7 +796,7 @@ namespace Vocaluxe.Screens
 
         private void _CycleChartMode()
         {
-            _ChartMode = (EHighscoreChartMode)(((int)_ChartMode + 1) % 3);
+            _ChartMode = (EHighscoreChartMode)(((int)_ChartMode + 1) % 2);
             _UpdateChart();
         }
 
