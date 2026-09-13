@@ -353,11 +353,11 @@ namespace Vocaluxe.Lib.Database
                                 {
                                     Name = reader.GetString(0),
                                     Score = reader.GetInt32(1),
-                                    Date = new DateTime(ticks).ToString("dd/MM/yyyy"),
+                                    Date = (ticks > 0) ? new DateTime(ticks).ToString("dd/MM/yyyy") : "",
                                     Difficulty = (EGameDifficulty)reader.GetInt32(3),
                                     VoiceNr = reader.GetInt32(4),
                                     ID = reader.GetInt32(5),
-                                    DateTicks = ticks
+                                    DateTicks = (ticks > 0) ? ticks : 0
                                 };
 
                             scores.Add(score);
