@@ -294,7 +294,12 @@ namespace Vocaluxe.Screens
                     string displayName = playerName + (_IsDuet ? " (P" + (player.VoiceNr + 1) + ")" : "");
                     int score = (int)Math.Round(player.Points);
 
-                    // Check if player's score is an all-time record for their mic/voice line
+                    // Check if player achieved a profile-specific personal best (earns sparkles!)
+                    var playerPriorScores = priorScores.Where(s => s.Name == playerName && (!_IsDuet || s.VoiceNr == player.VoiceNr)).ToList();
+                    int prevPlayerBest = playerPriorScores.Count > 0 ? playerPriorScores.Max(s => s.Score) : 0;
+                    bool isPersonalHighscore = score > prevPlayerBest && score > CSettings.MinScoreForDB;
+
+                    // Check if player's score is an all-time record for their mic/voice line (earns NEW RECORD tag!)
                     var voiceScores = priorScores.Where(s => !_IsDuet || s.VoiceNr == player.VoiceNr).ToList();
                     int prevVoiceRecord = voiceScores.Count > 0 ? voiceScores.Max(s => s.Score) : 0;
                     bool isAllTimeMicRecord = score > prevVoiceRecord && score > CSettings.MinScoreForDB;
@@ -329,12 +334,12 @@ namespace Vocaluxe.Screens
                         Tag = tag,
                         Date = dateStr,
                         Color = color,
-                        HasParticles = isAllTimeMicRecord,
+                        HasParticles = isPersonalHighscore,
                         IsSession = true,
                         VoiceNr = player.VoiceNr
                     });
 
-                    if (isAllTimeMicRecord && !_HasPlayedHighscoreSound)
+                    if (isPersonalHighscore && !_HasPlayedHighscoreSound)
                     {
                         _HighscoreStream = PlaySound(ESounds.Highscore, CConfig.SoundEffectVolume);
                         _HasPlayedHighscoreSound = true;
@@ -634,6 +639,8 @@ namespace Vocaluxe.Screens
 
         private void _AddScoresToDB()
         {
+            if (_FromScreenSong) return;
+
             CPoints points = CGame.GetPoints();
             if (points == null) return;
             if (CScreenSong.GetAudioMode() == EAudioMode.TR_AUDIOMODE_KARAOKE) return;
@@ -646,19 +653,17 @@ namespace Vocaluxe.Screens
                     if (players[p].Points > CSettings.MinScoreForDB && players[p].SongFinished && !CProfiles.IsGuestProfile(players[p].ProfileID))
                     {
                         int id = CDataBase.AddScore(players[p]);
-                        _NewEntryIDs.Add(id);
+                        if (id > 0)
+                            _NewEntryIDs.Add(id);
                     }
                 }
             }
 
-            if (!_FromScreenSong)
+            for (int round = 0; round < points.NumRounds; round++)
             {
-                for (int round = 0; round < points.NumRounds; round++)
-                {
-                    var song = CGame.GetSong(round);
-                    if (song != null && song.ID >= 0)
-                        _SessionSongsSung.Add(song.ID);
-                }
+                var song = CGame.GetSong(round);
+                if (song != null && song.ID >= 0)
+                    _SessionSongsSung.Add(song.ID);
             }
         }
 
