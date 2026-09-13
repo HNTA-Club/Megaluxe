@@ -138,13 +138,13 @@ namespace Vocaluxe.Screens
                 return data;
 
             int currentSeason = CHighscoreStats.GetCurrentSeasonYear();
-            int maxSeason = currentSeason;
+            int maxSeason = Math.Max(currentSeason, selectedSeasonYear);
             int minSeason = scores.Select(s => CHighscoreStats.GetSeasonYear(s)).Min();
-            if (minSeason > currentSeason) minSeason = currentSeason;
+            if (minSeason > maxSeason) minSeason = maxSeason;
 
             if (selectedSeasonYear < maxSeason - NumChartRows + 1)
             {
-                maxSeason = Math.Min(currentSeason, selectedSeasonYear + NumChartRows - 1);
+                maxSeason = selectedSeasonYear + NumChartRows - 1;
                 minSeason = Math.Max(minSeason, maxSeason - NumChartRows + 1);
             }
             else if (maxSeason - minSeason + 1 > NumChartRows)
@@ -219,35 +219,40 @@ namespace Vocaluxe.Screens
             for (int i = 0; i < data.Rows.Count && i < NumChartRows; i++)
             {
                 float y = layout.StartY + i * layout.RowPitch;
-                float barWidth = Math.Max(25f, barMaxWidth * Math.Min(1.0f, Math.Max(0.05f, data.Rows[i].Ratio)));
-
-                // Color hierarchy: Cyan for currently selected season, default white for other seasons
-                SColorF fillColor;
-                SColorF edgeColor;
-
-                if (data.Rows[i].IsSelectedSeason)
-                {
-                    fillColor = new SColorF(0.25f, 0.80f, 1.00f, 0.45f); // Vibrant Electric Cyan
-                    edgeColor = new SColorF(0.40f, 0.90f, 1.00f, 0.95f);
-                }
-                else
-                {
-                    fillColor = new SColorF(0.96f, 0.96f, 0.98f, 0.28f); // Soft Clean Default White
-                    edgeColor = new SColorF(1.00f, 1.00f, 1.00f, 0.85f);
-                }
 
                 // 1. Draw dark translucent background tray at Z = -0.4f (behind fill bar!)
                 SRectF bgRect = new SRectF(barStartX, y, barMaxWidth, layout.BarHeight, -0.4f);
                 SColorF bgColor = new SColorF(0.06f, 0.08f, 0.14f, 0.65f);
                 CDraw.DrawRect(bgColor, bgRect);
 
-                // 2. Draw filled progress bar rect with color at Z = -0.5f (in front of tray!)
-                SRectF fillRect = new SRectF(barStartX, y, barWidth, layout.BarHeight, -0.5f);
-                CDraw.DrawRect(fillColor, fillRect);
+                // Only draw filled progress bar and highlight edge if there is non-zero activity
+                if (data.Rows[i].Ratio > 0f)
+                {
+                    float barWidth = Math.Max(25f, barMaxWidth * Math.Min(1.0f, Math.Max(0.05f, data.Rows[i].Ratio)));
 
-                // 3. Draw bright edge highlight on the right end of the fill bar at Z = -0.6f (frontmost!)
-                SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, layout.BarHeight, -0.6f);
-                CDraw.DrawRect(edgeColor, edgeRect);
+                    // Color hierarchy: Cyan for currently selected season, default white for other seasons
+                    SColorF fillColor;
+                    SColorF edgeColor;
+
+                    if (data.Rows[i].IsSelectedSeason)
+                    {
+                        fillColor = new SColorF(0.25f, 0.80f, 1.00f, 0.45f); // Vibrant Electric Cyan
+                        edgeColor = new SColorF(0.40f, 0.90f, 1.00f, 0.95f);
+                    }
+                    else
+                    {
+                        fillColor = new SColorF(0.96f, 0.96f, 0.98f, 0.28f); // Soft Clean Default White
+                        edgeColor = new SColorF(1.00f, 1.00f, 1.00f, 0.85f);
+                    }
+
+                    // 2. Draw filled progress bar rect with color at Z = -0.5f (in front of tray!)
+                    SRectF fillRect = new SRectF(barStartX, y, barWidth, layout.BarHeight, -0.5f);
+                    CDraw.DrawRect(fillColor, fillRect);
+
+                    // 3. Draw bright edge highlight on the right end of the fill bar at Z = -0.6f (frontmost!)
+                    SRectF edgeRect = new SRectF(barStartX + barWidth - 3f, y, 3f, layout.BarHeight, -0.6f);
+                    CDraw.DrawRect(edgeColor, edgeRect);
+                }
             }
         }
 
