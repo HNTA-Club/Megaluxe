@@ -353,15 +353,25 @@ namespace Vocaluxe.Lib.Database
                         while (reader.Read())
                         {
                             long ticks = reader.GetInt64(2);
+                            bool validTicks = ticks > 0 && ticks <= DateTime.MaxValue.Ticks;
+                            string date = "";
+                            if (validTicks)
+                            {
+                                try
+                                {
+                                    date = new DateTime(ticks).ToString("dd/MM/yyyy");
+                                }
+                                catch {}
+                            }
                             var score = new SDBScoreEntry
                                 {
                                     Name = reader.GetString(0),
                                     Score = reader.GetInt32(1),
-                                    Date = (ticks > 0) ? new DateTime(ticks).ToString("dd/MM/yyyy") : "",
+                                    Date = date,
                                     Difficulty = (EGameDifficulty)reader.GetInt32(3),
                                     VoiceNr = reader.GetInt32(4),
                                     ID = reader.GetInt32(5),
-                                    DateTicks = (ticks > 0) ? ticks : 0
+                                    DateTicks = validTicks ? ticks : 0
                                 };
 
                             scores.Add(score);
