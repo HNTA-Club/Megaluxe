@@ -33,7 +33,7 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 5; }
+            get { return 6; }
         }
 
         private const int _NumLeaderboard = 13;
@@ -65,11 +65,10 @@ namespace Vocaluxe.Screens
         private string[] _TextChartValue;
         private EHighscoreChartMode _ChartMode = EHighscoreChartMode.Popular5Months;
 
-        // Color Palettes
-        private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint
-        private static readonly SColorF _ColorAllTime = new SColorF(0.96f, 0.78f, 0.26f, 1f); // Radiant Gold
-        private static readonly SColorF _ColorSeason = new SColorF(0.25f, 0.80f, 1.00f, 1f);  // Electric Cyan
-        private static readonly SColorF _ColorNormal = new SColorF(0.85f, 0.88f, 0.92f, 0.95f); // Crisp Light Silver
+        // Color Palettes: Green for this/latest run, Blue for season, White default
+        private static readonly SColorF _ColorSession = new SColorF(0.18f, 0.90f, 0.45f, 1f); // Vibrant Emerald/Mint (Green)
+        private static readonly SColorF _ColorSeason = new SColorF(0.25f, 0.80f, 1.00f, 1f);  // Electric Cyan (Blue)
+        private static readonly SColorF _ColorNormal = new SColorF(0.96f, 0.96f, 0.98f, 1f);  // Clean Crisp White (Default)
 
         private List<SDBScoreEntry>[] _Scores;
         private List<int>[] _AvailableYears;
@@ -176,13 +175,13 @@ namespace Vocaluxe.Screens
             if (_Texts != null)
             {
                 // Top border for Left Pane (Emerald/Gold gradient accent)
-                CDraw.DrawRect(new SColorF(0.18f, 0.85f, 0.55f, 0.95f), new SRectF(60, 140, 870, 4, -1f));
+                CDraw.DrawRect(new SColorF(0.18f, 0.85f, 0.55f, 0.95f), new SRectF(40, 140, 980, 4, -1f));
 
                 // Top-Right Pane (Song Lore) top accent line
-                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(990, 140, 870, 4, -1f));
+                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(1060, 140, 820, 4, -1f));
 
                 // Bottom-Right Pane (Visualization Chart) top accent line
-                CDraw.DrawRect(new SColorF(0.95f, 0.65f, 0.20f, 0.95f), new SRectF(990, 620, 870, 4, -1f));
+                CDraw.DrawRect(new SColorF(0.95f, 0.65f, 0.20f, 0.95f), new SRectF(1060, 620, 820, 4, -1f));
             }
         }
 
@@ -283,6 +282,7 @@ namespace Vocaluxe.Screens
         private class SDisplayRow
         {
             public int Rank;
+            public bool ShowRank;
             public string Name;
             public int Score;
             public string Tag;
@@ -290,12 +290,14 @@ namespace Vocaluxe.Screens
             public SColorF Color;
             public bool HasParticles;
             public bool IsSession;
+            public int VoiceNr;
         }
 
         private void _UpdateLeaderboard()
         {
             _SetText(_TextLeaderboardTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_LEADERBOARD"), true, new SColorF(1f, 1f, 1f, 1f));
-            _SetText(_TextLeaderboardSubTitle, _SeasonYear + "-" + (_SeasonYear + 1) + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") + " (▲/▼)", true, new SColorF(0.6f, 0.85f, 0.95f, 0.85f));
+            string seasonRange = "09/" + _SeasonYear + "-08/" + (_SeasonYear + 1);
+            _SetText(_TextLeaderboardSubTitle, seasonRange + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") + " (▲/▼)", true, new SColorF(0.6f, 0.85f, 0.95f, 0.85f));
 
             var scores = _Scores[_Round] ?? new List<SDBScoreEntry>();
             var priorScores = scores.Where(s => !_IsNewEntry(s.ID)).ToList();
@@ -320,17 +322,18 @@ namespace Vocaluxe.Screens
                     bool isAllTimeMicRecord = score > prevVoiceRecord && score > CSettings.MinScoreForDB;
 
                     string tag = isAllTimeMicRecord ? ("★ " + CLanguage.Translate("TR_SCREENHIGHSCORE_NEW_SONG_RECORD") + " ★") : CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION");
-                    SColorF color = isAllTimeMicRecord ? _ColorAllTime : _ColorSession;
+                    SColorF color = _ColorSession;
 
                     sessionRows.Add(new SDisplayRow
                     {
                         Name = name,
                         Score = score,
                         Tag = tag,
-                        Date = DateTime.Now.ToString("yyyy-MM-dd"),
+                        Date = DateTime.Now.ToString("dd/MM/yyyy"),
                         Color = color,
                         HasParticles = isAllTimeMicRecord,
-                        IsSession = true
+                        IsSession = true,
+                        VoiceNr = player.VoiceNr
                     });
 
                     if (isAllTimeMicRecord && !_HasPlayedHighscoreSound)
@@ -356,62 +359,72 @@ namespace Vocaluxe.Screens
                     {
                         Name = displayName,
                         Score = entry.Score,
-                        Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_LATEST_SESSION"),
+                        Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
                         Date = entry.Date,
                         Color = _ColorSession,
                         HasParticles = false,
-                        IsSession = true
+                        IsSession = true,
+                        VoiceNr = entry.VoiceNr
                     });
                 }
             }
 
-            // 2. Build candidate list from DB scores (player bests)
             int allTimeRecord = scores.Count > 0 ? scores.Max(s => s.Score) : 0;
-
-            var playerBests = scores
-                .GroupBy(s => s.Name + (_IsDuet ? " (P" + (s.VoiceNr + 1) + ")" : ""))
-                .Select(g => g.OrderByDescending(s => s.Score).First())
-                .ToList();
+            Func<SDBScoreEntry, string> getMicKey = s => s.Name + (_IsDuet ? " (P" + (s.VoiceNr + 1) + ")" : "");
 
             var candidateRows = new List<SDisplayRow>();
 
-            // If we have active session players from singing, add them as primary candidates
-            var addedKeys = new HashSet<string>();
+            // (A) Session rows first (Green)
             foreach (var sess in sessionRows)
             {
                 candidateRows.Add(sess);
-                addedKeys.Add(sess.Name + "_" + sess.Score);
             }
 
-            // Add player bests from DB
-            foreach (var entry in playerBests)
+            // (B) Seasonal bests for the selected season (Blue)
+            var seasonScores = scores.Where(s => GetSeasonYear(s) == _SeasonYear).ToList();
+            var seasonBests = seasonScores
+                .GroupBy(getMicKey)
+                .Select(g => g.OrderByDescending(s => s.Score).First())
+                .ToList();
+
+            foreach (var entry in seasonBests)
             {
-                string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
-                string key = displayName + "_" + entry.Score;
-                if (addedKeys.Contains(key))
+                string displayName = getMicKey(entry);
+
+                // Skip if already in candidateRows (e.g. from current session)
+                if (candidateRows.Any(r => r.Name == displayName && r.Score == entry.Score && r.Date == entry.Date))
+                    continue;
+
+                candidateRows.Add(new SDisplayRow
+                {
+                    Name = displayName,
+                    Score = entry.Score,
+                    Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON"),
+                    Date = entry.Date,
+                    Color = _ColorSeason,
+                    HasParticles = false,
+                    IsSession = false,
+                    VoiceNr = entry.VoiceNr
+                });
+            }
+
+            // (C) All-time bests (Blue if this season, White default otherwise)
+            var allTimeBests = scores
+                .GroupBy(getMicKey)
+                .Select(g => g.OrderByDescending(s => s.Score).First())
+                .ToList();
+
+            foreach (var entry in allTimeBests)
+            {
+                string displayName = getMicKey(entry);
+
+                // Skip if already in candidateRows (e.g. from session or season)
+                if (candidateRows.Any(r => r.Name == displayName && r.Score == entry.Score && r.Date == entry.Date))
                     continue;
 
                 bool isSeason = GetSeasonYear(entry) == _SeasonYear;
-                bool isAllTimeTop = entry.Score == allTimeRecord;
-
-                SColorF color;
-                string tag;
-
-                if (isAllTimeTop)
-                {
-                    color = _ColorAllTime;
-                    tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_ALLTIME");
-                }
-                else if (isSeason)
-                {
-                    color = _ColorSeason;
-                    tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON");
-                }
-                else
-                {
-                    color = _ColorNormal;
-                    tag = entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "";
-                }
+                SColorF color = isSeason ? _ColorSeason : _ColorNormal;
+                string tag = isSeason ? CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") : (entry.Difficulty != EGameDifficulty.TR_CONFIG_NORMAL ? _GetShortDifficulty(entry.Difficulty) : "");
 
                 candidateRows.Add(new SDisplayRow
                 {
@@ -421,18 +434,34 @@ namespace Vocaluxe.Screens
                     Date = entry.Date,
                     Color = color,
                     HasParticles = false,
-                    IsSession = false
+                    IsSession = false,
+                    VoiceNr = entry.VoiceNr
                 });
-                addedKeys.Add(key);
             }
 
             // Sort all candidates by score descending
             candidateRows = candidateRows.OrderByDescending(r => r.Score).ToList();
 
-            // Assign ranks #1, #2, ...
+            // Compute absolute rank in the song (per mic line) and filter to top 50%
             for (int i = 0; i < candidateRows.Count; i++)
             {
-                candidateRows[i].Rank = i + 1;
+                var row = candidateRows[i];
+
+                var voiceScores = scores
+                    .Where(s => !_IsDuet || s.VoiceNr == row.VoiceNr)
+                    .Select(s => s.Score)
+                    .ToList();
+
+                foreach (var sess in sessionRows.Where(s => !_IsDuet || s.VoiceNr == row.VoiceNr))
+                {
+                    if (!voiceScores.Contains(sess.Score))
+                        voiceScores.Add(sess.Score);
+                }
+
+                int totalScores = voiceScores.Count;
+                int absoluteRank = voiceScores.Count(sc => sc > row.Score) + 1;
+                row.Rank = absoluteRank;
+                row.ShowRank = totalScores == 0 || absoluteRank <= Math.Ceiling(totalScores * 0.5f);
             }
 
             // 3. Select rows to display in the 13 table rows (with Sticky Session Row support)
@@ -461,7 +490,8 @@ namespace Vocaluxe.Screens
                 if (i < displayRows.Count)
                 {
                     var row = displayRows[i];
-                    _SetText(_TextLeaderboardRank[i], "#" + row.Rank, true, row.Color);
+                    string rankStr = row.ShowRank ? ("#" + row.Rank) : "";
+                    _SetText(_TextLeaderboardRank[i], rankStr, row.ShowRank, row.Color);
                     _SetText(_TextLeaderboardName[i], row.Name, true, row.Color);
                     _SetText(_TextLeaderboardScore[i], row.Score.ToString("N0"), true, row.Color);
                     _SetText(_TextLeaderboardTag[i], row.Tag, true, row.Color);

@@ -2,7 +2,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>5</ScreenVersion>
+    <ScreenVersion>6</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -29,9 +29,9 @@
       <Skin />
       <Color Name="BackgroundColorAlpha" />
       <Rect>
-        <X>60</X>
+        <X>40</X>
         <Y>140</Y>
-        <W>870</W>
+        <W>980</W>
         <H>890</H>
         <Z>0</Z>
       </Rect>
@@ -40,9 +40,9 @@
       <Skin />
       <Color Name="BackgroundColorAlpha" />
       <Rect>
-        <X>990</X>
+        <X>1060</X>
         <Y>140</Y>
-        <W>870</W>
+        <W>820</W>
         <H>450</H>
         <Z>0</Z>
       </Rect>
@@ -51,9 +51,9 @@
       <Skin />
       <Color Name="BackgroundColorAlpha" />
       <Rect>
-        <X>990</X>
+        <X>1060</X>
         <Y>620</Y>
-        <W>870</W>
+        <W>820</W>
         <H>410</H>
         <Z>0</Z>
       </Rect>
@@ -103,7 +103,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTitle">
-      <X>90</X>
+      <X>70</X>
       <Y>155</Y>
       <Z>-1</Z>
       <H>34</H>
@@ -117,7 +117,7 @@
       <Text>TR_SCREENHIGHSCORE_LEADERBOARD</Text>
     </Text>
     <Text Name="TextLeaderboardSubTitle">
-      <X>890</X>
+      <X>990</X>
       <Y>162</Y>
       <Z>-1</Z>
       <H>24</H>
@@ -131,7 +131,7 @@
       <Text>TR_SCREENHIGHSCORE_SUBTITLE_ALLTIME</Text>
     </Text>
     <Text Name="TextLeaderboardRank1">
-      <X>90</X>
+      <X>70</X>
       <Y>205</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -145,11 +145,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName1">
-      <X>155</X>
+      <X>135</X>
       <Y>205</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -159,7 +159,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore1">
-      <X>620</X>
+      <X>690</X>
       <Y>205</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -173,11 +173,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag1">
-      <X>645</X>
+      <X>715</X>
       <Y>205</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -187,7 +187,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate1">
-      <X>890</X>
+      <X>990</X>
       <Y>205</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -201,7 +201,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank2">
-      <X>90</X>
+      <X>70</X>
       <Y>259</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -215,11 +215,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName2">
-      <X>155</X>
+      <X>135</X>
       <Y>259</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -229,7 +229,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore2">
-      <X>620</X>
+      <X>690</X>
       <Y>259</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -243,11 +243,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag2">
-      <X>645</X>
+      <X>715</X>
       <Y>259</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -257,7 +257,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate2">
-      <X>890</X>
+      <X>990</X>
       <Y>259</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -271,7 +271,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank3">
-      <X>90</X>
+      <X>70</X>
       <Y>313</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -285,11 +285,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName3">
-      <X>155</X>
+      <X>135</X>
       <Y>313</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -299,7 +299,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore3">
-      <X>620</X>
+      <X>690</X>
       <Y>313</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -313,11 +313,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag3">
-      <X>645</X>
+      <X>715</X>
       <Y>313</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -327,7 +327,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate3">
-      <X>890</X>
+      <X>990</X>
       <Y>313</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -341,7 +341,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank4">
-      <X>90</X>
+      <X>70</X>
       <Y>367</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -355,11 +355,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName4">
-      <X>155</X>
+      <X>135</X>
       <Y>367</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -369,7 +369,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore4">
-      <X>620</X>
+      <X>690</X>
       <Y>367</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -383,11 +383,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag4">
-      <X>645</X>
+      <X>715</X>
       <Y>367</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -397,7 +397,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate4">
-      <X>890</X>
+      <X>990</X>
       <Y>367</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -411,7 +411,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank5">
-      <X>90</X>
+      <X>70</X>
       <Y>421</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -425,11 +425,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName5">
-      <X>155</X>
+      <X>135</X>
       <Y>421</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -439,7 +439,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore5">
-      <X>620</X>
+      <X>690</X>
       <Y>421</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -453,11 +453,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag5">
-      <X>645</X>
+      <X>715</X>
       <Y>421</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -467,7 +467,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate5">
-      <X>890</X>
+      <X>990</X>
       <Y>421</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -481,7 +481,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank6">
-      <X>90</X>
+      <X>70</X>
       <Y>475</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -495,11 +495,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName6">
-      <X>155</X>
+      <X>135</X>
       <Y>475</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -509,7 +509,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore6">
-      <X>620</X>
+      <X>690</X>
       <Y>475</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -523,11 +523,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag6">
-      <X>645</X>
+      <X>715</X>
       <Y>475</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -537,7 +537,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate6">
-      <X>890</X>
+      <X>990</X>
       <Y>475</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -551,7 +551,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank7">
-      <X>90</X>
+      <X>70</X>
       <Y>529</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -565,11 +565,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName7">
-      <X>155</X>
+      <X>135</X>
       <Y>529</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -579,7 +579,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore7">
-      <X>620</X>
+      <X>690</X>
       <Y>529</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -593,11 +593,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag7">
-      <X>645</X>
+      <X>715</X>
       <Y>529</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -607,7 +607,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate7">
-      <X>890</X>
+      <X>990</X>
       <Y>529</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -621,7 +621,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank8">
-      <X>90</X>
+      <X>70</X>
       <Y>583</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -635,11 +635,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName8">
-      <X>155</X>
+      <X>135</X>
       <Y>583</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -649,7 +649,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore8">
-      <X>620</X>
+      <X>690</X>
       <Y>583</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -663,11 +663,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag8">
-      <X>645</X>
+      <X>715</X>
       <Y>583</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -677,7 +677,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate8">
-      <X>890</X>
+      <X>990</X>
       <Y>583</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -691,7 +691,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank9">
-      <X>90</X>
+      <X>70</X>
       <Y>637</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -705,11 +705,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName9">
-      <X>155</X>
+      <X>135</X>
       <Y>637</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -719,7 +719,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore9">
-      <X>620</X>
+      <X>690</X>
       <Y>637</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -733,11 +733,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag9">
-      <X>645</X>
+      <X>715</X>
       <Y>637</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -747,7 +747,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate9">
-      <X>890</X>
+      <X>990</X>
       <Y>637</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -761,7 +761,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank10">
-      <X>90</X>
+      <X>70</X>
       <Y>691</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -775,11 +775,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName10">
-      <X>155</X>
+      <X>135</X>
       <Y>691</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -789,7 +789,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore10">
-      <X>620</X>
+      <X>690</X>
       <Y>691</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -803,11 +803,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag10">
-      <X>645</X>
+      <X>715</X>
       <Y>691</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -817,7 +817,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate10">
-      <X>890</X>
+      <X>990</X>
       <Y>691</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -831,7 +831,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank11">
-      <X>90</X>
+      <X>70</X>
       <Y>745</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -845,11 +845,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName11">
-      <X>155</X>
+      <X>135</X>
       <Y>745</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -859,7 +859,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore11">
-      <X>620</X>
+      <X>690</X>
       <Y>745</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -873,11 +873,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag11">
-      <X>645</X>
+      <X>715</X>
       <Y>745</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -887,7 +887,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate11">
-      <X>890</X>
+      <X>990</X>
       <Y>745</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -901,7 +901,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank12">
-      <X>90</X>
+      <X>70</X>
       <Y>799</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -915,11 +915,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName12">
-      <X>155</X>
+      <X>135</X>
       <Y>799</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -929,7 +929,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore12">
-      <X>620</X>
+      <X>690</X>
       <Y>799</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -943,11 +943,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag12">
-      <X>645</X>
+      <X>715</X>
       <Y>799</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -957,7 +957,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate12">
-      <X>890</X>
+      <X>990</X>
       <Y>799</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -971,7 +971,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardRank13">
-      <X>90</X>
+      <X>70</X>
       <Y>853</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -985,11 +985,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardName13">
-      <X>155</X>
+      <X>135</X>
       <Y>853</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>340</MaxW>
+      <MaxW>410</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -999,7 +999,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardScore13">
-      <X>620</X>
+      <X>690</X>
       <Y>853</Y>
       <Z>-1</Z>
       <H>30</H>
@@ -1013,11 +1013,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardTag13">
-      <X>645</X>
+      <X>715</X>
       <Y>853</Y>
       <Z>-1</Z>
       <H>26</H>
-      <MaxW>155</MaxW>
+      <MaxW>180</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1027,7 +1027,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLeaderboardDate13">
-      <X>890</X>
+      <X>990</X>
       <Y>853</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -1041,7 +1041,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreTitle">
-      <X>1020</X>
+      <X>1090</X>
       <Y>160</Y>
       <Z>-1</Z>
       <H>38</H>
@@ -1055,11 +1055,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat1_Num">
-      <X>1040</X>
+      <X>1100</X>
       <Y>215</Y>
       <Z>-1</Z>
       <H>64</H>
-      <MaxW>380</MaxW>
+      <MaxW>350</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1069,11 +1069,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat1">
-      <X>1040</X>
+      <X>1100</X>
       <Y>290</Y>
       <Z>-1</Z>
       <H>28</H>
-      <MaxW>380</MaxW>
+      <MaxW>350</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1083,7 +1083,49 @@
       <Text></Text>
     </Text>
     <Text Name="TextLoreStat4">
-      <X>1040</X>
+      <X>1100</X>
+      <Y>330</Y>
+      <Z>-1</Z>
+      <H>26</H>
+      <MaxW>350</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat2_Num">
+      <X>1480</X>
+      <Y>215</Y>
+      <Z>-1</Z>
+      <H>64</H>
+      <MaxW>380</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat2">
+      <X>1480</X>
+      <Y>290</Y>
+      <Z>-1</Z>
+      <H>28</H>
+      <MaxW>380</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreStat3">
+      <X>1480</X>
       <Y>330</Y>
       <Z>-1</Z>
       <H>26</H>
@@ -1096,54 +1138,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextLoreStat2_Num">
-      <X>1460</X>
-      <Y>215</Y>
-      <Z>-1</Z>
-      <H>64</H>
-      <MaxW>410</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextLoreStat2">
-      <X>1460</X>
-      <Y>290</Y>
-      <Z>-1</Z>
-      <H>28</H>
-      <MaxW>410</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
-    <Text Name="TextLoreStat3">
-      <X>1460</X>
-      <Y>330</Y>
-      <Z>-1</Z>
-      <H>26</H>
-      <MaxW>410</MaxW>
-      <Color Name="TextColor" />
-      <SelColor Name="TextSelColor" />
-      <Align>Left</Align>
-      <ResizeAlign>Center</ResizeAlign>
-      <Style>Bold</Style>
-      <Font>Outline</Font>
-      <Text></Text>
-    </Text>
     <Text Name="TextLoreFact">
-      <X>1040</X>
+      <X>1100</X>
       <Y>485</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>780</MaxW>
+      <MaxW>740</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1153,7 +1153,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextHighlightTitle">
-      <X>1020</X>
+      <X>1090</X>
       <Y>640</Y>
       <Z>-1</Z>
       <H>38</H>
@@ -1167,11 +1167,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextHighlightBody">
-      <X>1425</X>
+      <X>1470</X>
       <Y>750</Y>
       <Z>-1</Z>
       <H>44</H>
-      <MaxW>800</MaxW>
+      <MaxW>760</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Center</Align>
@@ -1181,11 +1181,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartName1">
-      <X>1030</X>
+      <X>1095</X>
       <Y>700</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>500</MaxW>
+      <MaxW>470</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1195,7 +1195,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartValue1">
-      <X>1820</X>
+      <X>1845</X>
       <Y>700</Y>
       <Z>-1</Z>
       <H>32</H>
@@ -1209,11 +1209,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartName2">
-      <X>1030</X>
+      <X>1095</X>
       <Y>762</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>500</MaxW>
+      <MaxW>470</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1223,7 +1223,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartValue2">
-      <X>1820</X>
+      <X>1845</X>
       <Y>762</Y>
       <Z>-1</Z>
       <H>32</H>
@@ -1237,11 +1237,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartName3">
-      <X>1030</X>
+      <X>1095</X>
       <Y>824</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>500</MaxW>
+      <MaxW>470</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1251,7 +1251,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartValue3">
-      <X>1820</X>
+      <X>1845</X>
       <Y>824</Y>
       <Z>-1</Z>
       <H>32</H>
@@ -1265,11 +1265,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartName4">
-      <X>1030</X>
+      <X>1095</X>
       <Y>886</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>500</MaxW>
+      <MaxW>470</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1279,7 +1279,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartValue4">
-      <X>1820</X>
+      <X>1845</X>
       <Y>886</Y>
       <Z>-1</Z>
       <H>32</H>
@@ -1293,11 +1293,11 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartName5">
-      <X>1030</X>
+      <X>1095</X>
       <Y>948</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>500</MaxW>
+      <MaxW>470</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1307,7 +1307,7 @@
       <Text></Text>
     </Text>
     <Text Name="TextChartValue5">
-      <X>1820</X>
+      <X>1845</X>
       <Y>948</Y>
       <Z>-1</Z>
       <H>32</H>
@@ -1333,9 +1333,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard1">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>201</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1347,9 +1347,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard2">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>255</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1361,9 +1361,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard3">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>309</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1375,9 +1375,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard4">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>363</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1389,9 +1389,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard5">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>417</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1403,9 +1403,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard6">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>471</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1417,9 +1417,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard7">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>525</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1431,9 +1431,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard8">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>579</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1445,9 +1445,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard9">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>633</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1459,9 +1459,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard10">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>687</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1473,9 +1473,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard11">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>741</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1487,9 +1487,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard12">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>795</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>
@@ -1501,9 +1501,9 @@
     <ParticleEffect Name="ParticleEffectLeaderboard13">
       <Skin>Star</Skin>
       <Rect>
-        <X>90</X>
+        <X>65</X>
         <Y>849</Y>
-        <W>810</W>
+        <W>930</W>
         <H>38</H>
         <Z>-1</Z>
       </Rect>

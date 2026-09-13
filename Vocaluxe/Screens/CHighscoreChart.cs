@@ -193,8 +193,8 @@ namespace Vocaluxe.Screens
             if (data == null || data.Rows == null || data.Rows.Count == 0)
                 return;
 
-            const float barStartX = 1020f;
-            const float barMaxWidth = 810f;
+            const float barStartX = 1085f;
+            const float barMaxWidth = 770f;
 
             // Soft translucent vibrant mode color
             SColorF fillColor;
