@@ -233,6 +233,12 @@
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS">{0} biisiä esitetty tässä sessiossa</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE">{0}. biisiesitys tallennettu kerholla!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES">{0} biisiesitystä tallennettu kerholla yhteensä</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_POPULAR_5MONTHS">SUOSITUIMMAT (VIIM. 5 KK)</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_LONGEST_RECORDS">PISIMPÄÄN KESTÄNEET ENNÄTYKSET</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_FORGOTTEN_BANGERS">UNOHDETUT HITIT</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT">{0} esitystä</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_DAYS_UNIT">{0} pv</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_DROUGHT_UNIT">{0} pv tauko</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiilit</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Pelaajan nimi</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Pelin vaikeustaso</string>

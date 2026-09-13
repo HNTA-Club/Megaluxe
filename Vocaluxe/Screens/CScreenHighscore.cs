@@ -67,9 +67,12 @@ namespace Vocaluxe.Screens
         private const string _TextLoreStat3 = "TextLoreStat3";
         private const string _TextLoreStat4 = "TextLoreStat4";
 
-        // Quadrant 4: Club Highlight
+        // Quadrant 4: Club Visualization Panel
         private const string _TextHighlightTitle = "TextHighlightTitle";
         private const string _TextHighlightBody = "TextHighlightBody";
+        private string[] _TextChartName;
+        private string[] _TextChartValue;
+        private EHighscoreChartMode _ChartMode = EHighscoreChartMode.Popular5Months;
 
         private List<SDBScoreEntry>[] _Scores;
         private List<int>[] _AvailableYears;
@@ -149,6 +152,17 @@ namespace Vocaluxe.Screens
             }
             texts.Add(_TextSeasonSubTitle);
 
+            // Init Chart arrays
+            _TextChartName = new string[5];
+            _TextChartValue = new string[5];
+            for (int i = 0; i < 5; i++)
+            {
+                _TextChartName[i] = "TextChartName" + (i + 1);
+                _TextChartValue[i] = "TextChartValue" + (i + 1);
+                texts.Add(_TextChartName[i]);
+                texts.Add(_TextChartValue[i]);
+            }
+
             var particleList = new List<string>(_ParticleEffectCurrent);
             particleList.AddRange(_ParticleEffectSeason);
 
@@ -161,6 +175,24 @@ namespace Vocaluxe.Screens
         public override void Draw()
         {
             base.Draw();
+
+            SChartData chartData = CHighscoreChart.GetChartData(_ChartMode);
+            CHighscoreChart.DrawChartBars(chartData, _ChartMode);
+
+            // Draw chart texts ON TOP of the bars so they blend properly without depth buffer occlusion
+            if (chartData != null && chartData.Rows != null)
+            {
+                for (int i = 0; i < chartData.Rows.Count && i < 5; i++)
+                {
+                    if (_Texts != null)
+                    {
+                        if (_Texts.ContainsKey(_TextChartName[i]))
+                            _Texts[_TextChartName[i]].DrawRelative(0, 0);
+                        if (_Texts.ContainsKey(_TextChartValue[i]))
+                            _Texts[_TextChartValue[i]].DrawRelative(0, 0);
+                    }
+                }
+            }
 
             if (_Texts != null && _Texts.ContainsKey(_TextCurrentTitle))
             {
@@ -195,6 +227,10 @@ namespace Vocaluxe.Screens
                         break;
                     case Keys.Down:
                         _ChangeSeasonYear(-1);
+                        break;
+                    case Keys.Tab:
+                    case Keys.M:
+                        _CycleChartMode();
                         break;
                 }
             }
@@ -238,7 +274,7 @@ namespace Vocaluxe.Screens
             _UpdateCurrentPerformance();
             _UpdateSeasonLeaderboard();
             _UpdateSongLore();
-            _UpdateClubHighlight();
+            _UpdateChart();
 
             return true;
         }
@@ -518,10 +554,53 @@ namespace Vocaluxe.Screens
             _SetText("TextLoreFact", String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES"), totalDbScores));
         }
 
-        private void _UpdateClubHighlight()
+        private void _UpdateChart()
         {
-            // Bottom-Right card prepared for visualization panel
+            SChartData data = CHighscoreChart.GetChartData(_ChartMode);
+            _SetText(_TextHighlightTitle, CLanguage.Translate(data.TitleKey));
             _SetText(_TextHighlightBody, null, false);
+
+            for (int i = 0; i < 5; i++)
+            {
+                if (i < data.Rows.Count)
+                {
+                    if (_Texts != null)
+                    {
+                        if (_Texts.ContainsKey(_TextChartName[i]))
+                        {
+                            _Texts[_TextChartName[i]].Text = data.Rows[i].Label;
+                            _Texts[_TextChartName[i]].Visible = false;
+                        }
+                        if (_Texts.ContainsKey(_TextChartValue[i]))
+                        {
+                            _Texts[_TextChartValue[i]].Text = data.Rows[i].ValueText;
+                            _Texts[_TextChartValue[i]].Visible = false;
+                        }
+                    }
+                }
+                else
+                {
+                    if (_Texts != null)
+                    {
+                        if (_Texts.ContainsKey(_TextChartName[i]))
+                        {
+                            _Texts[_TextChartName[i]].Text = "";
+                            _Texts[_TextChartName[i]].Visible = false;
+                        }
+                        if (_Texts.ContainsKey(_TextChartValue[i]))
+                        {
+                            _Texts[_TextChartValue[i]].Text = "";
+                            _Texts[_TextChartValue[i]].Visible = false;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void _CycleChartMode()
+        {
+            _ChartMode = (EHighscoreChartMode)(((int)_ChartMode + 1) % 3);
+            _UpdateChart();
         }
 
         public override void OnShow()

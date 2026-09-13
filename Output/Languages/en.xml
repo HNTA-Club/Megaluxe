@@ -231,8 +231,14 @@
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT">First time in {0} days this song was sung!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_RECORDS">{0} song records broken this session!</string>
   <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_SESSION_SONGS">{0} songs performed this session</string>
-  <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE">{0}th performance recorded by the club!</string>
-  <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES">{0} total performances recorded by the club</string>
+  <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_MILESTONE">Milestone! Over {0} performances logged at the club!</string>
+  <string name="TR_SCREENHIGHSCORE_HIGHLIGHT_TOTAL_PERFORMANCES">{0} total performances recorded at the club</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_POPULAR_5MONTHS">TOP SONGS (PAST 5 MONTHS)</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_LONGEST_RECORDS">LONGEST UNBROKEN RECORDS</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_FORGOTTEN_BANGERS">FORGOTTEN BANGERS</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_PERFORMANCES_UNIT">{0} runs</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_DAYS_UNIT">{0} days</string>
+  <string name="TR_SCREENHIGHSCORE_CHART_DROUGHT_UNIT">{0}d drought</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiles</string>
   <string name="TR_SCREENPROFILES_PLAYERNAME">Player name</string>
   <string name="TR_SCREENPROFILES_GAMEDIFFICULTY">Game difficulty</string>
