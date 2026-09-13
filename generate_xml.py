@@ -86,14 +86,14 @@ NUM_LEADERBOARD_ROWS = 12
 LEADERBOARD_START_Y  = LEFT_CARD.y + 70                    # 210
 LEADERBOARD_PITCH    = 65
 COL_RANK             = LEFT_CARD.x + 30                    # 70
-COL_NAME             = COL_RANK + 70                       # 140 (max_w=415)
-COL_SCORE            = LEFT_CARD.x + 615                   # 655 (align Right)
-COL_TAG              = LEFT_CARD.x + 640                   # 680 (max_w=140)
-COL_DATE             = LEFT_CARD.right - 30                # 990 (align Right, max_w=165)
+COL_NAME             = COL_RANK + 65                       # 135 (max_w=310)
+COL_SCORE            = LEFT_CARD.x + 530                   # 570 (align Right)
+COL_TAG              = LEFT_CARD.x + 560                   # 600 (max_w=140)
+COL_DATE             = LEFT_CARD.right - 30                # 990 (align Right, max_w=240)
 
 # 3. Top-Right Pane: Song Lore (2 Columns + Fact Footer)
 LORE_COL1_X = LORE_CARD.x + 40                             # 1100
-LORE_COL2_X = LORE_CARD.x + 420                            # 1480
+LORE_COL2_X = LORE_CARD.x + 410                            # 1470
 
 # 4. Bottom-Right Pane: Club Visualization Panel (8 Rows)
 NUM_CHART_ROWS   = 8
@@ -130,27 +130,27 @@ texts.append(create_text('TextLeaderboardSubTitle', COL_DATE, LEFT_CARD.y + 22, 
 
 for i in range(1, NUM_LEADERBOARD_ROWS + 1):
     y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
-    texts.append(create_text(f'TextLeaderboardRank{i}', COL_RANK, y, 36, 'Left'))
-    texts.append(create_text(f'TextLeaderboardName{i}', COL_NAME, y, 36, 'Left', max_w='415'))
-    texts.append(create_text(f'TextLeaderboardScore{i}', COL_SCORE, y, 36, 'Right'))
-    texts.append(create_text(f'TextLeaderboardTag{i}', COL_TAG, y + 5, 26, 'Left', max_w='140'))
-    texts.append(create_text(f'TextLeaderboardDate{i}', COL_DATE, y + 5, 26, 'Right', max_w='165'))
+    texts.append(create_text(f'TextLeaderboardRank{i}', COL_RANK, y, 38, 'Left'))
+    texts.append(create_text(f'TextLeaderboardName{i}', COL_NAME, y, 38, 'Left', max_w='310'))
+    texts.append(create_text(f'TextLeaderboardScore{i}', COL_SCORE, y, 38, 'Right'))
+    texts.append(create_text(f'TextLeaderboardTag{i}', COL_TAG, y + 5, 28, 'Left', max_w='140'))
+    texts.append(create_text(f'TextLeaderboardDate{i}', COL_DATE, y + 4, 30, 'Right', max_w='240'))
 
 # Top-Right Pane: Song Lore
 texts.append(create_text('TextLoreTitle', LORE_CARD.x + 30, LORE_CARD.y + 20, 38, 'Left', color='TextColor'))
 
 # Left Column (Performances)
-texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 215, 64, 'Left', color='TextColor', max_w='350'))
-texts.append(create_text('TextLoreStat1', LORE_COL1_X, 290, 28, 'Left', max_w='350'))
-texts.append(create_text('TextLoreStat4', LORE_COL1_X, 330, 26, 'Left', max_w='350'))
+texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 210, 64, 'Left', color='TextColor', max_w='360'))
+texts.append(create_text('TextLoreStat1', LORE_COL1_X, 290, 34, 'Left', max_w='360'))
+texts.append(create_text('TextLoreStat4', LORE_COL1_X, 340, 30, 'Left', max_w='360'))
 
 # Right Column (Record & Date)
-texts.append(create_text('TextLoreStat2_Num', LORE_COL2_X, 215, 64, 'Left', color='TextColor', max_w='380'))
-texts.append(create_text('TextLoreStat2', LORE_COL2_X, 290, 28, 'Left', max_w='380'))
-texts.append(create_text('TextLoreStat3', LORE_COL2_X, 330, 26, 'Left', max_w='380'))
+texts.append(create_text('TextLoreStat2_Num', LORE_COL2_X, 210, 64, 'Left', color='TextColor', max_w='370'))
+texts.append(create_text('TextLoreStat2', LORE_COL2_X, 290, 34, 'Left', max_w='370'))
+texts.append(create_text('TextLoreStat3', LORE_COL2_X, 340, 30, 'Left', max_w='370'))
 
 # Fun Fact / Highlight Line
-texts.append(create_text('TextLoreFact', LORE_COL1_X, 485, 32, 'Left', max_w='740', color='TextColor'))
+texts.append(create_text('TextLoreFact', LORE_COL1_X, 480, 34, 'Left', max_w='740', color='TextColor'))
 
 # Bottom-Right Pane: Club Visualization Panel
 texts.append(create_text('TextHighlightTitle', CHART_CARD.x + 30, CHART_CARD.y + 20, 36, 'Left', color='TextColor'))
@@ -165,13 +165,13 @@ particles = []
 # Particle Effects for Leaderboard (1..12)
 for i in range(1, NUM_LEADERBOARD_ROWS + 1):
     y = LEADERBOARD_START_Y + (i - 1) * LEADERBOARD_PITCH
-    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', LEFT_CARD.x + 25, y - 4, LEFT_CARD.w - 50, 46))
+    particles.append(create_particle(f'ParticleEffectLeaderboard{i}', LEFT_CARD.x + 25, y - 4, LEFT_CARD.w - 50, 48))
 
 xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>10</ScreenVersion>
+    <ScreenVersion>11</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
