@@ -82,6 +82,9 @@
   <string name="TR_CONFIG_LASTPLAYED">Last Played</string>
   <string name="TR_CONFIG_HIGHSCORE">Highscore</string>
   <string name="TR_CONFIG_DIFFICULTY">Difficulty</string>
+  <string name="TR_CONFIG_DIFFICULTY_AGILITY">Difficulty (Agility)</string>
+  <string name="TR_CONFIG_DIFFICULTY_RANGE">Difficulty (Range)</string>
+  <string name="TR_CONFIG_DIFFICULTY_PACE">Difficulty (Pace)</string>
   <string name="TR_CONFIG_EASY">Easy</string>
   <string name="TR_CONFIG_NORMAL">Normal</string>
   <string name="TR_CONFIG_HARD">Hard</string>

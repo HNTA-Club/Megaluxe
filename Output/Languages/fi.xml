@@ -82,6 +82,9 @@
   <string name="TR_CONFIG_LASTPLAYED">Pelattu viimeksi</string>
   <string name="TR_CONFIG_HIGHSCORE">Huippupisteet</string>
   <string name="TR_CONFIG_DIFFICULTY">Vaikeustaso</string>
+  <string name="TR_CONFIG_DIFFICULTY_AGILITY">Vaikeustaso (Ketteryys)</string>
+  <string name="TR_CONFIG_DIFFICULTY_RANGE">Vaikeustaso (Ääniala)</string>
+  <string name="TR_CONFIG_DIFFICULTY_PACE">Vaikeustaso (Nopeus)</string>
   <string name="TR_CONFIG_EASY">Helppo</string>
   <string name="TR_CONFIG_NORMAL">Normaali</string>
   <string name="TR_CONFIG_HARD">Vaikea</string>

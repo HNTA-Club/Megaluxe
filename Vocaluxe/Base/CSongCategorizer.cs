@@ -136,6 +136,48 @@ namespace Vocaluxe.Base
                             songPointer.SortString = "";
                     }
                     break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                    foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
+                    {
+                        CSong song = CSongs.GetSong(songPointer.SongID);
+                        if (song != null && song.Difficulty.Agility >= 1.0f)
+                        {
+                            float agility = song.Difficulty.Agility;
+                            songPointer.SortString = SDifficultyMetrics.GetTierStars(agility) + " (" +
+                                                     CLanguage.Translate(SDifficultyMetrics.GetTierNameKey(agility)) + ")";
+                        }
+                        else
+                            songPointer.SortString = "";
+                    }
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                    foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
+                    {
+                        CSong song = CSongs.GetSong(songPointer.SongID);
+                        if (song != null && song.Difficulty.Range >= 1.0f)
+                        {
+                            float range = song.Difficulty.Range;
+                            songPointer.SortString = SDifficultyMetrics.GetTierStars(range) + " (" +
+                                                     CLanguage.Translate(SDifficultyMetrics.GetTierNameKey(range)) + ")";
+                        }
+                        else
+                            songPointer.SortString = "";
+                    }
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
+                    foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
+                    {
+                        CSong song = CSongs.GetSong(songPointer.SongID);
+                        if (song != null && song.Difficulty.Pace >= 1.0f)
+                        {
+                            float pace = song.Difficulty.Pace;
+                            songPointer.SortString = SDifficultyMetrics.GetTierStars(pace) + " (" +
+                                                     CLanguage.Translate(SDifficultyMetrics.GetTierNameKey(pace)) + ")";
+                        }
+                        else
+                            songPointer.SortString = "";
+                    }
+                    break;
             }
         }
 
@@ -175,6 +217,9 @@ namespace Vocaluxe.Base
                     Debug.Assert(false, "Should not have an uncategorized song");
                     break;
                 case ESongSorting.TR_CONFIG_DIFFICULTY:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
                     noCategoryName = CLanguage.Translate("TR_SCREENSONG_NODIFFICULTY");
                     break;
                 default:

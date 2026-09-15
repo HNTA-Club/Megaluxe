@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -272,6 +272,11 @@ namespace Vocaluxe.Base
                     return ECoverGeneratorType.LastPlayed;
                 case ESongSorting.TR_CONFIG_HIGHSCORE:
                     return ECoverGeneratorType.HighScore;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
+                    return ECoverGeneratorType.Default;
                 default:
                     throw new ArgumentOutOfRangeException("sorting");
             }
