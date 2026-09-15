@@ -67,6 +67,7 @@ namespace VocaluxeLib.Menu.SongMenu
         public SThemeText TextTitle;
         public SThemeText TextSongLength;
         public SThemeText TextSongYear;
+        public SThemeText TextSongDifficulty;
 
         public SThemeStatic StaticCoverBig;
         public SThemeStatic StaticTextBG;
@@ -119,6 +120,7 @@ namespace VocaluxeLib.Menu.SongMenu
         public SThemeText TextTitle;
         public SThemeText TextSongLength;
         public SThemeText TextSongYear;
+        public SThemeText TextSongDifficulty;
 
         public SThemeStatic StaticCoverBig;
         public SThemeStatic StaticTextBG;

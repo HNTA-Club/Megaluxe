@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ namespace VocaluxeLib.Menu.SongMenu
         private CText _Title;
         private CText _SongLength;
         private CText _SongYear;
+        private CText _SongDifficulty;
 
         private int _NumW;
         private int _NumH;
@@ -118,6 +119,23 @@ namespace VocaluxeLib.Menu.SongMenu
             _Title = new CText(_Theme.SongMenuTileBoard.TextTitle, _PartyModeID);
             _SongLength = new CText(_Theme.SongMenuTileBoard.TextSongLength, _PartyModeID);
             _SongYear = new CText(_Theme.SongMenuTileBoard.TextSongYear, _PartyModeID);
+
+            if (_Theme.SongMenuTileBoard.TextSongDifficulty.FontHeight > 0)
+            {
+                _SongDifficulty = new CText(_Theme.SongMenuTileBoard.TextSongDifficulty, _PartyModeID);
+            }
+            else
+            {
+                var themeDiff = _Theme.SongMenuTileBoard.TextSongYear;
+                themeDiff.Name = "TextSongDifficulty";
+                themeDiff.X = 330f;
+                themeDiff.Y = 735f;
+                themeDiff.MaxWidth = 150f;
+                themeDiff.FontHeight = 42f;
+                themeDiff.Align = EAlignment.Center;
+                _SongDifficulty = new CText(themeDiff, _PartyModeID);
+            }
+
             _CoverBig = new CStatic(_Theme.SongMenuTileBoard.StaticCoverBig, _PartyModeID);
             _TextBG = new CStatic(_Theme.SongMenuTileBoard.StaticTextBG, _PartyModeID);
             _DuetIcon = new CStatic(_Theme.SongMenuTileBoard.StaticDuetIcon, _PartyModeID);
@@ -127,7 +145,7 @@ namespace VocaluxeLib.Menu.SongMenu
             _MedleyTagIcon = new CStatic(_Theme.SongMenuTileBoard.StaticMedleyTagIcon, _PartyModeID);
             _InstrumentalIcon = new CStatic(_Theme.SongMenuTileBoard.StaticInstrumentalIcon, _PartyModeID);
             _VocalsIcon = new CStatic(_Theme.SongMenuTileBoard.StaticVocalsIcon, _PartyModeID);
-            _SubElements.AddRange(new IMenuElement[] {_Artist, _Title, _SongLength, _SongYear, _DuetIcon, _RapIcon, _VideoIcon, _MedleyCalcIcon, _MedleyTagIcon, _InstrumentalIcon, _VocalsIcon});
+            _SubElements.AddRange(new IMenuElement[] {_Artist, _Title, _SongLength, _SongYear, _SongDifficulty, _DuetIcon, _RapIcon, _VideoIcon, _MedleyCalcIcon, _MedleyTagIcon, _InstrumentalIcon, _VocalsIcon});
         }
 
         private void _UpdateTileSelection()
@@ -144,6 +162,7 @@ namespace VocaluxeLib.Menu.SongMenu
             _Theme.SongMenuTileBoard.TextArtist = (SThemeText)_Artist.GetTheme();
             _Theme.SongMenuTileBoard.TextSongLength = (SThemeText)_SongLength.GetTheme();
             _Theme.SongMenuTileBoard.TextSongYear = (SThemeText)_SongYear.GetTheme();
+            _Theme.SongMenuTileBoard.TextSongDifficulty = (SThemeText)_SongDifficulty.GetTheme();
             _Theme.SongMenuTileBoard.TextTitle = (SThemeText)_Title.GetTheme();
             _Theme.SongMenuTileBoard.StaticCoverBig = (SThemeStatic)_CoverBig.GetTheme();
             _Theme.SongMenuTileBoard.StaticDuetIcon = (SThemeStatic)_DuetIcon.GetTheme();
@@ -221,6 +240,8 @@ namespace VocaluxeLib.Menu.SongMenu
             _Title.Text = String.Empty;
             _SongLength.Text = String.Empty;
             _SongYear.Text = String.Empty;
+            _SongDifficulty.Text = String.Empty;
+            _SongDifficulty.Visible = false;
             _DuetIcon.Visible = false;
             _RapIcon.Visible = false;
             _VideoIcon.Visible = false;
@@ -253,6 +274,17 @@ namespace VocaluxeLib.Menu.SongMenu
                 _Artist.Text = song.Artist;
                 _Title.Text = song.Title;
                 _SongYear.Text = song.Year;
+                if (song.Difficulty.Overall >= 1.0f)
+                {
+                    _SongDifficulty.Text = "★ " + song.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    _SongDifficulty.Color = SDifficultyMetrics.GetTierColor(song.Difficulty.Overall);
+                    _SongDifficulty.Visible = true;
+                }
+                else
+                {
+                    _SongDifficulty.Text = String.Empty;
+                    _SongDifficulty.Visible = false;
+                }
                 _DuetIcon.Visible = song.IsDuet;
                 _RapIcon.Visible = song.IsRap;
                 _VideoIcon.Visible = song.VideoFileName != "";
