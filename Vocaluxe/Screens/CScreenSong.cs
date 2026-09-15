@@ -108,6 +108,8 @@ namespace Vocaluxe.Screens
 
         private ISongMenu _SongMenu;
         private CPlaylist _Playlist;
+        private bool _DifficultyHoverActive;
+        private SColorF _DefaultHelpBarColor = new SColorF(0.96f, 0.96f, 0.98f, 1f);
 
         private System.Timers.Timer _TimerShortInfoText;
 
@@ -585,6 +587,12 @@ namespace Vocaluxe.Screens
 			    return true;
 			}
 
+			bool overDifficulty = !_Sso.Selection.PartyMode && _SongMenu != null && _SongMenu.IsMouseOverDifficulty(mouseEvent);
+			_UpdateDifficultyHover(overDifficulty);
+
+			if (overDifficulty && (mouseEvent.LB || mouseEvent.RB))
+				return true;
+
             if (_DragAndDropCover.Visible)
             {
                 _DragAndDropCover.X += mouseEvent.X - _OldMousePosX;
@@ -827,6 +835,10 @@ namespace Vocaluxe.Screens
         {
             base.OnShow();
 
+            _DifficultyHoverActive = false;
+            if (_Texts != null && _Texts.ContainsKey(_TextHelpBar) && _Texts[_TextHelpBar] != null)
+                _DefaultHelpBarColor = _Texts[_TextHelpBar].Color;
+
             _SelectedSongID = -1;
             _SelectedCategoryIndex = -2;
 
@@ -940,6 +952,7 @@ namespace Vocaluxe.Screens
         {
             base.OnClose();
 
+            _UpdateDifficultyHover(false);
             _SongMenu.OnHide();
             CSongs.OnCategoryChanged -= _OnCategoryChanged;
         }
@@ -951,6 +964,88 @@ namespace Vocaluxe.Screens
                 CSong song = CSongs.VisibleSongs[songNr];
                 if (song != null)
                     CParty.SongSelected(song.ID);
+            }
+        }
+
+        private string _FormatDifficultyBreakdown(CSong song)
+        {
+            if (song == null || song.Difficulty.Overall < 1.0f)
+                return String.Empty;
+
+            var d = song.Difficulty;
+            string paceStr = CLanguage.Translate("TR_DIFFICULTY_PACE") + ": " + d.Pace.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★";
+
+            string rangeStr;
+            string agilityStr;
+            if (d.PitchedRatio < 0.20f)
+            {
+                rangeStr = CLanguage.Translate("TR_DIFFICULTY_RANGE") + ": —";
+                agilityStr = CLanguage.Translate("TR_DIFFICULTY_AGILITY") + ": — (" + CLanguage.Translate("TR_DIFFICULTY_RAP_FOOTER") + ")";
+            }
+            else
+            {
+                string minNote = SDifficultyMetrics.FormatNoteName(d.P5Tone);
+                string maxNote = SDifficultyMetrics.FormatNoteName(d.P95Tone);
+                rangeStr = CLanguage.Translate("TR_DIFFICULTY_RANGE") + ": " + d.Range.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★ (" + minNote + "–" + maxNote + ", " + d.ToneSpan + " st)";
+                agilityStr = CLanguage.Translate("TR_DIFFICULTY_AGILITY") + ": " + d.Agility.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★";
+            }
+
+            string tierKey = SDifficultyMetrics.GetTierNameKey(d.Overall);
+            string tierStr = CLanguage.Translate(tierKey);
+            string overallStr = CLanguage.Translate("TR_CONFIG_DIFFICULTY") + ": " + tierStr + " (" + d.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★)";
+
+            string breakdown = paceStr + "  •  " + rangeStr + "  •  " + agilityStr + "  •  " + overallStr;
+
+            if ((_Sso.Sorting.DuetOptions == EDuetOptions.Duets || song.IsDuet) && song.Notes != null && song.Notes.VoiceCount >= 2)
+            {
+                CVoice v0 = song.Notes.GetVoice(0);
+                CVoice v1 = song.Notes.GetVoice(1);
+                if (v0 != null && v1 != null && v0.Difficulty.Overall >= 1.0f && v1.Difficulty.Overall >= 1.0f)
+                {
+                    try
+                    {
+                        breakdown += "  •  " + String.Format(System.Globalization.CultureInfo.InvariantCulture, CLanguage.Translate("TR_DIFFICULTY_DUET_VOICES"), v0.Difficulty.Overall, v1.Difficulty.Overall);
+                    }
+                    catch (FormatException)
+                    {
+                        breakdown += "  •  P1: " + v0.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★ • P2: " + v1.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★";
+                    }
+                }
+            }
+
+            return breakdown;
+        }
+
+        private void _UpdateDifficultyHover(bool isOverDifficulty)
+        {
+            if (_Texts == null || !_Texts.ContainsKey(_TextHelpBar) || _Texts[_TextHelpBar] == null)
+                return;
+
+            if (isOverDifficulty && !_Sso.Selection.PartyMode && !_SearchActive)
+            {
+                int previewNr = _SongMenu.GetPreviewSongNr();
+                if (previewNr >= 0 && previewNr < CSongs.VisibleSongs.Count)
+                {
+                    CSong song = CSongs.VisibleSongs[previewNr];
+                    if (song != null && song.Difficulty.Overall >= 1.0f)
+                    {
+                        if (_SongMenu != null)
+                            _SongMenu.SetDifficultySelected(true);
+                        _Texts[_TextHelpBar].Text = _FormatDifficultyBreakdown(song);
+                        _Texts[_TextHelpBar].Color = SDifficultyMetrics.GetTierColor(song.Difficulty.Overall);
+                        _DifficultyHoverActive = true;
+                        return;
+                    }
+                }
+            }
+
+            if (_DifficultyHoverActive)
+            {
+                if (_SongMenu != null)
+                    _SongMenu.SetDifficultySelected(false);
+                _Texts[_TextHelpBar].Text = CLanguage.Translate("TR_SCREENSONG_HELPMESSAGE");
+                _Texts[_TextHelpBar].Color = _DefaultHelpBarColor;
+                _DifficultyHoverActive = false;
             }
         }
 
@@ -975,6 +1070,8 @@ namespace Vocaluxe.Screens
             {
                 _SelectedSongID = _SongMenu.GetPreviewSongNr();
                 CParty.OnSongChange(_SelectedSongID, ref _Sso);
+                if (_DifficultyHoverActive)
+                    _UpdateDifficultyHover(true);
             }
 
             if (_Sso.Selection.PartyMode)

@@ -66,6 +66,31 @@ namespace Vocaluxe.Screens
             return SDifficultyMetrics.GetTierColor(overall);
         }
 
+        public static SColorF GetAxisColor(int axis)
+        {
+            if (axis >= 0 && axis < NumAxes)
+                return _EdgeColors[axis];
+            return new SColorF(1f, 1f, 1f, 1f);
+        }
+
+        public static int GetHoveredAxis(
+            SMouseEvent mouseEvent,
+            float startX = BarStartX,
+            float startY = BarStartY,
+            float maxWidth = BarMaxWidth,
+            float pitch = BarPitch,
+            float height = BarHeight)
+        {
+            for (int i = 0; i < NumAxes; i++)
+            {
+                float y = startY + i * pitch;
+                SRectF barHitRect = new SRectF(startX - 10f, y - 4f, maxWidth + 20f, height + 8f, 0);
+                if (CHelper.IsInBounds(barHitRect, mouseEvent))
+                    return i;
+            }
+            return -1;
+        }
+
         public static void DrawDifficultyBars(
             SDifficultyMetrics diff,
             COrderedDictionaryLite<CText> texts,
@@ -75,7 +100,8 @@ namespace Vocaluxe.Screens
             float startY = BarStartY,
             float maxWidth = BarMaxWidth,
             float pitch = BarPitch,
-            float height = BarHeight)
+            float height = BarHeight,
+            int hoveredAxis = -1)
         {
             if (diff.Overall < 1.0f)
                 return;
@@ -90,10 +116,13 @@ namespace Vocaluxe.Screens
             for (int i = 0; i < NumAxes; i++)
             {
                 float y = startY + i * pitch;
+                bool isHovered = (hoveredAxis == i);
 
                 // 1. Dark translucent tray behind the bar
                 SRectF bgRect = new SRectF(startX, y, maxWidth, height, -0.4f);
-                SColorF bgColor = new SColorF(0.06f, 0.08f, 0.14f, 0.65f);
+                SColorF bgColor = isHovered
+                    ? new SColorF(0.12f, 0.16f, 0.28f, 0.85f)
+                    : new SColorF(0.06f, 0.08f, 0.14f, 0.65f);
                 CDraw.DrawRect(bgColor, bgRect);
 
                 // 2. Filled progress bar
@@ -101,11 +130,24 @@ namespace Vocaluxe.Screens
                 float barWidth = Math.Max(25f, maxWidth * ratio);
 
                 SRectF fillRect = new SRectF(startX, y, barWidth, height, -0.5f);
-                CDraw.DrawRect(_FillColors[i], fillRect);
+                SColorF fillColor = isHovered
+                    ? new SColorF(_FillColors[i].R, _FillColors[i].G, _FillColors[i].B, 0.80f)
+                    : _FillColors[i];
+                CDraw.DrawRect(fillColor, fillRect);
 
                 // 3. Glowing edge highlight at the end of the bar
-                SRectF edgeRect = new SRectF(startX + barWidth - 3f, y, 3f, height, -0.6f);
+                float edgeWidth = isHovered ? 5f : 3f;
+                SRectF edgeRect = new SRectF(startX + barWidth - edgeWidth, y, edgeWidth, height, -0.6f);
                 CDraw.DrawRect(_EdgeColors[i], edgeRect);
+
+                // 4. Accent top and bottom borders if hovered
+                if (isHovered)
+                {
+                    SColorF borderCol = _EdgeColors[i];
+                    borderCol.A = 0.55f;
+                    CDraw.DrawRect(borderCol, new SRectF(startX, y, maxWidth, 1.5f, -0.7f));
+                    CDraw.DrawRect(borderCol, new SRectF(startX, y + height - 1.5f, maxWidth, 1.5f, -0.7f));
+                }
             }
 
             // Render labels and values on top of the bars to prevent occlusion
@@ -113,11 +155,19 @@ namespace Vocaluxe.Screens
             {
                 for (int i = 0; i < NumAxes; i++)
                 {
+                    bool isHovered = (hoveredAxis == i);
+
                     if (i < names.Length && texts.ContainsKey(names[i]) && texts[names[i]] != null)
+                    {
+                        texts[names[i]].Selected = isHovered;
                         texts[names[i]].DrawRelative(0, 0);
+                    }
 
                     if (i < values.Length && texts.ContainsKey(values[i]) && texts[values[i]] != null)
+                    {
+                        texts[values[i]].Selected = isHovered;
                         texts[values[i]].DrawRelative(0, 0);
+                    }
                 }
             }
         }

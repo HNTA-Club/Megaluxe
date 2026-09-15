@@ -246,6 +246,9 @@
   <string name="TR_DIFFICULTY_RANGE_FOOTER">Ääniala: {0} – {1} ({2} sävelaskelta)</string>
   <string name="TR_DIFFICULTY_RAP_FOOTER">Rytmi &amp; Flow (Puhelaulu / Ei sävelkorkeutta)</string>
   <string name="TR_DIFFICULTY_DUET_VOICES">P1: {0:0.0} ★  •  P2: {1:0.0} ★</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_PACE">Nopeus mittaa tavunopeutta, nuottitiheyttä ja sanoitusten rytmin kiivautta.</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_RANGE">Ääniala mittaa laajuutta ja äänialan ulottuvuutta matalimmasta korkeimpaan nuottiin.</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_AGILITY">Ketteryys mittaa sävelhyppyjä, intervallivaihdoksia ja melodian mutkikkuutta.</string>
   <string name="TR_SCREENHIGHSCORE_DIFFICULTY_SHOWCASE">VAIKEUSTASON ERITTELY</string>
   <string name="TR_DIFFICULTY_SHOWCASE_HINT">Napsauta tai paina [D]: Kappaleen historia</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiilit</string>

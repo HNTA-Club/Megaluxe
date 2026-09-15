@@ -19,6 +19,7 @@ using System;
 using NUnit.Framework;
 using VocaluxeLib;
 using VocaluxeLib.Songs;
+using Vocaluxe.Screens;
 
 namespace Tests.VocaluxeLib.Songs
 {
@@ -249,6 +250,44 @@ namespace Tests.VocaluxeLib.Songs
             SDifficultyMetrics infMetrics = CDifficultyCalculator.Calculate(voice, float.PositiveInfinity, false);
             Assert.AreEqual(SDifficultyMetrics.Default.Overall, infMetrics.Overall);
             Assert.IsFalse(float.IsNaN(infMetrics.Overall));
+        }
+
+        private static SMouseEvent CreateMouseEvent(int x, int y)
+        {
+            return new SMouseEvent(ESender.Mouse, EModifier.None, x, y, false, false, false, 0, false, false, false, false);
+        }
+
+        [Test]
+        public void TestDifficultyChartHoverDetection()
+        {
+            // BarStartX = 1470f, BarStartY = 215f, BarPitch = 52f, BarHeight = 34f, BarMaxWidth = 385f
+            // Axis 0: Pace (Y = 215 to 249)
+            Assert.AreEqual(0, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1500, 230)));
+
+            // Axis 1: Range (Y = 267 to 301)
+            Assert.AreEqual(1, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1600, 280)));
+
+            // Axis 2: Agility (Y = 319 to 353)
+            Assert.AreEqual(2, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1700, 330)));
+
+            // Far outside to the left / top / bottom / right
+            Assert.AreEqual(-1, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(100, 230)));
+            Assert.AreEqual(-1, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1500, 900)));
+        }
+
+        [Test]
+        public void TestDifficultyChartAxisColors()
+        {
+            SColorF paceCol = CDifficultyChart.GetAxisColor(0);
+            SColorF rangeCol = CDifficultyChart.GetAxisColor(1);
+            SColorF agilityCol = CDifficultyChart.GetAxisColor(2);
+            SColorF fallbackCol = CDifficultyChart.GetAxisColor(-1);
+
+            Assert.AreNotEqual(paceCol.R, rangeCol.R);
+            Assert.AreNotEqual(rangeCol.B, agilityCol.B);
+            Assert.AreEqual(1f, fallbackCol.R);
+            Assert.AreEqual(1f, fallbackCol.G);
+            Assert.AreEqual(1f, fallbackCol.B);
         }
     }
 }

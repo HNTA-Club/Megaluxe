@@ -190,6 +190,8 @@ namespace VocaluxeLib.Menu.SongMenu
         // This is the nr of the current selection (song or category)
         protected virtual int _SelectionNr { get; set; }
 
+        protected CText _SongDifficulty;
+
         protected CSongMenuFramework(int partyModeID)
         {
             Visible = true;
@@ -254,6 +256,23 @@ namespace VocaluxeLib.Menu.SongMenu
         {
             CStatic selCov = GetSelectedSongCover();
             return selCov != null && CHelper.IsInBounds(selCov.Rect.Scale(SelectedTileZoomFactor), mEvent);
+        }
+
+        public virtual bool IsMouseOverDifficulty(SMouseEvent mEvent)
+        {
+            if (_SongDifficulty != null && _SongDifficulty.Visible)
+            {
+                SRectF r = _SongDifficulty.Rect;
+                SRectF hitRect = new SRectF(r.X - 10f, r.Y - 6f, r.W + 20f, r.H + 12f, r.Z);
+                return CHelper.IsInBounds(hitRect, mEvent);
+            }
+            return false;
+        }
+
+        public virtual void SetDifficultySelected(bool selected)
+        {
+            if (_SongDifficulty != null)
+                _SongDifficulty.Selected = selected;
         }
 
         public int GetPreviewSongNr()

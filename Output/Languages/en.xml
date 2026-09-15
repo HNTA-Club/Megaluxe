@@ -246,6 +246,9 @@
   <string name="TR_DIFFICULTY_RANGE_FOOTER">Vocal Span: {0} – {1} ({2} st)</string>
   <string name="TR_DIFFICULTY_RAP_FOOTER">Rhythm &amp; Flow (Spoken / Unpitched)</string>
   <string name="TR_DIFFICULTY_DUET_VOICES">P1: {0:0.0} ★  •  P2: {1:0.0} ★</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_PACE">Pace measures syllable speed, note density, and rapid-fire lyric delivery.</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_RANGE">Range measures vocal span and pitch reach between lowest and highest notes.</string>
+  <string name="TR_DIFFICULTY_EXPLAIN_AGILITY">Agility measures pitch jumps, interval transitions, and melody complexity.</string>
   <string name="TR_SCREENHIGHSCORE_DIFFICULTY_SHOWCASE">DIFFICULTY SHOWCASE</string>
   <string name="TR_DIFFICULTY_SHOWCASE_HINT">Click card or press [D] for Song Lore</string>
   <string name="TR_SCREENPROFILES_PROFILES">Profiles</string>

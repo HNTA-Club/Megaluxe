@@ -62,8 +62,12 @@ namespace Vocaluxe.Screens
         private const string _TextLoreDiffTitle = "TextLoreDiffTitle";
         private const string _TextLoreDiffOverall = "TextLoreDiffOverall";
         private const string _TextLoreDiffFooter = "TextLoreDiffFooter";
+        private const string _TextLoreFact = "TextLoreFact";
         private string[] _TextLoreDiffName;
         private string[] _TextLoreDiffValue;
+        private int _HoveredDifficultyAxis = -1;
+        private string _DefaultLoreFact = String.Empty;
+        private SColorF _DefaultLoreFactColor = new SColorF(1f, 1f, 1f, 1f);
 
         // Bottom-Right: Club Visualization Panel
         private const string _TextHighlightTitle = "TextHighlightTitle";
@@ -187,7 +191,7 @@ namespace Vocaluxe.Screens
             CSong currentSong = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongID()) : CGame.GetSong(_Round);
             if (currentSong != null && currentSong.Difficulty.Overall >= 1.0f)
             {
-                CDifficultyChart.DrawDifficultyBars(currentSong.Difficulty, _Texts, _TextLoreDiffName, _TextLoreDiffValue);
+                CDifficultyChart.DrawDifficultyBars(currentSong.Difficulty, _Texts, _TextLoreDiffName, _TextLoreDiffValue, hoveredAxis: _HoveredDifficultyAxis);
             }
 
             _DrawCardAccents(currentSong);
@@ -256,6 +260,36 @@ namespace Vocaluxe.Screens
 
         public override bool HandleMouse(SMouseEvent mouseEvent)
         {
+            CSong currentSong = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongID()) : CGame.GetSong(_Round);
+            if (currentSong != null && currentSong.Difficulty.Overall >= 1.0f)
+            {
+                int axis = CDifficultyChart.GetHoveredAxis(mouseEvent);
+                if (axis != _HoveredDifficultyAxis)
+                {
+                    _HoveredDifficultyAxis = axis;
+                    if (_HoveredDifficultyAxis >= 0)
+                    {
+                        string[] explainKeys = new string[]
+                        {
+                            "TR_DIFFICULTY_EXPLAIN_PACE",
+                            "TR_DIFFICULTY_EXPLAIN_RANGE",
+                            "TR_DIFFICULTY_EXPLAIN_AGILITY"
+                        };
+                        if (_HoveredDifficultyAxis < explainKeys.Length)
+                        {
+                            _SetText(_TextLoreFact, CLanguage.Translate(explainKeys[_HoveredDifficultyAxis]), true, CDifficultyChart.GetAxisColor(_HoveredDifficultyAxis));
+                        }
+                    }
+                    else
+                    {
+                        _SetText(_TextLoreFact, _DefaultLoreFact, !String.IsNullOrEmpty(_DefaultLoreFact), _DefaultLoreFactColor);
+                    }
+                }
+
+                if (axis >= 0 && (mouseEvent.LB || mouseEvent.RB))
+                    return true;
+            }
+
             if (mouseEvent.LB)
                 _LeaveScreen();
             if (mouseEvent.RB)
@@ -625,6 +659,7 @@ namespace Vocaluxe.Screens
                 _SetText(_TextLoreDiffTitle, null, false);
                 _SetText(_TextLoreDiffOverall, null, false);
                 _SetText(_TextLoreDiffFooter, null, false);
+                _HoveredDifficultyAxis = -1;
                 if (_TextLoreDiffName != null)
                 {
                     for (int i = 0; i < _TextLoreDiffName.Length; i++)
@@ -652,7 +687,11 @@ namespace Vocaluxe.Screens
                 _Texts["TextLoreFact"].X = 1100f;
                 _Texts["TextLoreFact"].Y = 490f;
             }
-            _SetText("TextLoreFact", info.FactText, true, new SColorF(1f, 1f, 1f, 1f));
+            _DefaultLoreFact = info.FactText;
+            if (_HoveredDifficultyAxis < 0)
+            {
+                _SetText("TextLoreFact", info.FactText, !String.IsNullOrEmpty(info.FactText), _DefaultLoreFactColor);
+            }
         }
 
         private void _UpdateChart()
@@ -746,6 +785,7 @@ namespace Vocaluxe.Screens
         public override void OnShow()
         {
             base.OnShow();
+            _HoveredDifficultyAxis = -1;
             _HasPlayedHighscoreSound = false;
             _Round = 0;
             _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();

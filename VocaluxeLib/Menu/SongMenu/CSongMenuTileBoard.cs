@@ -46,7 +46,6 @@ namespace VocaluxeLib.Menu.SongMenu
         private CText _Title;
         private CText _SongLength;
         private CText _SongYear;
-        private CText _SongDifficulty;
 
         private int _NumW;
         private int _NumH;
