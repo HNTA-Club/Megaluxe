@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -122,6 +122,20 @@ namespace Vocaluxe.Base
                     foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
                         songPointer.SortString = CSongs.GetSong(songPointer.SongID).LastPlayed.ToString("dd/MM/yyyy");
                     break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    foreach (CSongPointer songPointer in CSongs.Sorter.SortedSongs)
+                    {
+                        CSong song = CSongs.GetSong(songPointer.SongID);
+                        if (song != null && song.Difficulty.Overall >= 1.0f)
+                        {
+                            float overall = song.Difficulty.Overall;
+                            songPointer.SortString = SDifficultyMetrics.GetTierStars(overall) + " (" +
+                                                     CLanguage.Translate(SDifficultyMetrics.GetTierNameKey(overall)) + ")";
+                        }
+                        else
+                            songPointer.SortString = "";
+                    }
+                    break;
             }
         }
 
@@ -159,6 +173,9 @@ namespace Vocaluxe.Base
                 case ESongSorting.TR_CONFIG_DATEADDED:
                     noCategoryName = "";
                     Debug.Assert(false, "Should not have an uncategorized song");
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    noCategoryName = CLanguage.Translate("TR_SCREENSONG_NODIFFICULTY");
                     break;
                 default:
                     noCategoryName = "";

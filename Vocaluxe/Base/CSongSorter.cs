@@ -166,6 +166,22 @@ namespace Vocaluxe.Base
             return res;
         }
 
+        private int _SortByDifficulty(CSongPointer s1, CSongPointer s2)
+        {
+            int res = CSongs.Songs[s1.SongID].Difficulty.Overall.CompareTo(CSongs.Songs[s2.SongID].Difficulty.Overall);
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s1.SongID].ArtistSorting, CSongs.Songs[s2.SongID].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongID].TitleSorting, CSongs.Songs[s2.SongID].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s1.SongID].Artist, CSongs.Songs[s2.SongID].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongID].Title, CSongs.Songs[s2.SongID].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
         private static bool _HasDefaultDescendingSort(ESongSorting sorting)
         {
             return sorting == ESongSorting.TR_CONFIG_DATEADDED ||
@@ -232,6 +248,9 @@ namespace Vocaluxe.Base
                 case ESongSorting.TR_CONFIG_HIGHSCORE:
                     value = song.HighScore.ToString();
                     break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    value = song.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
                 default:
                     Debug.Assert(false, "Forgot sorting option");
                     break;
@@ -270,6 +289,9 @@ namespace Vocaluxe.Base
                     break;
                 case ESongSorting.TR_CONFIG_NUMPLAYED:
                     sortList.Sort(_SortByNumPlayed);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    sortList.Sort(_SortByDifficulty);
                     break;
                 default:
                     sortList.Sort(_SortByFieldArtistTitle);

@@ -248,7 +248,8 @@ namespace VocaluxeLib
         TR_CONFIG_CREATOR,
         TR_CONFIG_ENCODING,
         TR_CONFIG_LASTPLAYED,
-        TR_CONFIG_HIGHSCORE
+        TR_CONFIG_HIGHSCORE,
+        TR_CONFIG_DIFFICULTY
         // ReSharper restore InconsistentNaming
     }
 
