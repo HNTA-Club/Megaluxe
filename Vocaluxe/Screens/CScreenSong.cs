@@ -278,6 +278,12 @@ namespace Vocaluxe.Screens
                     if (keyEvent.Handled)
                         return true;
 
+                    if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode && (keyEvent.Unicode == 'å' || keyEvent.Unicode == 'Å'))
+                    {
+                        _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY);
+                        return true;
+                    }
+
                     switch (keyEvent.Key)
                     {
                         case Keys.Escape:
@@ -385,19 +391,39 @@ namespace Vocaluxe.Screens
                             }
                             break;
 
+                        case Keys.I:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY);
+                            }
+                            break;
+
+                        case Keys.O:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_RANGE);
+                            }
+                            break;
+
+                        case Keys.P:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_PACE);
+                            }
+                            break;
+
+                        case Keys.Oem6:
+                        case Keys.Oem4:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY);
+                            }
+                            break;
+
                         case Keys.Oemplus:
                             if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
                             {
                                 int tempSortNr = 11;
-
-                                _ToggleSort(tempSortNr);
-                            }
-                            break;
-
-                        case Keys.Oem4:
-                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
-                            {
-                                int tempSortNr = 12;
 
                                 _ToggleSort(tempSortNr);
                             }
@@ -994,7 +1020,7 @@ namespace Vocaluxe.Screens
             string tierStr = CLanguage.Translate(tierKey);
             string overallStr = CLanguage.Translate("TR_CONFIG_DIFFICULTY") + ": " + tierStr + " (" + d.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★)";
 
-            string breakdown = paceStr + "  •  " + rangeStr + "  •  " + agilityStr + "  •  " + overallStr;
+            string breakdown = agilityStr + "  •  " + rangeStr + "  •  " + paceStr + "  •  " + overallStr;
 
             if ((_Sso.Sorting.DuetOptions == EDuetOptions.Duets || song.IsDuet) && song.Notes != null && song.Notes.VoiceCount >= 2)
             {
@@ -1169,7 +1195,7 @@ namespace Vocaluxe.Screens
             switch (key)
             {
                 case Keys.D0:
-                    sortNr = 0;
+                    sortNr = (int)ESongSorting.TR_CONFIG_DATEADDED;
                     break;
                 case Keys.D1:
                     sortNr = 1;
