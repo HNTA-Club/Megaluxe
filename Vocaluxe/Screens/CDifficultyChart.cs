@@ -39,16 +39,16 @@ namespace Vocaluxe.Screens
         // 3-Axis Neon Palette
         private static readonly SColorF[] _FillColors = new SColorF[]
         {
-            new SColorF(0.00f, 0.90f, 1.00f, 0.45f), // Pace: Electric Cyan
+            new SColorF(0.85f, 0.35f, 1.00f, 0.45f), // Agility: Vivid Violet
             new SColorF(0.18f, 0.90f, 0.50f, 0.45f), // Range: Emerald Mint
-            new SColorF(0.85f, 0.35f, 1.00f, 0.45f)  // Agility: Vivid Violet
+            new SColorF(0.00f, 0.90f, 1.00f, 0.45f)  // Pace: Electric Cyan
         };
 
         private static readonly SColorF[] _EdgeColors = new SColorF[]
         {
-            new SColorF(0.20f, 1.00f, 1.00f, 0.95f), // Pace edge
+            new SColorF(0.95f, 0.55f, 1.00f, 0.95f), // Agility edge
             new SColorF(0.35f, 1.00f, 0.65f, 0.95f), // Range edge
-            new SColorF(0.95f, 0.55f, 1.00f, 0.95f)  // Agility edge
+            new SColorF(0.20f, 1.00f, 1.00f, 0.95f)  // Pace edge
         };
 
         public static string FormatNoteName(int tone)
@@ -108,9 +108,9 @@ namespace Vocaluxe.Screens
 
             float[] axisValues = new float[]
             {
-                diff.Pace,
+                diff.Agility,
                 diff.Range,
-                diff.Agility
+                diff.Pace
             };
 
             for (int i = 0; i < NumAxes; i++)

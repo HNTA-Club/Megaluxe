@@ -261,13 +261,13 @@ namespace Tests.VocaluxeLib.Songs
         public void TestDifficultyChartHoverDetection()
         {
             // BarStartX = 1470f, BarStartY = 215f, BarPitch = 52f, BarHeight = 34f, BarMaxWidth = 385f
-            // Axis 0: Pace (Y = 215 to 249)
+            // Axis 0: Agility (Y = 215 to 249)
             Assert.AreEqual(0, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1500, 230)));
 
             // Axis 1: Range (Y = 267 to 301)
             Assert.AreEqual(1, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1600, 280)));
 
-            // Axis 2: Agility (Y = 319 to 353)
+            // Axis 2: Pace (Y = 319 to 353)
             Assert.AreEqual(2, CDifficultyChart.GetHoveredAxis(CreateMouseEvent(1700, 330)));
 
             // Far outside to the left / top / bottom / right
@@ -278,16 +278,31 @@ namespace Tests.VocaluxeLib.Songs
         [Test]
         public void TestDifficultyChartAxisColors()
         {
-            SColorF paceCol = CDifficultyChart.GetAxisColor(0);
+            SColorF agilityCol = CDifficultyChart.GetAxisColor(0);
             SColorF rangeCol = CDifficultyChart.GetAxisColor(1);
-            SColorF agilityCol = CDifficultyChart.GetAxisColor(2);
+            SColorF paceCol = CDifficultyChart.GetAxisColor(2);
             SColorF fallbackCol = CDifficultyChart.GetAxisColor(-1);
 
-            Assert.AreNotEqual(paceCol.R, rangeCol.R);
-            Assert.AreNotEqual(rangeCol.B, agilityCol.B);
+            Assert.AreNotEqual(agilityCol.R, rangeCol.R);
+            Assert.AreNotEqual(rangeCol.R, paceCol.R);
             Assert.AreEqual(1f, fallbackCol.R);
             Assert.AreEqual(1f, fallbackCol.G);
             Assert.AreEqual(1f, fallbackCol.B);
+        }
+
+        [Test]
+        public void TestDifficultySortingEnumAndTiers()
+        {
+            Assert.IsTrue(Enum.IsDefined(typeof(ESongSorting), ESongSorting.TR_CONFIG_DIFFICULTY));
+            Assert.IsTrue(Enum.IsDefined(typeof(ESongSorting), ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY));
+            Assert.IsTrue(Enum.IsDefined(typeof(ESongSorting), ESongSorting.TR_CONFIG_DIFFICULTY_RANGE));
+            Assert.IsTrue(Enum.IsDefined(typeof(ESongSorting), ESongSorting.TR_CONFIG_DIFFICULTY_PACE));
+
+            Assert.AreEqual("★☆☆☆☆", SDifficultyMetrics.GetTierStars(1.2f));
+            Assert.AreEqual("★★☆☆☆", SDifficultyMetrics.GetTierStars(2.4f));
+            Assert.AreEqual("★★★☆☆", SDifficultyMetrics.GetTierStars(3.0f));
+            Assert.AreEqual("★★★★☆", SDifficultyMetrics.GetTierStars(3.8f));
+            Assert.AreEqual("★★★★★", SDifficultyMetrics.GetTierStars(4.7f));
         }
     }
 }

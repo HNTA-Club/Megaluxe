@@ -271,9 +271,9 @@ namespace Vocaluxe.Screens
                     {
                         string[] explainKeys = new string[]
                         {
-                            "TR_DIFFICULTY_EXPLAIN_PACE",
+                            "TR_DIFFICULTY_EXPLAIN_AGILITY",
                             "TR_DIFFICULTY_EXPLAIN_RANGE",
-                            "TR_DIFFICULTY_EXPLAIN_AGILITY"
+                            "TR_DIFFICULTY_EXPLAIN_PACE"
                         };
                         if (_HoveredDifficultyAxis < explainKeys.Length)
                         {
@@ -574,16 +574,16 @@ namespace Vocaluxe.Screens
 
                 string[] metricKeys = new string[]
                 {
-                    "TR_DIFFICULTY_PACE",
+                    "TR_DIFFICULTY_AGILITY",
                     "TR_DIFFICULTY_RANGE",
-                    "TR_DIFFICULTY_AGILITY"
+                    "TR_DIFFICULTY_PACE"
                 };
 
                 float[] metricValues = new float[]
                 {
-                    song.Difficulty.Pace,
+                    song.Difficulty.Agility,
                     song.Difficulty.Range,
-                    song.Difficulty.Agility
+                    song.Difficulty.Pace
                 };
 
                 const float barStartY = CDifficultyChart.BarStartY;
@@ -607,7 +607,7 @@ namespace Vocaluxe.Screens
 
                         if (i < _TextLoreDiffValue.Length && _Texts.ContainsKey(_TextLoreDiffValue[i]))
                         {
-                            string valText = (i > 0 && song.Difficulty.PitchedRatio == 0f) ? "—" : "★ " + metricValues[i].ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                            string valText = (metricKeys[i] != "TR_DIFFICULTY_PACE" && song.Difficulty.PitchedRatio == 0f) ? "—" : "★ " + metricValues[i].ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
                             _Texts[_TextLoreDiffValue[i]].Text = valText;
                             _Texts[_TextLoreDiffValue[i]].Y = y;
                             _Texts[_TextLoreDiffValue[i]].Font = new CFont(_Texts[_TextLoreDiffValue[i]].Font.Name, _Texts[_TextLoreDiffValue[i]].Font.Style, fontH);
