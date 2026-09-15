@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -77,7 +77,7 @@ namespace VocaluxeLib.Songs
             }
             set
             {
-                if ((value >= CBase.Settings.GetToneMin()) && (value <= CBase.Settings.GetToneMax()))
+                if (CBase.Settings == null || ((value >= CBase.Settings.GetToneMin()) && (value <= CBase.Settings.GetToneMax())))
                     _Tone = value;
             }
         }

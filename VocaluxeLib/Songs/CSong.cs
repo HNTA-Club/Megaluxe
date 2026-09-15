@@ -186,6 +186,9 @@ namespace VocaluxeLib.Songs
         public DateTime LastPlayed;
         public int HighScore;
 
+        // Difficulty
+        public SDifficultyMetrics Difficulty = SDifficultyMetrics.Default;
+
         // Notes
         public readonly CNotes Notes = new CNotes();
 
@@ -284,6 +287,7 @@ namespace VocaluxeLib.Songs
             NumPlayedSession = song.NumPlayedSession;
             LastPlayed = song.LastPlayed;
             HighScore = song.HighScore;
+            Difficulty = song.Difficulty;
 
             Notes = new CNotes(song.Notes);
         }

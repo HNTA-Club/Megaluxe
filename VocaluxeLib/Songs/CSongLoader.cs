@@ -829,6 +829,35 @@ namespace VocaluxeLib.Songs
                     _Song.NotesLoaded = true;
                     if (_Song.IsDuet)
                         _Song._CheckDuet();
+
+                    for (int i = 0; i < _Song.Notes.VoiceCount; i++)
+                    {
+                        CVoice voice = _Song.Notes.GetVoice(i);
+                        if (voice != null)
+                            voice.Difficulty = CDifficultyCalculator.Calculate(voice, _Song.BPM, _Song.IsRap);
+                    }
+
+                    CVoice voice0 = _Song.Notes.GetVoice(0);
+                    if (_Song.Notes.VoiceCount == 1 && voice0 != null)
+                    {
+                        _Song.Difficulty = voice0.Difficulty;
+                    }
+                    else if (_Song.Notes.VoiceCount > 1)
+                    {
+                        CVoice voice1 = _Song.Notes.GetVoice(1);
+                        if (voice0 != null && voice1 != null)
+                        {
+                            _Song.Difficulty = CDifficultyCalculator.CombineDuet(voice0.Difficulty, voice1.Difficulty);
+                        }
+                        else if (voice0 != null)
+                        {
+                            _Song.Difficulty = voice0.Difficulty;
+                        }
+                        else if (voice1 != null)
+                        {
+                            _Song.Difficulty = voice1.Difficulty;
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
