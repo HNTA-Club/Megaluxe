@@ -51,7 +51,10 @@ namespace Vocaluxe.Base
             set
             {
                 if (value == _IgnoreArticles)
+                {
                     return;
+                }
+
                 _IgnoreArticles = value;
                 _SetChanged();
             }
@@ -63,7 +66,10 @@ namespace Vocaluxe.Base
             set
             {
                 if (value == _SongSorting)
+                {
                     return;
+                }
+
                 _SongSorting = value;
                 _SetChanged();
             }
@@ -103,29 +109,32 @@ namespace Vocaluxe.Base
 
         private int _SortByFieldArtistTitle(CSongPointer s1, CSongPointer s2)
         {
-            int res = String.Compare(s1.SortString, s2.SortString, StringComparison.CurrentCultureIgnoreCase);
+            var res = String.Compare(s1.SortString, s2.SortString, StringComparison.CurrentCultureIgnoreCase);
             if (res == 0)
             {
                 if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
                 {
-                    res = String.Compare(CSongs.Songs[s1.SongID].ArtistSorting, CSongs.Songs[s2.SongID].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
-                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongID].TitleSorting, CSongs.Songs[s2.SongID].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                    res = String.Compare(CSongs.Songs[s1.SongId].ArtistSorting, CSongs.Songs[s2.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
                 }
-                res = String.Compare(CSongs.Songs[s1.SongID].Artist, CSongs.Songs[s2.SongID].Artist, StringComparison.CurrentCultureIgnoreCase);
-                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongID].Title, CSongs.Songs[s2.SongID].Title, StringComparison.CurrentCultureIgnoreCase);
+
+                res = String.Compare(CSongs.Songs[s1.SongId].Artist, CSongs.Songs[s2.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
             }
+
             return res;
         }
 
         private int _SortByFieldTitle(CSongPointer s1, CSongPointer s2)
         {
-            int res = String.Compare(s1.SortString, s2.SortString, StringComparison.CurrentCultureIgnoreCase);
+            var res = String.Compare(s1.SortString, s2.SortString, StringComparison.CurrentCultureIgnoreCase);
             if (res == 0)
             {
                 return _IgnoreArticles == EOffOn.TR_CONFIG_ON
-                           ? String.Compare(CSongs.Songs[s1.SongID].TitleSorting, CSongs.Songs[s2.SongID].TitleSorting, StringComparison.CurrentCultureIgnoreCase) :
-                           String.Compare(CSongs.Songs[s1.SongID].Title, CSongs.Songs[s2.SongID].Title, StringComparison.CurrentCultureIgnoreCase);
+                    ? String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase) :
+                    String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
             }
+
             return res;
         }
 
@@ -134,7 +143,7 @@ namespace Vocaluxe.Base
         /// </summary>
         private int _SortByLetterFieldTitle(CSongPointer s1, CSongPointer s2)
         {
-            int res = String.Compare(s1.SortString[0].ToString(), s2.SortString[0].ToString(), StringComparison.CurrentCultureIgnoreCase);
+            var res = String.Compare(s1.SortString[0].ToString(), s2.SortString[0].ToString(), StringComparison.CurrentCultureIgnoreCase);
             return res != 0 ? res : _SortByFieldTitle(s1, s2);
         }
 
@@ -143,25 +152,25 @@ namespace Vocaluxe.Base
         /// </summary>
         private int _SortByLetterFieldArtistTitle(CSongPointer s1, CSongPointer s2)
         {
-            int res = String.Compare(s1.SortString[0].ToString(), s2.SortString[0].ToString(), StringComparison.CurrentCultureIgnoreCase);
+            var res = String.Compare(s1.SortString[0].ToString(), s2.SortString[0].ToString(), StringComparison.CurrentCultureIgnoreCase);
             return res != 0 ? res : _SortByFieldArtistTitle(s1, s2);
         }
 
         private int _SortByNumPlayed(CSongPointer s1, CSongPointer s2)
         {
             // Compare integer NumPlayed directly to avoid parsing strings repeatedly during O(N log N) sorts
-            int res = CSongs.Songs[s1.SongID].NumPlayed.CompareTo(CSongs.Songs[s2.SongID].NumPlayed);
+            int res = CSongs.Songs[s1.SongId].NumPlayed.CompareTo(CSongs.Songs[s2.SongId].NumPlayed);
             if (res == 0)
             {
                 // Note: s2 is compared against s1 because NUMPLAYED default sort is descending (_HasDefaultDescendingSort),
                 // which calls sortList.Reverse(), resulting in A-Z secondary ordering for artist/title.
                 if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
                 {
-                    res = String.Compare(CSongs.Songs[s2.SongID].ArtistSorting, CSongs.Songs[s1.SongID].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
-                    return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongID].TitleSorting, CSongs.Songs[s1.SongID].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                    res = String.Compare(CSongs.Songs[s2.SongId].ArtistSorting, CSongs.Songs[s1.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongId].TitleSorting, CSongs.Songs[s1.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
                 }
-                res = String.Compare(CSongs.Songs[s2.SongID].Artist, CSongs.Songs[s1.SongID].Artist, StringComparison.CurrentCultureIgnoreCase);
-                return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongID].Title, CSongs.Songs[s1.SongID].Title, StringComparison.CurrentCultureIgnoreCase);
+                res = String.Compare(CSongs.Songs[s2.SongId].Artist, CSongs.Songs[s1.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s2.SongId].Title, CSongs.Songs[s1.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
             }
             return res;
         }
@@ -221,7 +230,7 @@ namespace Vocaluxe.Base
                     value = song.NumPlayed.ToString();
                     break;
                 case ESongSorting.TR_CONFIG_CREATOR:
-                    value = song.Creator;
+                    values = song.Creators;
                     break;
                 case ESongSorting.TR_CONFIG_ENCODING:
                     value = song.Encoding.ToString();
@@ -236,26 +245,38 @@ namespace Vocaluxe.Base
                     Debug.Assert(false, "Forgot sorting option");
                     break;
             }
+
             Debug.Assert(value != null || values != null, "Sorting implementation faulty");
             if (value != null)
-                list.Add(new CSongPointer(song.ID, value));
+            {
+                list.Add(new CSongPointer(song.Id, value));
+            }
             else
             {
                 if (values.Count == 0)
-                    list.Add(new CSongPointer(song.ID, ""));
+                {
+                    list.Add(new CSongPointer(song.Id, ""));
+                }
                 else
-                    list.AddRange(values.Select(val => new CSongPointer(song.ID, val)));
+                {
+                    list.AddRange(values.Select(val => new CSongPointer(song.Id, val)));
+                }
             }
         }
 
         private void _SortSongs()
         {
             if (!_Changed)
+            {
                 return;
+            }
 
-            List<CSongPointer> sortList = new List<CSongPointer>();
-            foreach (CSong song in CSongs.Filter.FilteredSongs)
+            var sortList = new List<CSongPointer>();
+            foreach (var song in CSongs.Filter.FilteredSongs)
+            {
                 _AddSongToList(song, sortList);
+            }
+
             switch (_SongSorting)
             {
                 case ESongSorting.TR_CONFIG_ARTIST:
@@ -277,7 +298,9 @@ namespace Vocaluxe.Base
             }
 
             if (_IsSortDescending(_SongSorting, _ReverseSorting))
+            {
                 sortList.Reverse();
+            }
 
             _SortedSongs = sortList.ToArray();
             _Changed = false;
