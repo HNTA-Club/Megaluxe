@@ -152,21 +152,38 @@ for i in range(1, NUM_LEADERBOARD_ROWS + 1):
 texts.append(create_text('TextLoreTitle', LORE_CARD.x + 30, LORE_CARD.y + 20, 38, 'Left', color='TextColor'))
 
 # Left Column: Performance History & Lore
-texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 210, 64, 'Left', color='TextColor', max_w='740'))
-texts.append(create_text('TextLoreStat1', LORE_COL1_X, 285, 32, 'Left', max_w='740'))
-texts.append(create_text('TextLoreStat4', LORE_COL1_X, 335, 30, 'Left', max_w='740'))
-texts.append(create_text('TextLoreStat3', LORE_COL1_X, 385, 30, 'Left', max_w='740'))
+texts.append(create_text('TextLoreStat1_Num', LORE_COL1_X, 210, 64, 'Left', color='TextColor', max_w='360'))
+texts.append(create_text('TextLoreStat1', LORE_COL1_X, 285, 32, 'Left', max_w='360'))
+texts.append(create_text('TextLoreStat4', LORE_COL1_X, 335, 30, 'Left', max_w='360'))
+texts.append(create_text('TextLoreStat3', LORE_COL1_X, 385, 30, 'Left', max_w='360'))
 
-# Right Column: Reserved for difficulty metric (placeholders)
-texts.append(create_text('TextLoreStat2_Num', LORE_COL2_X, 210, 64, 'Left', color='TextColor', max_w='370'))
-texts.append(create_text('TextLoreStat2', LORE_COL2_X, 285, 32, 'Left', max_w='370'))
+# Right Column: Song Difficulty Breakdown (Header + 5 Bar Rows + Footer)
+LORE_DIFF_X       = LORE_COL2_X                           # 1470
+LORE_DIFF_W       = LORE_CARD.right - LORE_DIFF_X - 25    # 385 (from 1470 to 1855)
+LORE_DIFF_TITLE_Y = LORE_CARD.y + 20                      # 160 (aligned with TextLoreTitle)
+
+texts.append(create_text('TextLoreDiffTitle', LORE_DIFF_X, LORE_DIFF_TITLE_Y, 36, 'Left', color='TextColor'))
+texts.append(create_text('TextLoreDiffOverall', LORE_DIFF_X + LORE_DIFF_W, LORE_DIFF_TITLE_Y + 4, 30, 'Right', color='TextColor'))
+
+DIFF_BAR_START_Y = 215
+DIFF_BAR_PITCH   = 52
+DIFF_BAR_H       = 34
+DIFF_TEXT_H      = 24
+DIFF_TEXT_PAD_Y  = (DIFF_BAR_H - DIFF_TEXT_H) // 2       # 5px offset
+
+for i in range(1, 4):
+    y = DIFF_BAR_START_Y + (i - 1) * DIFF_BAR_PITCH + DIFF_TEXT_PAD_Y
+    texts.append(create_text(f'TextLoreDiffName{i}', LORE_DIFF_X + 10, y, DIFF_TEXT_H, 'Left', max_w='260'))
+    texts.append(create_text(f'TextLoreDiffValue{i}', LORE_DIFF_X + LORE_DIFF_W - 10, y, DIFF_TEXT_H, 'Right'))
+
+texts.append(create_text('TextLoreDiffFooter', 1470, 390, 24, 'Left', max_w='390'))
 
 # Fun Fact / Highlight Line
-texts.append(create_text('TextLoreFact', LORE_COL1_X, 480, 34, 'Left', max_w='740', color='TextColor'))
+texts.append(create_text('TextLoreFact', LORE_COL1_X, 490, 34, 'Left', max_w='740', color='TextColor'))
 
 # Bottom-Right Pane: Club Visualization Panel
 texts.append(create_text('TextHighlightTitle', CHART_CARD.x + 30, CHART_CARD.y + 20, 36, 'Left', color='TextColor'))
-texts.append(create_text('TextHighlightBody', CHART_CARD.x + CHART_CARD.w // 2, 750, 44, 'Center', max_w='760'))
+texts.append(create_text('TextHighlightBody', CHART_CARD.x + 30, CHART_CARD.y + 60, 24, 'Left', max_w='740', color='TextColor'))
 
 for i in range(1, NUM_CHART_ROWS + 1):
     y = CHART_START_Y + (i - 1) * CHART_ROW_PITCH + CHART_TEXT_PAD_Y
@@ -187,7 +204,7 @@ xml_content = f'''<?xml version='1.0' encoding='utf-8'?>
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>11</ScreenVersion>
+    <ScreenVersion>13</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">

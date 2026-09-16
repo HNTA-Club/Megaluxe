@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -25,7 +25,12 @@ namespace VocaluxeLib.Songs
     {
         private readonly List<CSongLine> _Lines = new List<CSongLine>();
 
-        public CVoice() { }
+        public SDifficultyMetrics Difficulty { get; set; }
+
+        public CVoice()
+        {
+            Difficulty = SDifficultyMetrics.Default;
+        }
 
         public CVoice(CVoice voice)
         {
@@ -33,6 +38,7 @@ namespace VocaluxeLib.Songs
             {
                 _Lines.Add(new CSongLine(line));
             }
+            Difficulty = voice.Difficulty;
         }
 
         public CSongLine[] Lines

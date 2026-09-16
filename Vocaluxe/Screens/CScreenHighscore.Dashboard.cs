@@ -43,9 +43,19 @@ namespace Vocaluxe.Screens
         // Top-Right: Song Lore
         private const string _TextLoreTitle = "TextLoreTitle";
         private const string _TextLoreStat1 = "TextLoreStat1";
-        private const string _TextLoreStat2 = "TextLoreStat2";
         private const string _TextLoreStat3 = "TextLoreStat3";
         private const string _TextLoreStat4 = "TextLoreStat4";
+
+        // Top-Right: Difficulty Breakdown
+        private const string _TextLoreDiffTitle = "TextLoreDiffTitle";
+        private const string _TextLoreDiffOverall = "TextLoreDiffOverall";
+        private const string _TextLoreDiffFooter = "TextLoreDiffFooter";
+        private const string _TextLoreFact = "TextLoreFact";
+        private string[] _TextLoreDiffName;
+        private string[] _TextLoreDiffValue;
+        private int _HoveredDifficultyAxis = -1;
+        private string _DefaultLoreFact = String.Empty;
+        private SColorF _DefaultLoreFactColor = new SColorF(1f, 1f, 1f, 1f);
 
         // Bottom-Right: Club Visualization Panel
         private const string _TextHighlightTitle = "TextHighlightTitle";
@@ -74,12 +84,13 @@ namespace Vocaluxe.Screens
             texts.Add(_TextLeaderboardSubTitle);
             texts.Add(_TextLoreTitle);
             texts.Add(_TextLoreStat1);
-            texts.Add(_TextLoreStat2);
             texts.Add(_TextLoreStat3);
             texts.Add(_TextLoreStat4);
             texts.Add("TextLoreStat1_Num");
-            texts.Add("TextLoreStat2_Num");
             texts.Add("TextLoreFact");
+            texts.Add(_TextLoreDiffTitle);
+            texts.Add(_TextLoreDiffOverall);
+            texts.Add(_TextLoreDiffFooter);
             texts.Add(_TextHighlightTitle);
             texts.Add(_TextHighlightBody);
 
@@ -105,6 +116,17 @@ namespace Vocaluxe.Screens
                 texts.Add(_TextLeaderboardScore[i]);
                 texts.Add(_TextLeaderboardTag[i]);
                 texts.Add(_TextLeaderboardDate[i]);
+            }
+
+            // Init Difficulty breakdown arrays (3 axes)
+            _TextLoreDiffName = new string[CDifficultyChart.NumAxes];
+            _TextLoreDiffValue = new string[CDifficultyChart.NumAxes];
+            for (int i = 0; i < CDifficultyChart.NumAxes; i++)
+            {
+                _TextLoreDiffName[i] = "TextLoreDiffName" + (i + 1);
+                _TextLoreDiffValue[i] = "TextLoreDiffValue" + (i + 1);
+                texts.Add(_TextLoreDiffName[i]);
+                texts.Add(_TextLoreDiffValue[i]);
             }
 
             // Init Chart arrays (up to NumChartRows)
@@ -133,7 +155,13 @@ namespace Vocaluxe.Screens
                 CHighscoreChart.DrawChart(_CachedChartData, _CachedChartLayout, chartCardRect, _Texts, _TextChartName, _TextChartValue);
             }
 
-            _DrawCardAccents();
+            CSong currentSong = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongId()) : CGame.GetSong(_Round);
+            if (currentSong != null && currentSong.Difficulty.Overall >= 1.0f)
+            {
+                CDifficultyChart.DrawDifficultyBars(currentSong.Difficulty, _Texts, _TextLoreDiffName, _TextLoreDiffValue, hoveredAxis: _HoveredDifficultyAxis);
+            }
+
+            _DrawCardAccents(currentSong);
         }
 
         private void _UpdateDashboard()
@@ -146,7 +174,7 @@ namespace Vocaluxe.Screens
             _UpdateChart();
         }
 
-        private void _DrawCardAccents()
+        private void _DrawCardAccents(CSong curSong = null)
         {
             if (_Statics == null)
                 return;
@@ -161,7 +189,10 @@ namespace Vocaluxe.Screens
             if (_Statics.ContainsKey("StaticCardLore"))
             {
                 var r = _Statics["StaticCardLore"].Rect;
-                CDraw.DrawRect(new SColorF(0.85f, 0.45f, 0.95f, 0.95f), new SRectF(r.X, r.Y, r.W, 4, -1f));
+                SColorF accentCol = (curSong != null && curSong.Difficulty.Overall >= 1.0f)
+                    ? CDifficultyChart.GetTierColor(curSong.Difficulty.Overall)
+                    : new SColorF(0.85f, 0.45f, 0.95f, 0.95f);
+                CDraw.DrawRect(accentCol, new SRectF(r.X, r.Y, r.W, 4, -1f));
             }
 
             if (_Statics.ContainsKey("StaticCardHighlight"))
@@ -351,6 +382,9 @@ namespace Vocaluxe.Screens
             int totalDbScores = CDataBase.GetTotalScoreCount();
             var info = CHighscoreStats.GetSongLoreInfo(scores, _SeasonYear, totalDbScores, _SessionRecordsBroken, _SessionSongsSung.Count);
 
+            CSong song = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongId()) : CGame.GetSong(_Round);
+            bool hasDifficulty = (song != null && song.Difficulty.Overall >= 1.0f);
+
             // Left Pane: Performance History & Record Info
             if (info.UniquePerformances == 0)
             {
@@ -412,11 +446,135 @@ namespace Vocaluxe.Screens
                 }
             }
 
-            // Right Pane: Kept empty for now (reserved for upcoming difficulty metric)
-            _SetText("TextLoreStat2_Num", null, false);
-            _SetText(_TextLoreStat2, null, false);
+            // Right Pane: Difficulty Breakdown
+            if (hasDifficulty)
+            {
+                _SetText(_TextLoreDiffTitle, CLanguage.Translate("TR_SCREENHIGHSCORE_DIFFICULTY"));
+                string tierKey = CDifficultyChart.GetTierNameKey(song.Difficulty.Overall);
+                string tierName = CLanguage.Translate(tierKey);
+                SColorF tierColor = CDifficultyChart.GetTierColor(song.Difficulty.Overall);
+                _SetText(_TextLoreDiffOverall, "★ " + song.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + "  [" + tierName.ToUpper() + "]", true, tierColor);
 
-            _SetText("TextLoreFact", info.FactText);
+                string[] metricKeys = new string[]
+                {
+                    "TR_DIFFICULTY_AGILITY",
+                    "TR_DIFFICULTY_RANGE",
+                    "TR_DIFFICULTY_PACE"
+                };
+
+                float[] metricValues = new float[]
+                {
+                    song.Difficulty.Agility,
+                    song.Difficulty.Range,
+                    song.Difficulty.Pace
+                };
+
+                const float barStartY = CDifficultyChart.BarStartY;
+                const float barPitch = CDifficultyChart.BarPitch;
+                const float barH = CDifficultyChart.BarHeight;
+                const float fontH = CDifficultyChart.FontHeight;
+
+                for (int i = 0; i < CDifficultyChart.NumAxes; i++)
+                {
+                    float y = barStartY + i * barPitch + (barH - fontH) / 2f;
+                    if (_Texts != null)
+                    {
+                        if (i < _TextLoreDiffName.Length && _Texts.ContainsKey(_TextLoreDiffName[i]))
+                        {
+                            _Texts[_TextLoreDiffName[i]].Text = CLanguage.Translate(metricKeys[i]).ToUpper();
+                            _Texts[_TextLoreDiffName[i]].Y = y;
+                            _Texts[_TextLoreDiffName[i]].Font = new CFont(_Texts[_TextLoreDiffName[i]].Font.Name, _Texts[_TextLoreDiffName[i]].Font.Style, fontH);
+                            _Texts[_TextLoreDiffName[i]].Color = _ColorNormal;
+                            _Texts[_TextLoreDiffName[i]].Visible = false;
+                        }
+
+                        if (i < _TextLoreDiffValue.Length && _Texts.ContainsKey(_TextLoreDiffValue[i]))
+                        {
+                            string valText = (metricKeys[i] != "TR_DIFFICULTY_PACE" && song.Difficulty.PitchedRatio == 0f) ? "—" : "★ " + metricValues[i].ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                            _Texts[_TextLoreDiffValue[i]].Text = valText;
+                            _Texts[_TextLoreDiffValue[i]].Y = y;
+                            _Texts[_TextLoreDiffValue[i]].Font = new CFont(_Texts[_TextLoreDiffValue[i]].Font.Name, _Texts[_TextLoreDiffValue[i]].Font.Style, fontH);
+                            _Texts[_TextLoreDiffValue[i]].Color = _ColorNormal;
+                            _Texts[_TextLoreDiffValue[i]].Visible = false;
+                        }
+                    }
+                }
+
+                string footerText = "";
+                if (song.Difficulty.PitchedRatio < 0.20f)
+                {
+                    footerText = CLanguage.Translate("TR_DIFFICULTY_RAP_FOOTER");
+                }
+                else
+                {
+                    string minNote = CDifficultyChart.FormatNoteName(song.Difficulty.P5Tone);
+                    string maxNote = CDifficultyChart.FormatNoteName(song.Difficulty.P95Tone);
+                    try
+                    {
+                        footerText = String.Format(CLanguage.Translate("TR_DIFFICULTY_RANGE_FOOTER"), minNote, maxNote, song.Difficulty.ToneSpan);
+                    }
+                    catch (FormatException)
+                    {
+                        footerText = minNote + " – " + maxNote + " (" + song.Difficulty.ToneSpan + " st)";
+                    }
+
+                    if ((_IsDuet || song.IsDuet) && song.Notes != null && song.Notes.VoiceCount >= 2)
+                    {
+                        CVoice voice0 = song.Notes.GetVoice(0);
+                        CVoice voice1 = song.Notes.GetVoice(1);
+                        if (voice0 != null && voice1 != null && voice0.Difficulty.Overall >= 1.0f && voice1.Difficulty.Overall >= 1.0f)
+                        {
+                            try
+                            {
+                                footerText += "  (" + String.Format(System.Globalization.CultureInfo.InvariantCulture, CLanguage.Translate("TR_DIFFICULTY_DUET_VOICES"), voice0.Difficulty.Overall, voice1.Difficulty.Overall) + ")";
+                            }
+                            catch (FormatException)
+                            {
+                                footerText += "  (P1: " + voice0.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★ • P2: " + voice1.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture) + " ★)";
+                            }
+                        }
+                    }
+                }
+                _SetText(_TextLoreDiffFooter, footerText);
+            }
+            else
+            {
+                _SetText(_TextLoreDiffTitle, null, false);
+                _SetText(_TextLoreDiffOverall, null, false);
+                _SetText(_TextLoreDiffFooter, null, false);
+                _HoveredDifficultyAxis = -1;
+                if (_TextLoreDiffName != null)
+                {
+                    for (int i = 0; i < _TextLoreDiffName.Length; i++)
+                    {
+                        if (_Texts != null)
+                        {
+                            if (i < _TextLoreDiffName.Length && _Texts.ContainsKey(_TextLoreDiffName[i]))
+                            {
+                                _Texts[_TextLoreDiffName[i]].Text = "";
+                                _Texts[_TextLoreDiffName[i]].Visible = false;
+                            }
+                            if (i < _TextLoreDiffValue.Length && _Texts.ContainsKey(_TextLoreDiffValue[i]))
+                            {
+                                _Texts[_TextLoreDiffValue[i]].Text = "";
+                                _Texts[_TextLoreDiffValue[i]].Visible = false;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Bottom Fact Text
+            if (_Texts != null && _Texts.ContainsKey("TextLoreFact"))
+            {
+                _Texts["TextLoreFact"].X = 1100f;
+                _Texts["TextLoreFact"].Y = 490f;
+            }
+            _DefaultLoreFact = info.FactText;
+            if (_HoveredDifficultyAxis < 0)
+            {
+                _SetText("TextLoreFact", info.FactText, !String.IsNullOrEmpty(info.FactText), _DefaultLoreFactColor);
+            }
         }
 
         private void _UpdateChart()
@@ -567,6 +725,45 @@ namespace Vocaluxe.Screens
                     }
                 }
             }
+        }
+
+        private void _ResetDifficultyHover()
+        {
+            _HoveredDifficultyAxis = -1;
+        }
+
+        private bool _HandleDifficultyHover(SMouseEvent mouseEvent)
+        {
+            CSong currentSong = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongId()) : CGame.GetSong(_Round);
+            if (currentSong != null && currentSong.Difficulty.Overall >= 1.0f)
+            {
+                int axis = CDifficultyChart.GetHoveredAxis(mouseEvent);
+                if (axis != _HoveredDifficultyAxis)
+                {
+                    _HoveredDifficultyAxis = axis;
+                    if (_HoveredDifficultyAxis >= 0)
+                    {
+                        string[] explainKeys = new string[]
+                        {
+                            "TR_DIFFICULTY_EXPLAIN_AGILITY",
+                            "TR_DIFFICULTY_EXPLAIN_RANGE",
+                            "TR_DIFFICULTY_EXPLAIN_PACE"
+                        };
+                        if (_HoveredDifficultyAxis < explainKeys.Length)
+                        {
+                            _SetText(_TextLoreFact, CLanguage.Translate(explainKeys[_HoveredDifficultyAxis]), true, CDifficultyChart.GetAxisColor(_HoveredDifficultyAxis));
+                        }
+                    }
+                    else
+                    {
+                        _SetText(_TextLoreFact, _DefaultLoreFact, !String.IsNullOrEmpty(_DefaultLoreFact), _DefaultLoreFactColor);
+                    }
+                }
+
+                if (axis >= 0 && (mouseEvent.LB || mouseEvent.RB))
+                    return true;
+            }
+            return false;
         }
     }
 }

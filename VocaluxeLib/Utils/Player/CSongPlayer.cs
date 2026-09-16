@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -87,24 +87,24 @@ namespace VocaluxeLib.Utils.Player
 
         public CTextureRef GetVideoTexture()
         {
-            if (_Video == null || _Song == null)
-            {
+            var video = _Video;
+            if (video == null || video.IsClosed() || _Song == null)
                 return null;
-            }
 
-            if (CBase.Video.GetFrame(_Video, CBase.Sound.GetPosition(_StreamId)))
+            if (CBase.Video.GetFrame(video, CBase.Sound.GetPosition(_StreamId)))
             {
-                if (_VideoFading != null)
+                var texture = video.Texture;
+                if (texture != null)
                 {
-                    bool finished;
-                    _Video.Texture.Color.A = _VideoFading.GetValue(out finished);
-                    if (finished)
+                    if (_VideoFading != null)
                     {
-                        _VideoFading = null;
+                        bool finished;
+                        texture.Color.A = _VideoFading.GetValue(out finished);
+                        if (finished)
+                            _VideoFading = null;
                     }
+                    return texture;
                 }
-
-                return _Video.Texture;
             }
 
             return null;

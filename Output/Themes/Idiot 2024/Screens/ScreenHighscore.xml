@@ -6,7 +6,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenHighscore</ScreenName>
-    <ScreenVersion>11</ScreenVersion>
+    <ScreenVersion>13</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -993,7 +993,7 @@
       <Y>210</Y>
       <Z>-1</Z>
       <H>64</H>
-      <MaxW>740</MaxW>
+      <MaxW>360</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1007,7 +1007,7 @@
       <Y>285</Y>
       <Z>-1</Z>
       <H>32</H>
-      <MaxW>740</MaxW>
+      <MaxW>360</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1021,7 +1021,7 @@
       <Y>335</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>740</MaxW>
+      <MaxW>360</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1035,7 +1035,7 @@
       <Y>385</Y>
       <Z>-1</Z>
       <H>30</H>
-      <MaxW>740</MaxW>
+      <MaxW>360</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1044,12 +1044,12 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextLoreStat2_Num">
+    <Text Name="TextLoreDiffTitle">
       <X>1470</X>
-      <Y>210</Y>
+      <Y>160</Y>
       <Z>-1</Z>
-      <H>64</H>
-      <MaxW>370</MaxW>
+      <H>36</H>
+      <MaxW>0</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1058,12 +1058,110 @@
       <Font>Outline</Font>
       <Text></Text>
     </Text>
-    <Text Name="TextLoreStat2">
-      <X>1470</X>
-      <Y>285</Y>
+    <Text Name="TextLoreDiffOverall">
+      <X>1855</X>
+      <Y>164</Y>
       <Z>-1</Z>
-      <H>32</H>
-      <MaxW>370</MaxW>
+      <H>30</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffName1">
+      <X>1480</X>
+      <Y>220</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>260</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffValue1">
+      <X>1845</X>
+      <Y>220</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffName2">
+      <X>1480</X>
+      <Y>272</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>260</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffValue2">
+      <X>1845</X>
+      <Y>272</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffName3">
+      <X>1480</X>
+      <Y>324</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>260</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Left</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffValue3">
+      <X>1845</X>
+      <Y>324</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>0</MaxW>
+      <Color Name="TextColor" />
+      <SelColor Name="TextSelColor" />
+      <Align>Right</Align>
+      <ResizeAlign>Center</ResizeAlign>
+      <Style>Bold</Style>
+      <Font>Outline</Font>
+      <Text></Text>
+    </Text>
+    <Text Name="TextLoreDiffFooter">
+      <X>1470</X>
+      <Y>390</Y>
+      <Z>-1</Z>
+      <H>24</H>
+      <MaxW>390</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
       <Align>Left</Align>
@@ -1074,7 +1172,7 @@
     </Text>
     <Text Name="TextLoreFact">
       <X>1100</X>
-      <Y>480</Y>
+      <Y>490</Y>
       <Z>-1</Z>
       <H>34</H>
       <MaxW>740</MaxW>
@@ -1101,14 +1199,14 @@
       <Text></Text>
     </Text>
     <Text Name="TextHighlightBody">
-      <X>1470</X>
-      <Y>750</Y>
+      <X>1090</X>
+      <Y>680</Y>
       <Z>-1</Z>
-      <H>44</H>
-      <MaxW>760</MaxW>
+      <H>24</H>
+      <MaxW>740</MaxW>
       <Color Name="TextColor" />
       <SelColor Name="TextSelColor" />
-      <Align>Center</Align>
+      <Align>Left</Align>
       <ResizeAlign>Center</ResizeAlign>
       <Style>Bold</Style>
       <Font>Outline</Font>

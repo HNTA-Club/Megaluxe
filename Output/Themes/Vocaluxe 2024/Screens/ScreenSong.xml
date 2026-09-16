@@ -2,7 +2,7 @@
 <Screen xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <Informations>
     <ScreenName>ScreenSong</ScreenName>
-    <ScreenVersion>14</ScreenVersion>
+    <ScreenVersion>15</ScreenVersion>
   </Informations>
   <Backgrounds>
     <Background Name="Background1">
@@ -987,6 +987,20 @@
           <Font>Outline</Font>
           <Text />
         </TextSongYear>
+        <TextSongDifficulty Name="TextSongDifficulty">
+          <X>330</X>
+          <Y>735</Y>
+          <Z>-11</Z>
+          <H>42</H>
+          <MaxW>150</MaxW>
+          <Color Name="TextColor" />
+          <SelColor Name="TextSelColor" />
+          <Align>Center</Align>
+          <ResizeAlign>Top</ResizeAlign>
+          <Style>Bold</Style>
+          <Font>Outline</Font>
+          <Text />
+        </TextSongDifficulty>
         <StaticCoverBig Name="StaticCoverBig">
           <Skin />
           <Color Name="Visible" />
@@ -1161,6 +1175,20 @@
           <Font>Outline</Font>
           <Text />
         </TextSongYear>
+        <TextSongDifficulty Name="TextSongDifficulty">
+          <X>330</X>
+          <Y>735</Y>
+          <Z>-11</Z>
+          <H>42</H>
+          <MaxW>150</MaxW>
+          <Color Name="TextColor" />
+          <SelColor Name="TextSelColor" />
+          <Align>Center</Align>
+          <ResizeAlign>Top</ResizeAlign>
+          <Style>Bold</Style>
+          <Font>Outline</Font>
+          <Text />
+        </TextSongDifficulty>
         <StaticCoverBig Name="StaticCoverBig">
           <Skin />
           <Color Name="Visible" />
