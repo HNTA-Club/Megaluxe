@@ -29,7 +29,7 @@ using VocaluxeLib.Songs;
 
 namespace Vocaluxe.Screens
 {
-    public class CScreenSong : CMenu
+    public partial class CScreenSong : CMenu
     {
         private enum ESongOptionsView
         {
@@ -42,7 +42,7 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 14; }
+            get { return 15; }
         }
 
         private const string _TextCategory = "TextCategory";
@@ -310,6 +310,12 @@ namespace Vocaluxe.Screens
                         return true;
                     }
 
+                    if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode && (keyEvent.Unicode == 'å' || keyEvent.Unicode == 'Å'))
+                    {
+                        _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY);
+                        return true;
+                    }
+
                     switch (keyEvent.Key)
                     {
                         case Keys.Escape:
@@ -448,18 +454,39 @@ namespace Vocaluxe.Screens
                             }
                             break;
 
+                        case Keys.I:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY);
+                            }
+                            break;
+
+                        case Keys.O:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_RANGE);
+                            }
+                            break;
+
+                        case Keys.P:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY_PACE);
+                            }
+                            break;
+
+                        case Keys.Oem6:
+                        case Keys.Oem4:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY);
+                            }
+                            break;
+
                         case Keys.Oemplus:
                             if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
                             {
                                 int tempSortNr = 11;
-                                _ToggleSort(tempSortNr);
-                            }
-                            break;
-
-                        case Keys.Oem4:
-                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
-                            {
-                                int tempSortNr = 12;
                                 _ToggleSort(tempSortNr);
                             }
                             break;
@@ -677,6 +704,12 @@ namespace Vocaluxe.Screens
 
                 return true;
             }
+
+			bool overDifficulty = !_Sso.Selection.PartyMode && _SongMenu != null && _SongMenu.IsMouseOverDifficulty(mouseEvent);
+			_UpdateDifficultyHover(overDifficulty);
+
+			if (overDifficulty && (mouseEvent.LB || mouseEvent.RB))
+				return true;
 
             if (_DragAndDropCover.Visible)
             {
@@ -932,12 +965,17 @@ namespace Vocaluxe.Screens
                 _ToggleSongOptions(ESongOptionsView.None);
                 _SelectedCategoryIndex = _SongMenu.GetSelectedCategory();
                 _SongMenu.EnterSelectedCategory();
+                _SelectFirstRankedSongIfDifficulty();
             }
         }
 
         public override void OnShow()
         {
             base.OnShow();
+
+            _DifficultyHoverActive = false;
+            if (_Texts != null && _Texts.ContainsKey(_TextHelpBar) && _Texts[_TextHelpBar] != null)
+                _DefaultHelpBarColor = _Texts[_TextHelpBar].Color;
 
             _SelectedSongId = -1;
             _SelectedCategoryIndex = -2;
@@ -952,6 +990,7 @@ namespace Vocaluxe.Screens
                 {
                     _SongMenu.SetSelectedCategory(_SelectedCategoryIndex);
                     _SongMenu.EnterSelectedCategory();
+                    _SelectFirstRankedSongIfDifficulty();
                 }
                 else if (CBase.Songs.IsInCategory())
                 {
@@ -983,6 +1022,7 @@ namespace Vocaluxe.Screens
             }
 
             var lastSongId = getSelectedSongId();
+            bool songFound = false;
             if (CSongs.IsInCategory && lastSongId >= 0)
             {
                 for (var i = 0; i < CSongs.VisibleSongs.Count; i++)
@@ -990,9 +1030,16 @@ namespace Vocaluxe.Screens
                     if (CSongs.VisibleSongs[i].Id == lastSongId)
                     {
                         _SongMenu.SetSelectedSong(i);
+                        songFound = true;
                         break;
                     }
                 }
+            }
+
+            int selectedIndex = _SongMenu.GetPreviewSongNr();
+            if (!songFound || (CSongs.IsInCategory && selectedIndex >= 0 && selectedIndex < CSongs.VisibleSongs.Count && !CSongs.VisibleSongs[selectedIndex].Difficulty.IsRankedForSort(CSongs.Sorter.SongSorting)))
+            {
+                _SelectFirstRankedSongIfDifficulty();
             }
 
             if (_Sso.Selection.PartyMode)
@@ -1157,6 +1204,7 @@ namespace Vocaluxe.Screens
         {
             base.OnClose();
 
+            _UpdateDifficultyHover(false);
             _SongMenu.OnHide();
             CSongs.OnCategoryChanged -= _OnCategoryChanged;
         }
@@ -1194,12 +1242,18 @@ namespace Vocaluxe.Screens
                 {
                     _SongMenu.SetSelectedSong(_Sso.Selection.SongIndex);
                 }
+                else
+                {
+                    _SelectFirstRankedSongIfDifficulty();
+                }
             }
 
             if (_SelectedSongId != _SongMenu.GetPreviewSongNr() && CSongs.IsInCategory)
             {
                 _SelectedSongId = _SongMenu.GetPreviewSongNr();
                 CParty.OnSongChange(_SelectedSongId, ref _Sso);
+                if (_DifficultyHoverActive)
+                    _UpdateDifficultyHover(true);
             }
 
             if (_Sso.Selection.PartyMode)
@@ -1293,6 +1347,7 @@ namespace Vocaluxe.Screens
 
             _SongMenu.Update(_Sso);
             _SongMenu.OnShow();
+            _SelectFirstRankedSongIfDifficulty();
 
             string direction = CSongs.Sorter.SortDescending ? " ↓" : " ↑";
             _ShowInfoText(CBase.Language.Translate("TR_SCREENSONG_SORTING").Replace("%s", CBase.Language.Translate(_Sso.Sorting.SongSorting.ToString()) + direction));
@@ -1303,7 +1358,7 @@ namespace Vocaluxe.Screens
             switch (key)
             {
                 case Keys.D0:
-                    sortNr = 0;
+                    sortNr = (int)ESongSorting.TR_CONFIG_DATEADDED;
                     break;
                 case Keys.D1:
                     sortNr = 1;
@@ -1824,6 +1879,7 @@ namespace Vocaluxe.Screens
             }
 
             _SongMenu.OnShow();
+            _SelectFirstRankedSongIfDifficulty();
         }
 
         private void _ToggleSongOptions(ESongOptionsView view)

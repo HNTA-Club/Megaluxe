@@ -32,7 +32,7 @@ namespace Vocaluxe.Screens
         // Version number for theme files. Increment it, if you've changed something on the theme files!
         protected override int _ScreenVersion
         {
-            get { return 11; }
+            get { return 13; }
         }
 
         private const string _TextSongName = "TextSongName";
@@ -71,6 +71,7 @@ namespace Vocaluxe.Screens
             _InitDashboard(texts);
 
             _ThemeTexts = texts.ToArray();
+
             _NewEntryIds = new List<int>();
         }
 
@@ -102,6 +103,7 @@ namespace Vocaluxe.Screens
             _Round = 0;
             _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
             _FromScreenSong = (CGame.NumRounds == 0);
+            _ResetDifficultyHover();
 
             _NewEntryIds.Clear();
             _AddScoresToDB();
@@ -149,6 +151,9 @@ namespace Vocaluxe.Screens
 
         public override bool HandleMouse(SMouseEvent mouseEvent)
         {
+            if (_HandleDifficultyHover(mouseEvent))
+                return true;
+
             if (mouseEvent.LB)
             {
                 _LeaveScreen();
@@ -314,6 +319,11 @@ namespace Vocaluxe.Screens
             _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
             _NeedsRefresh = true;
             UpdateGame();
+        }
+
+        public override void OnClose()
+        {
+            base.OnClose();
         }
 
         private void _LeaveScreen()

@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -35,6 +35,8 @@ namespace VocaluxeLib.Menu.SongMenu
         CStatic GetSelectedSongCover();
         void SetSelectedSong(int visibleSongNr);
         bool IsMouseOverSelectedSong(SMouseEvent mEvent);
+        bool IsMouseOverDifficulty(SMouseEvent mEvent);
+        void SetDifficultySelected(bool selected);
 
         // Same for categories
         int GetSelectedCategory();

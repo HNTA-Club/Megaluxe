@@ -130,6 +130,23 @@ namespace VocaluxeLib.Menu.SongMenu
             _Title = new CText(_Theme.SongMenuList.TextTitle, _PartyModeId);
             _SongLength = new CText(_Theme.SongMenuList.TextSongLength, _PartyModeId);
             _SongYear = new CText(_Theme.SongMenuList.TextSongYear, _PartyModeId);
+
+            if (_Theme.SongMenuList.TextSongDifficulty.FontHeight > 0)
+            {
+                _SongDifficulty = new CText(_Theme.SongMenuList.TextSongDifficulty, _PartyModeId);
+            }
+            else
+            {
+                var themeDiff = _Theme.SongMenuList.TextSongYear;
+                themeDiff.Name = "TextSongDifficulty";
+                themeDiff.X = 330f;
+                themeDiff.Y = 735f;
+                themeDiff.MaxWidth = 150f;
+                themeDiff.FontHeight = 42f;
+                themeDiff.Align = EAlignment.Center;
+                _SongDifficulty = new CText(themeDiff, _PartyModeId);
+            }
+
             _CoverBig = new CStatic(_Theme.SongMenuList.StaticCoverBig, _PartyModeId);
             _TextBG = new CStatic(_Theme.SongMenuList.StaticTextBG, _PartyModeId);
             _DuetIcon = new CStatic(_Theme.SongMenuList.StaticDuetIcon, _PartyModeId);
@@ -140,7 +157,7 @@ namespace VocaluxeLib.Menu.SongMenu
             _InstrumentalIcon = new CStatic(_Theme.SongMenuList.StaticInstrumentalIcon, _PartyModeId);
             _VocalsIcon = new CStatic(_Theme.SongMenuList.StaticVocalsIcon, _PartyModeId);
             _SubElements.AddRange(new IMenuElement[]
-                { _Artist, _Title, _SongLength, _SongYear, _DuetIcon, _RapIcon, _VideoIcon, _MedleyCalcIcon, _MedleyTagIcon, _InstrumentalIcon, _VocalsIcon });
+                { _Artist, _Title, _SongLength, _SongYear, _SongDifficulty, _DuetIcon, _RapIcon, _VideoIcon, _MedleyCalcIcon, _MedleyTagIcon, _InstrumentalIcon, _VocalsIcon });
         }
 
         private void _ReadSubTheme()
@@ -148,6 +165,7 @@ namespace VocaluxeLib.Menu.SongMenu
             _Theme.SongMenuList.TextArtist = (SThemeText)_Artist.GetTheme();
             _Theme.SongMenuList.TextSongLength = (SThemeText)_SongLength.GetTheme();
             _Theme.SongMenuList.TextSongYear = (SThemeText)_SongYear.GetTheme();
+            _Theme.SongMenuList.TextSongDifficulty = (SThemeText)_SongDifficulty.GetTheme();
             _Theme.SongMenuList.TextTitle = (SThemeText)_Title.GetTheme();
             _Theme.SongMenuList.StaticCoverBig = (SThemeStatic)_CoverBig.GetTheme();
             _Theme.SongMenuList.StaticDuetIcon = (SThemeStatic)_DuetIcon.GetTheme();
@@ -265,6 +283,8 @@ namespace VocaluxeLib.Menu.SongMenu
             _Title.Text = string.Empty;
             _SongLength.Text = string.Empty;
             _SongYear.Text = string.Empty;
+            _SongDifficulty.Text = string.Empty;
+            _SongDifficulty.Visible = false;
             _DuetIcon.Visible = false;
             _RapIcon.Visible = false;
             _VideoIcon.Visible = false;
@@ -303,6 +323,17 @@ namespace VocaluxeLib.Menu.SongMenu
                 _Artist.Text = song.Artist;
                 _Title.Text = song.Title;
                 _SongYear.Text = song.Year;
+                if (song.Difficulty.Overall >= 1.0f)
+                {
+                    _SongDifficulty.Text = "★ " + song.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    _SongDifficulty.Color = SDifficultyMetrics.GetTierColor(song.Difficulty.Overall);
+                    _SongDifficulty.Visible = true;
+                }
+                else
+                {
+                    _SongDifficulty.Text = String.Empty;
+                    _SongDifficulty.Visible = false;
+                }
                 _DuetIcon.Visible = song.IsDuet;
                 _RapIcon.Visible = song.IsRap;
                 _VideoIcon.Visible = song.Video != "";
