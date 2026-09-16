@@ -108,5 +108,34 @@ namespace Vocaluxe.Screens
                 _DifficultyHoverActive = false;
             }
         }
+
+        /// <summary>
+        ///     If sorting by difficulty ascending, snaps the cursor to the first ranked song (> 1.0f).
+        ///     Unranked placeholder songs (1.0f) remain before it in the list and can still be accessed by scrolling up.
+        /// </summary>
+        private void _SelectFirstRankedSongIfDifficulty()
+        {
+            if (!CSongs.IsInCategory || CSongs.VisibleSongs == null || CSongs.VisibleSongs.Count == 0 || _SongMenu == null)
+                return;
+
+            ESongSorting sorting = CSongs.Sorter.SongSorting;
+            bool isDifficultySort = sorting == ESongSorting.TR_CONFIG_DIFFICULTY ||
+                                    sorting == ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY ||
+                                    sorting == ESongSorting.TR_CONFIG_DIFFICULTY_RANGE ||
+                                    sorting == ESongSorting.TR_CONFIG_DIFFICULTY_PACE;
+
+            if (!isDifficultySort || CSongs.Sorter.SortDescending)
+                return;
+
+            for (int i = 0; i < CSongs.VisibleSongs.Count; i++)
+            {
+                CSong song = CSongs.VisibleSongs[i];
+                if (song != null && song.Difficulty.IsRankedForSort(sorting))
+                {
+                    _SongMenu.SetSelectedSong(i);
+                    break;
+                }
+            }
+        }
     }
 }

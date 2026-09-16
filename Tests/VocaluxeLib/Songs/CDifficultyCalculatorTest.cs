@@ -305,5 +305,44 @@ namespace Tests.VocaluxeLib.Songs
             Assert.AreEqual("★★★★☆", SDifficultyMetrics.GetTierStars(3.8f));
             Assert.AreEqual("★★★★★", SDifficultyMetrics.GetTierStars(4.7f));
         }
+
+        [Test]
+        public void TestDifficultyMetricsIsRankedAndIsRankedForSort()
+        {
+            // Default unranked placeholder
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRanked);
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY));
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY));
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_RANGE));
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_PACE));
+            Assert.IsFalse(SDifficultyMetrics.Default.IsRankedForSort(ESongSorting.TR_CONFIG_ARTIST));
+
+            // Standard pitched singing voice
+            var singingVoice = CreateVoiceWithNotes(
+                new CSongNote(0, 4, 0, "Do", ENoteType.Normal),
+                new CSongNote(4, 4, 4, "Re", ENoteType.Normal),
+                new CSongNote(8, 4, 7, "Mi", ENoteType.Normal)
+            );
+            SDifficultyMetrics singingMetrics = CDifficultyCalculator.Calculate(singingVoice, DefaultBpm, false);
+            Assert.IsTrue(singingMetrics.IsRanked);
+            Assert.IsTrue(singingMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY));
+            Assert.IsTrue(singingMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY));
+            Assert.IsTrue(singingMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_RANGE));
+            Assert.IsTrue(singingMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_PACE));
+
+            // Pure rap voice (unpitched: range & agility are 1.0f, but pace and overall are ranked)
+            var rapNotes = new CSongNote[20];
+            for (int i = 0; i < 20; i++)
+            {
+                rapNotes[i] = new CSongNote(i * 4, 3, 0, "yo", ENoteType.Rap);
+            }
+            var rapVoice = CreateVoiceWithNotes(rapNotes);
+            SDifficultyMetrics rapMetrics = CDifficultyCalculator.Calculate(rapVoice, DefaultBpm, false);
+            Assert.IsTrue(rapMetrics.IsRanked);
+            Assert.IsTrue(rapMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY));
+            Assert.IsTrue(rapMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_PACE));
+            Assert.IsFalse(rapMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY));
+            Assert.IsFalse(rapMetrics.IsRankedForSort(ESongSorting.TR_CONFIG_DIFFICULTY_RANGE));
+        }
     }
 }

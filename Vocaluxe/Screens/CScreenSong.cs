@@ -965,6 +965,7 @@ namespace Vocaluxe.Screens
                 _ToggleSongOptions(ESongOptionsView.None);
                 _SelectedCategoryIndex = _SongMenu.GetSelectedCategory();
                 _SongMenu.EnterSelectedCategory();
+                _SelectFirstRankedSongIfDifficulty();
             }
         }
 
@@ -989,6 +990,7 @@ namespace Vocaluxe.Screens
                 {
                     _SongMenu.SetSelectedCategory(_SelectedCategoryIndex);
                     _SongMenu.EnterSelectedCategory();
+                    _SelectFirstRankedSongIfDifficulty();
                 }
                 else if (CBase.Songs.IsInCategory())
                 {
@@ -1020,6 +1022,7 @@ namespace Vocaluxe.Screens
             }
 
             var lastSongId = getSelectedSongId();
+            bool songFound = false;
             if (CSongs.IsInCategory && lastSongId >= 0)
             {
                 for (var i = 0; i < CSongs.VisibleSongs.Count; i++)
@@ -1027,9 +1030,16 @@ namespace Vocaluxe.Screens
                     if (CSongs.VisibleSongs[i].Id == lastSongId)
                     {
                         _SongMenu.SetSelectedSong(i);
+                        songFound = true;
                         break;
                     }
                 }
+            }
+
+            int selectedIndex = _SongMenu.GetPreviewSongNr();
+            if (!songFound || (CSongs.IsInCategory && selectedIndex >= 0 && selectedIndex < CSongs.VisibleSongs.Count && !CSongs.VisibleSongs[selectedIndex].Difficulty.IsRankedForSort(CSongs.Sorter.SongSorting)))
+            {
+                _SelectFirstRankedSongIfDifficulty();
             }
 
             if (_Sso.Selection.PartyMode)
@@ -1232,6 +1242,10 @@ namespace Vocaluxe.Screens
                 {
                     _SongMenu.SetSelectedSong(_Sso.Selection.SongIndex);
                 }
+                else
+                {
+                    _SelectFirstRankedSongIfDifficulty();
+                }
             }
 
             if (_SelectedSongId != _SongMenu.GetPreviewSongNr() && CSongs.IsInCategory)
@@ -1333,6 +1347,7 @@ namespace Vocaluxe.Screens
 
             _SongMenu.Update(_Sso);
             _SongMenu.OnShow();
+            _SelectFirstRankedSongIfDifficulty();
 
             string direction = CSongs.Sorter.SortDescending ? " ↓" : " ↑";
             _ShowInfoText(CBase.Language.Translate("TR_SCREENSONG_SORTING").Replace("%s", CBase.Language.Translate(_Sso.Sorting.SongSorting.ToString()) + direction));
@@ -1864,6 +1879,7 @@ namespace Vocaluxe.Screens
             }
 
             _SongMenu.OnShow();
+            _SelectFirstRankedSongIfDifficulty();
         }
 
         private void _ToggleSongOptions(ESongOptionsView view)

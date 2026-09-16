@@ -15,6 +15,8 @@
 // along with Vocaluxe. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using VocaluxeLib;
+
 namespace VocaluxeLib.Songs
 {
     /// <summary>
@@ -32,6 +34,31 @@ namespace VocaluxeLib.Songs
         public float Pace { get; }
         public float Range { get; }
         public float Agility { get; }
+
+        /// <summary>
+        ///     Returns true if the metrics represent a ranked song (i.e. not the default 1.0 placeholder).
+        /// </summary>
+        public bool IsRanked => Overall > 1.0f;
+
+        /// <summary>
+        ///     Checks whether the song is ranked for a specific difficulty sorting criteria.
+        /// </summary>
+        public bool IsRankedForSort(ESongSorting sorting)
+        {
+            switch (sorting)
+            {
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                    return Agility > 1.0f;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                    return Range > 1.0f;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
+                    return Pace > 1.0f;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    return Overall > 1.0f;
+                default:
+                    return false;
+            }
+        }
 
         // Backward compatibility alias for Pace
         public float Speed => Pace;
