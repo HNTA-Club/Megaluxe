@@ -77,6 +77,8 @@ tx.exe
 /PitchTracker/bin
 /PitchTracker/obj
 /Logs
+/Output/Logs
+/Output/CoverCache
 /Tests/bin
 *.orig
 *.DotSettings

@@ -391,7 +391,7 @@ namespace Vocaluxe.Base
                 if (!File.Exists(cachePath))
                     return false;
 
-                texture = CDraw.AddTexture(cachePath);
+                texture = CDraw.EnqueueTexture(cachePath);
                 return texture != null;
             }
             catch (Exception e)
