@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -15,11 +15,12 @@
 // along with Vocaluxe. If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
+using System.IO;
 using System.Text;
 
 namespace VocaluxeLib
 {
-    static class CEncoding
+    public static class CEncoding
     {
         public static Encoding GetEncoding(this string encodingName)
         {
@@ -55,6 +56,81 @@ namespace VocaluxeLib
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Analyzes a byte buffer to check if it contains valid UTF-8 sequences,
+        /// including 1-byte ASCII, 2-byte, 3-byte, and 4-byte supplementary plane characters (emojis, special symbols).
+        /// </summary>
+        public static bool IsValidUtf8(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0)
+            {
+                return true;
+            }
+
+            int i = 0;
+            while (i < bytes.Length)
+            {
+                byte b = bytes[i];
+                if (b <= 0x7F)
+                {
+                    i++;
+                    continue;
+                }
+                else if (b >= 0xC2 && b <= 0xDF)
+                {
+                    if (i + 1 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF)
+                    {
+                        return false;
+                    }
+                    i += 2;
+                }
+                else if (b >= 0xE0 && b <= 0xEF)
+                {
+                    if (i + 2 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF)
+                    {
+                        return false;
+                    }
+                    i += 3;
+                }
+                else if (b >= 0xF0 && b <= 0xF4)
+                {
+                    // 4-byte sequence (Unicode supplementary planes: emojis, special symbols)
+                    if (i + 3 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF || bytes[i + 3] < 0x80 || bytes[i + 3] > 0xBF)
+                    {
+                        return false;
+                    }
+                    i += 4;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Detects the encoding of a text file. If the file bytes form valid UTF-8 (including emojis),
+        /// UTF-8 is returned; otherwise, fallback (Encoding.Default) is returned.
+        /// </summary>
+        public static Encoding DetectFileEncoding(string filePath, Encoding fallback = null)
+        {
+            if (string.IsNullOrEmpty(filePath) || !File.Exists(filePath))
+            {
+                return fallback ?? Encoding.Default;
+            }
+
+            try
+            {
+                byte[] bytes = File.ReadAllBytes(filePath);
+                return IsValidUtf8(bytes) ? Encoding.UTF8 : (fallback ?? Encoding.Default);
+            }
+            catch
+            {
+                return fallback ?? Encoding.Default;
+            }
         }
     }
 }

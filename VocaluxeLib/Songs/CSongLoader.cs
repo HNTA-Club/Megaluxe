@@ -84,61 +84,14 @@ namespace VocaluxeLib.Songs
             {
                 var filePath = Path.Combine(_Song.Folder, _Song.FileName);
 
-                if (useSetEncoding == false)
-                {
-                    byte[] bytes = File.ReadAllBytes(filePath);
-
-                    bool isUtf8 = true;
-                    int i = 0;
-                    while (i < bytes.Length)
-                    {
-                        byte b = bytes[i];
-                        if (b <= 0x7F)
-                        {
-                            i++;
-                            continue;
-                        }
-                        else if (b >= 0xC2 && b <= 0xDF)
-                        {
-                            if (i + 1 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF)
-                            {
-                                isUtf8 = false;
-                                break;
-                            }
-                            i += 2;
-                        }
-                        else if (b >= 0xE0 && b <= 0xEF)
-                        {
-                            if (i + 2 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF)
-                            {
-                                isUtf8 = false;
-                                break;
-                            }
-                            i += 3;
-                        }
-                        else if (b >= 0xF0 && b <= 0xF4)
-                        {
-                            // 4-byte sequence (Unicode supplementary planes: emojis, special symbols)
-                            if (i + 3 >= bytes.Length || bytes[i + 1] < 0x80 || bytes[i + 1] > 0xBF || bytes[i + 2] < 0x80 || bytes[i + 2] > 0xBF || bytes[i + 3] < 0x80 || bytes[i + 3] > 0xBF)
-                            {
-                                isUtf8 = false;
-                                break;
-                            }
-                            i += 4;
-                        }
-                        else
-                        {
-                            isUtf8 = false;
-                            break;
-                        }
-                    }
-
-                    _Song.Encoding = isUtf8 ? System.Text.Encoding.UTF8 : System.Text.Encoding.Default;
-                }
-
                 if (!File.Exists(filePath))
                 {
                     return false;
+                }
+
+                if (!useSetEncoding)
+                {
+                    _Song.Encoding = CEncoding.DetectFileEncoding(filePath, System.Text.Encoding.Default);
                 }
 
                 _Song.Languages.Clear();
