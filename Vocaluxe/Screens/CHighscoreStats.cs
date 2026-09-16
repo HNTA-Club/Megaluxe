@@ -138,7 +138,7 @@ namespace Vocaluxe.Screens
 
             if (withoutTicks.Count > 0)
             {
-                var dateGroups = withoutTicks.GroupBy(s => !string.IsNullOrEmpty(s.Date) ? s.Date : s.ID.ToString());
+                var dateGroups = withoutTicks.GroupBy(s => !string.IsNullOrEmpty(s.Date) ? s.Date : s.Id.ToString());
                 count += dateGroups.Count();
             }
 
@@ -180,12 +180,12 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.Id) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                     continue;
 
                 candidateRows.Add(new SLeaderboardRow
                 {
-                    ID = entry.ID,
+                    ID = entry.Id,
                     Name = displayName,
                     Score = entry.Score,
                     Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON"),
@@ -208,7 +208,7 @@ namespace Vocaluxe.Screens
                 string displayName = getMicKey(entry);
                 string entryDate = FormatScoreDateTime(entry);
 
-                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
+                if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.Id) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                     continue;
 
                 bool isSeason = GetSeasonYear(entry) == seasonYear;
@@ -217,7 +217,7 @@ namespace Vocaluxe.Screens
 
                 candidateRows.Add(new SLeaderboardRow
                 {
-                    ID = entry.ID,
+                    ID = entry.Id,
                     Name = displayName,
                     Score = entry.Score,
                     Tag = tag,
@@ -241,7 +241,7 @@ namespace Vocaluxe.Screens
                     string displayName = getMicKey(entry);
                     string entryDate = FormatScoreDateTime(entry);
 
-                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.ID) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
+                    if (candidateRows.Any(r => (r.ID > 0 && r.ID == entry.Id) || (r.ID <= 0 && r.Name == displayName && Math.Abs(r.Score - entry.Score) <= 1 && r.Date == entryDate)))
                         continue;
 
                     bool isSeason = GetSeasonYear(entry) == seasonYear;
@@ -250,7 +250,7 @@ namespace Vocaluxe.Screens
 
                     candidateRows.Add(new SLeaderboardRow
                     {
-                        ID = entry.ID,
+                        ID = entry.Id,
                         Name = displayName,
                         Score = entry.Score,
                         Tag = tag,
@@ -280,7 +280,7 @@ namespace Vocaluxe.Screens
                 foreach (var sess in sessionRows.Where(s => !isDuet || s.VoiceNr == v))
                 {
                     // Avoid duplicating an entry if it was already loaded from DB scores
-                    if (sess.ID <= 0 || !scores.Any(s => s.ID == sess.ID))
+                    if (sess.ID <= 0 || !scores.Any(s => s.Id == sess.ID))
                         pool.Add(sess.Score);
                 }
 

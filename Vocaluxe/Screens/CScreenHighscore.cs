@@ -24,7 +24,6 @@ using VocaluxeLib;
 using VocaluxeLib.Game;
 using VocaluxeLib.Menu;
 using VocaluxeLib.Songs;
-using Vocaluxe.Lib.Sound;
 
 namespace Vocaluxe.Screens
 {
@@ -76,7 +75,7 @@ namespace Vocaluxe.Screens
         private List<SDBScoreEntry>[] _Scores;
         private List<int>[] _AvailableYears;
         private int _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
-        private List<int> _NewEntryIDs;
+        private List<int> _NewEntryIds;
         private int _Round;
         private bool _IsDuet;
         private bool _FromScreenSong = false;
@@ -88,7 +87,7 @@ namespace Vocaluxe.Screens
         
         private static int PlaySound(ESounds sound, int volume)
         {
-            int streamId = CSound.PlaySound(sound, false);
+            var streamId = CSound.PlaySound(sound, false);
             CSound.SetStreamVolume(streamId, volume);
             return streamId;
         }
@@ -138,7 +137,7 @@ namespace Vocaluxe.Screens
             // Init Chart arrays (up to NumChartRows)
             _TextChartName = new string[CHighscoreChart.NumChartRows];
             _TextChartValue = new string[CHighscoreChart.NumChartRows];
-            for (int i = 0; i < CHighscoreChart.NumChartRows; i++)
+            for (var i = 0; i < CHighscoreChart.NumChartRows; i++)
             {
                 _TextChartName[i] = "TextChartName" + (i + 1);
                 _TextChartValue[i] = "TextChartValue" + (i + 1);
@@ -149,7 +148,7 @@ namespace Vocaluxe.Screens
             _ThemeTexts = texts.ToArray();
             _ThemeParticleEffects = _ParticleEffectLeaderboard;
             _ThemeStatics = new string[] { "StaticMenuBar", "StaticCardCurrent", "StaticCardLore", "StaticCardHighlight" };
-            _NewEntryIDs = new List<int>();
+            _NewEntryIds = new List<int>();
         }
 
         public override void Draw()
@@ -195,7 +194,7 @@ namespace Vocaluxe.Screens
 
         public override bool HandleInput(SKeyEvent keyEvent)
         {
-            if (keyEvent.KeyPressed && !Char.IsControl(keyEvent.Unicode)) {}
+            if (keyEvent.KeyPressed && !Char.IsControl(keyEvent.Unicode)) { }
             else
             {
                 switch (keyEvent.Key)
@@ -205,6 +204,7 @@ namespace Vocaluxe.Screens
                     case Keys.Enter:
                         _LeaveScreen();
                         break;
+
                     case Keys.Left:
                         _ChangeRound(-1);
                         break;
@@ -229,11 +229,17 @@ namespace Vocaluxe.Screens
         public override bool HandleMouse(SMouseEvent mouseEvent)
         {
             if (mouseEvent.LB)
+            {
                 _LeaveScreen();
+            }
             if (mouseEvent.RB)
+            {
                 _LeaveScreen();
+            }
             if (mouseEvent.Wheel != 0)
+            {
                 _ChangeSeasonYear(-Math.Sign(mouseEvent.Wheel));
+            }
             return true;
         }
 
@@ -246,7 +252,9 @@ namespace Vocaluxe.Screens
                 {
                     _Texts[key].Text = text;
                     if (color.HasValue)
+                    {
                         _Texts[key].Color = color.Value;
+                    }
                 }
             }
         }
@@ -278,7 +286,7 @@ namespace Vocaluxe.Screens
             _SetText(_TextLeaderboardSubTitle, seasonRange + " " + CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SEASON") + " (▲/▼)", true, new SColorF(0.6f, 0.85f, 0.95f, 0.85f));
 
             var scores = _Scores[_Round] ?? new List<SDBScoreEntry>();
-            var priorScores = scores.Where(s => !_IsNewEntry(s.ID)).ToList();
+            var priorScores = scores.Where(s => !_IsNewEntry(s.Id)).ToList();
 
             // 1. Identify active session runs / players
             var sessionRows = new List<SLeaderboardRow>();
@@ -290,7 +298,7 @@ namespace Vocaluxe.Screens
                 for (int p = 0; p < players.Length; p++)
                 {
                     var player = players[p];
-                    string playerName = CProfiles.GetPlayerName(player.ProfileID);
+                    string playerName = CProfiles.GetPlayerName(player.ProfileId);
                     string displayName = playerName + (_IsDuet ? " (P" + (player.VoiceNr + 1) + ")" : "");
                     int score = (int)Math.Round(player.Points);
 
@@ -310,10 +318,10 @@ namespace Vocaluxe.Screens
                     // Match with database entry that was just inserted in _AddScoresToDB()
                     int entryId = -1;
                     string dateStr = "";
-                    var dbEntry = scores.FirstOrDefault(s => _NewEntryIDs.Contains(s.ID) && s.VoiceNr == player.VoiceNr && s.Name == playerName);
-                    if (dbEntry.ID > 0)
+                    var dbEntry = scores.FirstOrDefault(s => _NewEntryIds.Contains(s.Id) && s.VoiceNr == player.VoiceNr && s.Name == playerName);
+                    if (dbEntry.Id > 0)
                     {
-                        entryId = dbEntry.ID;
+                        entryId = dbEntry.Id;
                         score = dbEntry.Score;
                         dateStr = CHighscoreStats.FormatScoreDateTime(dbEntry);
                     }
@@ -365,7 +373,7 @@ namespace Vocaluxe.Screens
                         string displayName = entry.Name + (_IsDuet ? " (P" + (entry.VoiceNr + 1) + ")" : "");
                         sessionRows.Add(new SLeaderboardRow
                         {
-                            ID = entry.ID,
+                            ID = entry.Id,
                             Name = displayName,
                             Score = entry.Score,
                             Tag = CLanguage.Translate("TR_SCREENHIGHSCORE_TAG_SESSION"),
@@ -599,7 +607,7 @@ namespace Vocaluxe.Screens
             _SeasonYear = CHighscoreStats.GetCurrentSeasonYear();
             _FromScreenSong = (CGame.NumRounds == 0);
             
-            _NewEntryIDs.Clear();
+            _NewEntryIds.Clear();
             _AddScoresToDB();
             _LoadScores();
             _CountBrokenRecords();
@@ -611,39 +619,39 @@ namespace Vocaluxe.Screens
 
         private bool _IsNewEntry(int id)
         {
-            return _NewEntryIDs.Any(t => t == id);
+            return _NewEntryIds.Any(t => t == id);
         }
 
         private void _CountBrokenRecords()
         {
             if (_FromScreenSong) return;
 
-            CPoints points = CGame.GetPoints();
+            var points = CGame.GetPoints();
             if (points == null) return;
 
-            for (int round = 0; round < points.NumRounds; round++)
+            for (var round = 0; round < points.NumRounds; round++)
             {
                 if (_Scores == null || round >= _Scores.Length || _Scores[round] == null) continue;
 
                 var roundScores = _Scores[round];
-                var priorScores = roundScores.Where(s => !_IsNewEntry(s.ID)).ToList();
-                SPlayer[] players = points.GetPlayer(round, CGame.NumPlayers);
-                bool isDuet = (CGame.GetGameMode(round) == EGameMode.TR_GAMEMODE_DUET);
+                var priorScores = roundScores.Where(s => !_IsNewEntry(s.Id)).ToList();
+                var players = points.GetPlayer(round, CGame.NumPlayers);
+                var isDuet = (CGame.GetGameMode(round) == EGameMode.TR_GAMEMODE_DUET);
 
                 // Group valid players by voice line so multi-player single-mic rounds only count at most 1 broken record
                 var playerVoices = players
-                    .Where(p => p.Points > CSettings.MinScoreForDB && p.SongFinished && !CProfiles.IsGuestProfile(p.ProfileID))
+                    .Where(p => p.Points > CSettings.MinScoreForDB && p.SongFinished && !CProfiles.IsGuestProfile(p.ProfileId))
                     .GroupBy(p => isDuet ? p.VoiceNr : 0);
 
                 foreach (var voiceGroup in playerVoices)
                 {
-                    int voiceNr = voiceGroup.Key;
+                    var voiceNr = voiceGroup.Key;
                     var voiceScores = priorScores.Where(s => !isDuet || s.VoiceNr == voiceNr).ToList();
                     // Only count as broken if an existing prior record existed in the database
                     if (voiceScores.Count > 0)
                     {
-                        int prevVoiceRecord = voiceScores.Max(s => s.Score);
-                        int maxRoundScore = voiceGroup.Max(p => (int)Math.Round(p.Points));
+                        var prevVoiceRecord = voiceScores.Max(s => s.Score);
+                        var maxRoundScore = voiceGroup.Max(p => (int)Math.Round(p.Points));
                         if (maxRoundScore > prevVoiceRecord)
                         {
                             _SessionRecordsBroken++;
@@ -657,35 +665,35 @@ namespace Vocaluxe.Screens
         {
             if (_FromScreenSong) return;
 
-            CPoints points = CGame.GetPoints();
+            var points = CGame.GetPoints();
             if (points == null) return;
             if (CScreenSong.GetAudioMode() == EAudioMode.TR_AUDIOMODE_KARAOKE) return;
 
-            for (int round = 0; round < points.NumRounds; round++)
+            for (var round = 0; round < points.NumRounds; round++)
             {
-                SPlayer[] players = points.GetPlayer(round, CGame.NumPlayers);
-                for (int p = 0; p < players.Length; p++)
+                var players = points.GetPlayer(round, CGame.NumPlayers);
+                for (var p = 0; p < players.Length; p++)
                 {
-                    if (players[p].Points > CSettings.MinScoreForDB && players[p].SongFinished && !CProfiles.IsGuestProfile(players[p].ProfileID))
+                    if (players[p].Points > CSettings.MinScoreForDB && players[p].SongFinished && !CProfiles.IsGuestProfile(players[p].ProfileId))
                     {
                         int id = CDataBase.AddScore(players[p]);
                         if (id > 0)
-                            _NewEntryIDs.Add(id);
+                            _NewEntryIds.Add(id);
                     }
                 }
             }
 
-            for (int round = 0; round < points.NumRounds; round++)
+            for (var round = 0; round < points.NumRounds; round++)
             {
                 var song = CGame.GetSong(round);
-                if (song != null && song.ID >= 0)
-                    _SessionSongsSung.Add(song.ID);
+                if (song != null && song.Id >= 0)
+                    _SessionSongsSung.Add(song.Id);
             }
         }
 
         private void _LoadScores()
         {
-            int rounds = CGame.NumRounds;
+            var rounds = CGame.NumRounds;
 
             if (rounds == 0)
             {
@@ -693,12 +701,12 @@ namespace Vocaluxe.Screens
                 _Round = (int)EGameMode.TR_GAMEMODE_NORMAL;
                 _Scores = new List<SDBScoreEntry>[4];
                 _AvailableYears = new List<int>[4];
-                int songID = CScreenSong.getSelectedSongID();
+                var songId = CScreenSong.getSelectedSongId();
                 bool foundHighscoreEntries = false;
 
-                for (int gameModeNum = 0; gameModeNum < 4; gameModeNum++)
+                for (var gameModeNum = 0; gameModeNum < 4; gameModeNum++)
                 {
-                    _Scores[gameModeNum] = CDataBase.LoadScore(songID, (EGameMode)gameModeNum, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
+                    _Scores[gameModeNum] = CDataBase.LoadScore(songId, (EGameMode)gameModeNum, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
                     _AvailableYears[gameModeNum] = _Scores[gameModeNum].Select(s => CHighscoreStats.GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
 
                     if (!foundHighscoreEntries && _Scores[gameModeNum].Count > 0)
@@ -713,11 +721,11 @@ namespace Vocaluxe.Screens
                 _FromScreenSong = false;
                 _Scores = new List<SDBScoreEntry>[rounds];
                 _AvailableYears = new List<int>[rounds];
-                for (int round = 0; round < rounds; round++)
+                for (var round = 0; round < rounds; round++)
                 {
-                    int songID = CGame.GetSong(round).ID;
-                    EGameMode gameMode = CGame.GetGameMode(round);
-                    _Scores[round] = CDataBase.LoadScore(songID, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
+                    var songId = CGame.GetSong(round).Id;
+                    var gameMode = CGame.GetGameMode(round);
+                    _Scores[round] = CDataBase.LoadScore(songId, gameMode, EHighscoreStyle.TR_CONFIG_HIGHSCORE_LIST_ALL) ?? new List<SDBScoreEntry>();
                     _AvailableYears[round] = _Scores[round].Select(s => CHighscoreStats.GetSeasonYear(s)).Distinct().OrderByDescending(y => y).ToList();
                 }
             }
@@ -726,19 +734,30 @@ namespace Vocaluxe.Screens
         private void _UpdateRound()
         {
             _IsDuet = false;
-            CPoints points = CGame.GetPoints();
-            
-            CSong song;
-            if (_FromScreenSong) song = CSongs.GetSong(CScreenSong.getSelectedSongID());
-            else song = CGame.GetSong(_Round);
+            var points = CGame.GetPoints();
 
-            if (song == null) return;
+            CSong song;
+            if (_FromScreenSong)
+            {
+                song = CSongs.GetSong(CScreenSong.getSelectedSongId());
+            }
+            else
+            {
+                song = CGame.GetSong(_Round);
+            }
+
+            if (song == null)
+            {
+                return;
+            }
 
             _Texts[_TextSongName].Text = song.Artist + " - " + song.Title;
             if (points != null && !_FromScreenSong && points.NumRounds > 1)
+            {
                 _Texts[_TextSongName].Text += " (" + (_Round + 1) + "/" + points.NumRounds + ")";
+            }
 
-            switch ((_FromScreenSong ? (EGameMode)_Round : CGame.GetGameMode(_Round)))
+            switch (_FromScreenSong ? (EGameMode)_Round : CGame.GetGameMode(_Round))
             {
                 case EGameMode.TR_GAMEMODE_NORMAL:
                     _Texts[_TextSongMode].Text = "TR_GAMEMODE_NORMAL";
@@ -799,7 +818,7 @@ namespace Vocaluxe.Screens
             }
             else
             {
-                CPoints points = CGame.GetPoints();
+                var points = CGame.GetPoints();
                 if (points != null)
                 {
                     _Round += num;
@@ -813,10 +832,10 @@ namespace Vocaluxe.Screens
         }
 
         private void _LeaveScreen()
-        {           
+        {
             if (_HighscoreStream != -1)
             {
-                 CSound.Close(_HighscoreStream);
+                CSound.Close(_HighscoreStream);
                 _HighscoreStream = -1;
             }
             CParty.LeavingHighscore();
