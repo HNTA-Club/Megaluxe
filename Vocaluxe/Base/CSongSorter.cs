@@ -175,6 +175,70 @@ namespace Vocaluxe.Base
             return res;
         }
 
+        private int _SortByDifficulty(CSongPointer s1, CSongPointer s2)
+        {
+            int res = CSongs.Songs[s1.SongId].Difficulty.Overall.CompareTo(CSongs.Songs[s2.SongId].Difficulty.Overall);
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s1.SongId].ArtistSorting, CSongs.Songs[s2.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s1.SongId].Artist, CSongs.Songs[s2.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
+        private int _SortByAgility(CSongPointer s1, CSongPointer s2)
+        {
+            int res = CSongs.Songs[s1.SongId].Difficulty.Agility.CompareTo(CSongs.Songs[s2.SongId].Difficulty.Agility);
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s1.SongId].ArtistSorting, CSongs.Songs[s2.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s1.SongId].Artist, CSongs.Songs[s2.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
+        private int _SortByRange(CSongPointer s1, CSongPointer s2)
+        {
+            int res = CSongs.Songs[s1.SongId].Difficulty.Range.CompareTo(CSongs.Songs[s2.SongId].Difficulty.Range);
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s1.SongId].ArtistSorting, CSongs.Songs[s2.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s1.SongId].Artist, CSongs.Songs[s2.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
+        private int _SortByPace(CSongPointer s1, CSongPointer s2)
+        {
+            int res = CSongs.Songs[s1.SongId].Difficulty.Pace.CompareTo(CSongs.Songs[s2.SongId].Difficulty.Pace);
+            if (res == 0)
+            {
+                if (_IgnoreArticles == EOffOn.TR_CONFIG_ON)
+                {
+                    res = String.Compare(CSongs.Songs[s1.SongId].ArtistSorting, CSongs.Songs[s2.SongId].ArtistSorting, StringComparison.CurrentCultureIgnoreCase);
+                    return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].TitleSorting, CSongs.Songs[s2.SongId].TitleSorting, StringComparison.CurrentCultureIgnoreCase);
+                }
+                res = String.Compare(CSongs.Songs[s1.SongId].Artist, CSongs.Songs[s2.SongId].Artist, StringComparison.CurrentCultureIgnoreCase);
+                return res != 0 ? res : String.Compare(CSongs.Songs[s1.SongId].Title, CSongs.Songs[s2.SongId].Title, StringComparison.CurrentCultureIgnoreCase);
+            }
+            return res;
+        }
+
         private static bool _HasDefaultDescendingSort(ESongSorting sorting)
         {
             return sorting == ESongSorting.TR_CONFIG_DATEADDED ||
@@ -241,6 +305,18 @@ namespace Vocaluxe.Base
                 case ESongSorting.TR_CONFIG_HIGHSCORE:
                     value = song.HighScore.ToString();
                     break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    value = song.Difficulty.Overall.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                    value = song.Difficulty.Agility.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                    value = song.Difficulty.Range.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
+                    value = song.Difficulty.Pace.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
                 default:
                     Debug.Assert(false, "Forgot sorting option");
                     break;
@@ -291,6 +367,18 @@ namespace Vocaluxe.Base
                     break;
                 case ESongSorting.TR_CONFIG_NUMPLAYED:
                     sortList.Sort(_SortByNumPlayed);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY:
+                    sortList.Sort(_SortByDifficulty);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_AGILITY:
+                    sortList.Sort(_SortByAgility);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_RANGE:
+                    sortList.Sort(_SortByRange);
+                    break;
+                case ESongSorting.TR_CONFIG_DIFFICULTY_PACE:
+                    sortList.Sort(_SortByPace);
                     break;
                 default:
                     sortList.Sort(_SortByFieldArtistTitle);

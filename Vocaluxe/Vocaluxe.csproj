@@ -335,6 +335,7 @@
     <Compile Include="Screens\CPopupScreenPlayerControl.cs" />
     <Compile Include="Screens\CPopupScreenVolumeControl.cs" />
     <Compile Include="Screens\CScreenCredits.cs" />
+    <Compile Include="Screens\CDifficultyChart.cs" />
     <Compile Include="Screens\CHighscoreChart.cs" />
     <Compile Include="Screens\CHighscoreStats.cs" />
     <Compile Include="Screens\CScreenHighscore.cs" />
@@ -350,6 +351,7 @@
     <Compile Include="Screens\CScreenScore.cs" />
     <Compile Include="Screens\CScreenSing.cs" />
     <Compile Include="Screens\CScreenSong.cs" />
+    <Compile Include="Screens\CScreenSong.Difficulty.cs" />
     <Compile Include="Screens\CScreenTest.cs" />
     <Compile Include="Screens\CScreenOptionsSound.cs" />
     <Compile Include="Screens\CScreenOptionsVideo.cs" />
