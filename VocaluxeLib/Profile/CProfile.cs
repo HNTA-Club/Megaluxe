@@ -67,11 +67,11 @@ namespace VocaluxeLib.Profile
         public string AvatarFileName
             // ReSharper restore UnusedMember.Global
         {
-            get { return Path.GetFileName(Avatar.FileName); }
+            get { return Path.GetFileName(Avatar?.FileName ?? string.Empty); }
             set
             {
-                Avatar = CBase.Profiles.GetAvatarByFilename(value);
-                if (Avatar == null)
+                Avatar = CBase.Profiles?.GetAvatarByFilename(value);
+                if (Avatar == null && CBase.Profiles != null)
                 {
                     CLog.Error("Avatar '" + value + "' not found");
                 }
