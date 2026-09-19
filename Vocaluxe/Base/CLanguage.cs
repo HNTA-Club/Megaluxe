@@ -1,4 +1,4 @@
-﻿#region license
+#region license
 // This file is part of Vocaluxe.
 // 
 // Vocaluxe is free software: you can redistribute it and/or modify
@@ -144,12 +144,12 @@ namespace Vocaluxe.Base
                 }
             }
 
-            if (_Languages[_CurrentLanguage].Texts.TryGetValue(keyWord, out translation))
+            if (_CurrentLanguage >= 0 && _CurrentLanguage < _Languages.Count && _Languages[_CurrentLanguage].Texts.TryGetValue(keyWord, out translation))
             {
                 return true;
             }
 
-            if (_Languages[_FallbackLanguage].Texts.TryGetValue(keyWord, out translation))
+            if (_FallbackLanguage >= 0 && _FallbackLanguage < _Languages.Count && _Languages[_FallbackLanguage].Texts.TryGetValue(keyWord, out translation))
             {
                 return true;
             }
