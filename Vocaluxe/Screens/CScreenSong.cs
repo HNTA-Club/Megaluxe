@@ -476,10 +476,17 @@ namespace Vocaluxe.Screens
                             break;
 
                         case Keys.Oem6:
-                        case Keys.Oem4:
                             if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
                             {
                                 _ToggleSort((int)ESongSorting.TR_CONFIG_DIFFICULTY);
+                            }
+                            break;
+
+                        case Keys.Oem4:
+                            if (keyEvent.Mod == EModifier.Ctrl && !_Sso.Selection.PartyMode)
+                            {
+                                int tempSortNr = (int)ESongSorting.TR_CONFIG_NUMPLAYED;
+                                _ToggleSort(tempSortNr);
                             }
                             break;
 
