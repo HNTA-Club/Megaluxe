@@ -378,9 +378,12 @@ namespace Vocaluxe.Screens
 
         private void _UpdateSongLore()
         {
-            var scores = _Scores[_Round];
+            var scores = (_Scores != null && _Round < _Scores.Length) ? (_Scores[_Round] ?? new List<SDBScoreEntry>()) : new List<SDBScoreEntry>();
             int totalDbScores = CDataBase.GetTotalScoreCount();
-            var info = CHighscoreStats.GetSongLoreInfo(scores, _SeasonYear, totalDbScores, _SessionRecordsBroken, _SessionSongsSung.Count);
+            List<SDBScoreEntry> priorScores = !_FromScreenSong
+                ? scores.Where(s => !_IsNewEntry(s.Id)).ToList()
+                : null;
+            var info = CHighscoreStats.GetSongLoreInfo(scores, _SeasonYear, totalDbScores, _SessionRecordsBroken, _SessionSongsSung.Count, priorScores);
 
             CSong song = _FromScreenSong ? CSongs.GetSong(CScreenSong.getSelectedSongId()) : CGame.GetSong(_Round);
             bool hasDifficulty = (song != null && song.Difficulty.Overall >= 1.0f);
