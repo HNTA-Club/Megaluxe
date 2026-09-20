@@ -1438,9 +1438,20 @@ namespace Vocaluxe.Screens
 
         private void _ShowHighscore()
         {
+            int songNr = _SongMenu.GetPreviewSongNr();
+            if (songNr < 0 || songNr >= CSongs.VisibleSongs.Count)
+            {
+                songNr = _SongMenu.GetSelectedSongNr();
+            }
+
+            if (songNr < 0 || songNr >= CSongs.VisibleSongs.Count)
+            {
+                return;
+            }
+
             CGame.ClearSongs();
-            CScreenSong.setStaticSelectedSongId(CSongs.VisibleSongs[_SongMenu.GetPreviewSongNr()].Id);
-            _SongMenu.SetSelectedSong(_SongMenu.GetPreviewSongNr());
+            CScreenSong.setStaticSelectedSongId(CSongs.VisibleSongs[songNr].Id);
+            _SongMenu.SetSelectedSong(songNr);
             CBase.Graphics.FadeTo(EScreen.Highscore);
         }
 
