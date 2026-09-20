@@ -325,7 +325,8 @@ namespace Vocaluxe.Screens
             int seasonYear,
             int totalDbScores,
             int sessionRecordsBroken,
-            int sessionSongsCount)
+            int sessionSongsCount,
+            List<SDBScoreEntry> priorScores = null)
         {
             var info = new SSongLoreInfo();
             scores = scores ?? new List<SDBScoreEntry>();
@@ -359,7 +360,13 @@ namespace Vocaluxe.Screens
                 }
             }
 
-            var validScores = scores
+            // Target scores for calculating "last sung":
+            // When priorScores is provided (e.g. post-song screen), we evaluate when the song was sung
+            // prior to the performance that just finished.
+            // If priorScores is empty, it means this performance was the song's debut at the club.
+            // When priorScores is null (e.g. song list screen), we evaluate the most recent performance overall.
+            List<SDBScoreEntry> targetScores = priorScores ?? scores;
+            var validScores = targetScores
                 .Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks)
                 .OrderBy(s => s.DateTicks)
                 .ToList();
@@ -372,9 +379,9 @@ namespace Vocaluxe.Screens
                 DateTime lastDate = new DateTime(latest.DateTicks);
                 info.LastSungAgeDays = Math.Max(0, (int)(DateTime.Now - lastDate).TotalDays);
             }
-            else if (scores.Count > 0)
+            else if (targetScores.Count > 0)
             {
-                var scoresWithDate = scores
+                var scoresWithDate = targetScores
                     .Where(s => !string.IsNullOrEmpty(s.Date) && DateTime.TryParse(s.Date, out _))
                     .ToList();
                 if (scoresWithDate.Count > 0)
@@ -386,8 +393,24 @@ namespace Vocaluxe.Screens
                     info.LastSungAgeDays = Math.Max(0, (int)(DateTime.Now - lastDate).TotalDays);
                 }
             }
+            else if (priorScores != null && scores.Count > 0)
+            {
+                // Debut performance on post-song screen (no prior scores, but played now)
+                info.HasLastSung = true;
+                var latestCurrent = scores.Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks).OrderBy(s => s.DateTicks).LastOrDefault();
+                if (latestCurrent.DateTicks > 0)
+                {
+                    info.LastSungDate = !string.IsNullOrEmpty(latestCurrent.Date) ? latestCurrent.Date : new DateTime(latestCurrent.DateTicks).ToString("dd/MM/yyyy");
+                    info.LastSungAgeDays = Math.Max(0, (int)(DateTime.Now - new DateTime(latestCurrent.DateTicks)).TotalDays);
+                }
+                else
+                {
+                    info.LastSungDate = DateTime.Now.ToString("dd/MM/yyyy");
+                    info.LastSungAgeDays = 0;
+                }
+            }
 
-            info.FactText = EvaluateSongLoreFact(scores, totalDbScores, sessionRecordsBroken, sessionSongsCount);
+            info.FactText = EvaluateSongLoreFact(scores, totalDbScores, sessionRecordsBroken, sessionSongsCount, priorScores);
             return info;
         }
 
@@ -395,7 +418,8 @@ namespace Vocaluxe.Screens
             List<SDBScoreEntry> scores,
             int totalDbScores,
             int sessionRecordsBroken,
-            int sessionSongsCount)
+            int sessionSongsCount,
+            List<SDBScoreEntry> priorScores = null)
         {
             var validScores = (scores ?? new List<SDBScoreEntry>())
                 .Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks)
@@ -410,7 +434,22 @@ namespace Vocaluxe.Screens
             }
 
             // Priority 2: Long Drought Broken (>= 30 days since song was last performed, and sung recently within last 12h)
-            if (validScores.Count > 1)
+            if (priorScores != null)
+            {
+                var validPrior = priorScores
+                    .Where(s => s.DateTicks > 0 && s.DateTicks <= DateTime.MaxValue.Ticks)
+                    .OrderBy(s => s.DateTicks)
+                    .ToList();
+                if (validPrior.Count > 0)
+                {
+                    int daysAgo = (int)(DateTime.Now - new DateTime(validPrior.Last().DateTicks)).TotalDays;
+                    if (daysAgo >= 30)
+                    {
+                        return String.Format(CLanguage.Translate("TR_SCREENHIGHSCORE_HIGHLIGHT_DROUGHT"), daysAgo);
+                    }
+                }
+            }
+            else if (validScores.Count > 1)
             {
                 double lastHoursAgo = (DateTime.Now - new DateTime(validScores.Last().DateTicks)).TotalHours;
                 bool sungRecently = lastHoursAgo >= -0.5 && lastHoursAgo <= 12;
