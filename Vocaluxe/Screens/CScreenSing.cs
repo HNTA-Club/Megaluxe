@@ -1366,6 +1366,15 @@ namespace Vocaluxe.Screens
                 return;
             }
 
+            if (CScreenSong.TrainingLoggingEnabled)
+            {
+                if (CTrainingRecorder.IsActive)
+                {
+                    CTrainingRecorder.FinalizeSession();
+                }
+                CTrainingRecorder.StartSession(song, CGame.Players, CGame.RoundNr, CGame.GameMode, CScreenSong.GetAudioMode());
+            }
+
             var useStartCountdown = CGame.GameMode != EGameMode.TR_GAMEMODE_MEDLEY && song.Gap <= 2f;
 
             if (useStartCountdown)

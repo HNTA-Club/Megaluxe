@@ -126,5 +126,33 @@ namespace Tests.Training
             Assert.That(deserialized.Notes[0].Chunks[0].PitchOffset, Is.EqualTo(-1));
             Assert.That(deserialized.Notes[0].Chunks[1].Hit, Is.True);
         }
+
+        [Test]
+        public void TestClearSongData_NonExistent_ReturnsFalse()
+        {
+            var res = CTrainingStorage.ClearSongData("NonExistentArtist_XYZ_123", "NonExistentTitle_XYZ_123");
+            Assert.That(res, Is.False);
+        }
+
+        [Test]
+        public void TestClearSongData_Existing_DeletesDirectoryAndReturnsTrue()
+        {
+            var artist = "TestArtistClear";
+            var title = "TestTitleClear";
+            var profile = "TestProfileClear";
+
+            var dir = CTrainingStorage.GetSongDirectory(artist, title, profile);
+            System.IO.Directory.CreateDirectory(dir);
+            var testFilePath = System.IO.Path.Combine(dir, "run_test.json");
+            System.IO.File.WriteAllText(testFilePath, "{}");
+
+            Assert.That(System.IO.Directory.Exists(dir), Is.True);
+
+            var cleared = CTrainingStorage.ClearSongData(artist, title);
+            Assert.That(cleared, Is.True);
+
+            var songBaseDir = System.IO.Path.GetDirectoryName(dir);
+            Assert.That(System.IO.Directory.Exists(songBaseDir), Is.False);
+        }
     }
 }

@@ -26,6 +26,7 @@ using VocaluxeLib.Menu;
 using VocaluxeLib.Menu.SongMenu;
 using VocaluxeLib.PartyModes;
 using VocaluxeLib.Songs;
+using Vocaluxe.Training;
 
 namespace Vocaluxe.Screens
 {
@@ -79,6 +80,10 @@ namespace Vocaluxe.Screens
         private const string _SelectSlideOptionsPlaylistAdd = "SelectSlideOptionsPlaylistAdd";
         private const string _SelectSlideOptionsPlaylistOpen = "SelectSlideOptionsPlaylistOpen";
         private const string _SelectSlideOptionsNumMedleySongs = "SelectSlideOptionsNumMedleySongs";
+        private const string _SelectSlideOptionsTraining = "SelectSlideOptionsTraining";
+
+        private static bool _TrainingLoggingEnabled = false;
+        public static bool TrainingLoggingEnabled => _TrainingLoggingEnabled;
 
         private const string _StaticSearchBar = "StaticSearchBar";
         private const string _StaticOptionsBG = "StaticOptionsBG";
@@ -282,6 +287,21 @@ namespace Vocaluxe.Screens
             if (keyEvent.Handled)
             {
                 return true;
+            }
+
+            if (keyEvent.Key == Keys.Delete && keyEvent.Mod == EModifier.Shift && CSongs.IsInCategory)
+            {
+                var previewSongNr = _SongMenu.GetPreviewSongNr();
+                if (previewSongNr >= 0 && previewSongNr < CSongs.VisibleSongs.Count)
+                {
+                    var song = CSongs.VisibleSongs[previewSongNr];
+                    if (song != null)
+                    {
+                        var deleted = CTrainingStorage.ClearSongData(song.Artist, song.Title);
+                        _ShowInfoText(deleted ? "Training data cleared" : "No training data to clear");
+                        return true;
+                    }
+                }
             }
 
             if (_CurSongOptionsView == ESongOptionsView.None)
@@ -674,6 +694,11 @@ namespace Vocaluxe.Screens
                         else if (_Buttons[_ButtonOptionsHighscore].Selected)
                         {
                             _ShowHighscore();
+                        }
+                        else if (_SelectSlides.ContainsKey(_SelectSlideOptionsTraining) && _SelectSlides[_SelectSlideOptionsTraining].Selected)
+                        {
+                            _SelectSlides[_SelectSlideOptionsTraining].Selection = _SelectSlides[_SelectSlideOptionsTraining].Selection == 0 ? 1 : 0;
+                            _TrainingLoggingEnabled = _SelectSlides[_SelectSlideOptionsTraining].SelectedTag == 1;
                         }
 
                         break;
@@ -1474,6 +1499,10 @@ namespace Vocaluxe.Screens
 
                 _AudioMode = (EAudioMode)_SelectSlides[_SelectSlideOptionsAudioMode].SelectedTag;
                 _PlayerSelect = (EPlayerSelect)_SelectSlides[_SelectSlideOptionsPlayerSelect].Selection;
+                if (_SelectSlides.ContainsKey(_SelectSlideOptionsTraining))
+                {
+                    _TrainingLoggingEnabled = _SelectSlides[_SelectSlideOptionsTraining].SelectedTag == 1;
+                }
 
                 CGame.Reset();
                 CGame.ClearSongs();
@@ -1908,6 +1937,10 @@ namespace Vocaluxe.Screens
             _SelectSlides[_SelectSlideOptionsPlaylistAdd].Visible = false;
             _SelectSlides[_SelectSlideOptionsPlaylistOpen].Visible = false;
             _SelectSlides[_SelectSlideOptionsNumMedleySongs].Visible = false;
+            if (_SelectSlides.ContainsKey(_SelectSlideOptionsTraining))
+            {
+                _SelectSlides[_SelectSlideOptionsTraining].Visible = false;
+            }
             _Buttons[_ButtonOptionsClose].Visible = false;
             _Buttons[_ButtonOptionsSing].Visible = false;
             _Buttons[_ButtonOptionsPlaylist].Visible = false;
@@ -2030,6 +2063,18 @@ namespace Vocaluxe.Screens
 
             _SelectSlides[_SelectSlideOptionsMode].Visible = true;
             _SelectSlides[_SelectSlideOptionsPlaylistAdd].Visible = true;
+            if (!_SelectSlides.ContainsKey(_SelectSlideOptionsTraining))
+            {
+                var trainingSlide = new CSelectSlide(_SelectSlides[_SelectSlideOptionsMode]);
+                trainingSlide.LoadSkin();
+                trainingSlide.Y = 550;
+                trainingSlide.Clear();
+                trainingSlide.AddValue("Training: OFF", tag: 0);
+                trainingSlide.AddValue("Training: ON", tag: 1);
+                _AddSelectSlide(trainingSlide, _SelectSlideOptionsTraining);
+            }
+            _SelectSlides[_SelectSlideOptionsTraining].SelectedTag = _TrainingLoggingEnabled ? 1 : 0;
+            _SelectSlides[_SelectSlideOptionsTraining].Visible = true;
             _Buttons[_ButtonOptionsSing].Visible = true;
             _Buttons[_ButtonOptionsPlaylist].Visible = true;
             _Buttons[_ButtonOptionsHighscore].Visible = true;
