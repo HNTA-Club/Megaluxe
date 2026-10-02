@@ -82,3 +82,5 @@ tx.exe
 /Tests/bin
 *.orig
 *.DotSettings
+.agent/
+docs/
