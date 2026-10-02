@@ -23,6 +23,7 @@
 using System;
 using System.Collections.Generic;
 using Vocaluxe.SongQueue;
+using Vocaluxe.Training;
 using VocaluxeLib;
 using VocaluxeLib.Game;
 using VocaluxeLib.Songs;
@@ -357,6 +358,11 @@ namespace Vocaluxe.Base
                         Players[p].NoteDiff = Math.Abs(tone - tonePlayer);
                         var hit = Players[p].NoteDiff <= 2 - (int)CProfiles.GetDifficulty(Players[p].ProfileId);
 
+                        if (CTrainingRecorder.IsActive)
+                        {
+                            CTrainingRecorder.RecordBeat(p, line, note, beat, tone, tonePlayer, true, hit);
+                        }
+
                         if (hit)
                         {
                             // valid
@@ -412,6 +418,10 @@ namespace Vocaluxe.Base
                                 Players[p].SungLines[line].AddNote(new CSungNote(beat, 1, tonePlayer));
                             }
                         }
+                    }
+                    else if (notes[note].PointsForBeat > 0 && CTrainingRecorder.IsActive)
+                    {
+                        CTrainingRecorder.RecordBeat(p, line, note, beat, notes[note].Tone, 0, false, false);
                     }
 
                     // Check if line ended

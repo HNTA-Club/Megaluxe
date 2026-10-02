@@ -24,6 +24,7 @@ using System.Timers;
 using System.Windows.Forms;
 using Vocaluxe.Base;
 using Vocaluxe.Base.Fonts;
+using Vocaluxe.Training;
 using Vocaluxe.Lib.Sound;
 using VocaluxeLib;
 using VocaluxeLib.Draw;
@@ -639,6 +640,10 @@ namespace Vocaluxe.Screens
         public override void OnClose()
         {
             base.OnClose();
+            if (CTrainingRecorder.IsActive)
+            {
+                CTrainingRecorder.CancelSession();
+            }
             _CloseSong();
             if (_Webcam)
             {
@@ -1399,6 +1404,10 @@ namespace Vocaluxe.Screens
         /// </summary>
         private void _Stop()
         {
+            if (CTrainingRecorder.IsActive)
+            {
+                CTrainingRecorder.CancelSession();
+            }
             _CloseSong();
 
             //Need this to set other songs to points-var

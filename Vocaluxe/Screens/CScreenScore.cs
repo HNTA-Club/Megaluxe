@@ -22,6 +22,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vocaluxe.Base;
 using Vocaluxe.Base.Server;
+using Vocaluxe.Training;
 using VocaluxeLib;
 using VocaluxeLib.Game;
 using VocaluxeLib.Menu;
@@ -140,6 +141,11 @@ namespace Vocaluxe.Screens
             //-1 --> Show average
             _Round = CGame.NumRounds > 1 ? -1 : 0;
             _Points = CGame.GetPoints();
+
+            if (CTrainingRecorder.IsActive)
+            {
+                CTrainingRecorder.FinalizeSession();
+            }
 
             _SavePlayedSongs();
 
