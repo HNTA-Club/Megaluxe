@@ -359,6 +359,8 @@
     <Compile Include="Screens\CScreenOptionsTheme.cs" />
     <Compile Include="Screens\CScreenOptionsGraphics.cs" />
     <Compile Include="Screens\CScreenOptionsServer.cs" />
+    <Compile Include="Training\STrainingDataModels.cs" />
+    <Compile Include="Training\CTrainingStorage.cs" />
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>

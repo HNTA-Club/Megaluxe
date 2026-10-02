@@ -87,6 +87,7 @@
     <Compile Include="VocaluxeLib\Songs\CDifficultyCalculatorTest.cs" />
     <Compile Include="VocaluxeLib\XML\CXmlSerializerTest.cs" />
     <Compile Include="Screens\CHighscoreStatsTest.cs" />
+    <Compile Include="Training\TrainingStorageTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
