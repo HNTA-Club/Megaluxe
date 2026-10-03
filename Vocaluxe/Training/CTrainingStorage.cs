@@ -27,8 +27,9 @@ namespace Vocaluxe.Training
 {
     public static class CTrainingStorage
     {
+        private const string ExtraInvalidChars = "<>:\"/\\|?*";
         private static readonly Regex InvalidCharsRegex = new Regex(
-            $"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars()))}]",
+            $"[{Regex.Escape(new string(Path.GetInvalidFileNameChars()) + new string(Path.GetInvalidPathChars()) + ExtraInvalidChars)}]",
             RegexOptions.Compiled);
 
         public static string SanitizePath(string input)

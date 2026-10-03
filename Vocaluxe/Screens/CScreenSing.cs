@@ -640,10 +640,6 @@ namespace Vocaluxe.Screens
         public override void OnClose()
         {
             base.OnClose();
-            if (CTrainingRecorder.IsActive)
-            {
-                CTrainingRecorder.CancelSession();
-            }
             _CloseSong();
             if (_Webcam)
             {
@@ -1372,7 +1368,7 @@ namespace Vocaluxe.Screens
                 {
                     CTrainingRecorder.FinalizeSession();
                 }
-                CTrainingRecorder.StartSession(song, CGame.Players, CGame.RoundNr, CGame.GameMode, CScreenSong.GetAudioMode());
+                CTrainingRecorder.StartSession(song, CGame.Players, 0, CGame.GameMode, CScreenSong.GetAudioMode());
             }
 
             var useStartCountdown = CGame.GameMode != EGameMode.TR_GAMEMODE_MEDLEY && song.Gap <= 2f;
@@ -1434,6 +1430,10 @@ namespace Vocaluxe.Screens
         /// </summary>
         private void _FinishedSinging()
         {
+            if (CTrainingRecorder.IsActive)
+            {
+                CTrainingRecorder.FinalizeSession();
+            }
             _FadeOut = true;
             CParty.FinishedSinging();
 

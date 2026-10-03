@@ -79,6 +79,7 @@ tx.exe
 /Logs
 /Output/Logs
 /Output/CoverCache
+/Output/Training
 /Tests/bin
 *.orig
 *.DotSettings

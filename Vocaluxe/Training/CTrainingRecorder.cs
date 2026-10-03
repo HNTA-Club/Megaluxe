@@ -37,6 +37,7 @@ namespace Vocaluxe.Training
         private static EAudioMode _AudioMode;
 
         private static List<STrainingNote> _Notes = new List<STrainingNote>();
+        private static STrainingNote[][] _NotesMap;
         private static STrainingNote _ActiveNote;
         private static STrainingChunk _ActiveChunk;
         private static int _CurrentLineIndex = -1;
@@ -82,15 +83,17 @@ namespace Vocaluxe.Training
             if (voice != null)
             {
                 var noteCounter = 0;
+                _NotesMap = new STrainingNote[voice.Lines.Length][];
                 for (var l = 0; l < voice.Lines.Length; l++)
                 {
                     var line = voice.Lines[l];
+                    _NotesMap[l] = new STrainingNote[line.Notes.Length];
                     for (var n = 0; n < line.Notes.Length; n++)
                     {
                         var note = line.Notes[n];
                         var durationMs = song.Bpm > 0 ? note.Duration * (60000.0 / (song.Bpm * 4.0)) : 0.0;
 
-                        _Notes.Add(new STrainingNote
+                        var trainingNote = new STrainingNote
                         {
                             NoteIndex = noteCounter++,
                             LineIndex = l,
@@ -101,9 +104,15 @@ namespace Vocaluxe.Training
                             DurationBeats = note.Duration,
                             DurationMs = durationMs,
                             Chunks = new List<STrainingChunk>()
-                        });
+                        };
+                        _Notes.Add(trainingNote);
+                        _NotesMap[l][n] = trainingNote;
                     }
                 }
+            }
+            else
+            {
+                _NotesMap = new STrainingNote[0][];
             }
 
             _IsActive = true;
@@ -150,8 +159,16 @@ namespace Vocaluxe.Training
                 _CurrentLineIndex = lineIndex;
                 _CurrentNoteIndex = noteIndex;
 
-                _ActiveNote = _Notes.FirstOrDefault(n => n.LineIndex == lineIndex && n.StartBeat <= beat && (n.StartBeat + n.DurationBeats) > beat)
-                              ?? _Notes.FirstOrDefault(n => n.LineIndex == lineIndex);
+                if (_NotesMap != null &&
+                    lineIndex >= 0 && lineIndex < _NotesMap.Length &&
+                    noteIndex >= 0 && noteIndex < _NotesMap[lineIndex].Length)
+                {
+                    _ActiveNote = _NotesMap[lineIndex][noteIndex];
+                }
+                else
+                {
+                    _ActiveNote = null;
+                }
 
                 StartNewChunk(beat, sungToneVal, pitchOffset, status, hit);
                 return;
@@ -188,9 +205,12 @@ namespace Vocaluxe.Training
 
         private static void FlushActiveChunk()
         {
-            if (_ActiveChunk != null && _ActiveNote != null)
+            if (_ActiveChunk != null)
             {
-                _ActiveNote.Chunks.Add(_ActiveChunk);
+                if (_ActiveNote != null)
+                {
+                    _ActiveNote.Chunks.Add(_ActiveChunk);
+                }
                 _ActiveChunk = null;
             }
         }
@@ -200,6 +220,7 @@ namespace Vocaluxe.Training
             _IsActive = false;
             _Song = null;
             _Notes.Clear();
+            _NotesMap = null;
             _ActiveNote = null;
             _ActiveChunk = null;
             _CurrentLineIndex = -1;
@@ -306,7 +327,7 @@ namespace Vocaluxe.Training
                     Profile = _ProfileName,
                     Difficulty = _Difficulty.ToString(),
                     ToleranceSemitones = _ToleranceSemitones,
-                    Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ"),
+                    Timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture),
                     TotalNotes = _Notes.Count,
                     NotesEvaluated = _Notes.Count(n => n.Chunks.Count > 0),
                     HitRatio = totalEvaluatedBeats > 0 ? Math.Round((double)totalHitBeats / totalEvaluatedBeats, 3) : 0.0,
@@ -318,6 +339,12 @@ namespace Vocaluxe.Training
 
             CTrainingStorage.SaveRunAsync(sessionData);
 
+            _Notes = new List<STrainingNote>();
+            _NotesMap = null;
+            _ActiveNote = null;
+            _ActiveChunk = null;
+            _CurrentLineIndex = -1;
+            _CurrentNoteIndex = -1;
             _IsActive = false;
             return sessionData;
         }
